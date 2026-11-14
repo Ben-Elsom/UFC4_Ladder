@@ -36,7 +36,7 @@ def main() -> None:
     cfg = load_config()
     path = Path(a.state)
     state = load_state(path)
-    lad = Ladder(state, admin_name=cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""))
+    lad = Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""))
     pool = {acct: p["name"] for acct, p in state["players"].items()}
     now = int(time.time() * 1000)
 

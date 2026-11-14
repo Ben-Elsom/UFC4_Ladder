@@ -1,4 +1,4 @@
-"""The ladder itself: reads chat messages, keeps the fight log, works out ratings and belts.
+"""The ladder itself: reads chat messages, keeps the fight log, works out ratings.
 
 Everything is rebuilt from the fight log each time, so fixing or removing a
 fight is just changing that one entry.
@@ -15,12 +15,11 @@ from .parser import SELF, detect_mode, parse
 
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
-INACTIVE_DAYS = 30         # off the board (and belt vacated) after this long idle
-DUPLICATE_HOURS = 3        # both players reporting the same set within this window = one result
+DUPLICATE_MINUTES = 10     # both players reporting the same result within this window = one result
 MODE_GUESS_HOURS = 6       # no mode given? use what the pair last played within this window
 QUESTION_EXPIRES_HOURS = 24
-BELT_MIN_RANKED = 3        # belt is first awarded once this many players are ranked
-H = 3600 * 1000
+MIN = 60 * 1000
+H = 60 * MIN
 DAY = 24 * H
 
 
@@ -83,7 +82,6 @@ class Ladder:
     def replay(self, mode: str, now: int | None = None) -> dict[str, Any]:
         stats: dict[str, dict[str, Any]] = {}
         changes: dict[int, dict[str, tuple[float, float]]] = {}
-        belt: dict[str, Any] = {"holder": None, "since": None, "history": []}
 
         def st(acct: str) -> dict[str, Any]:
             return stats.setdefault(acct, {
@@ -92,26 +90,8 @@ class Ladder:
                 "streak": 0, "finishes": {"KO": 0, "TKO": 0, "SUB": 0, "DEC": 0}, "best_rating": glicko.START_RATING,
             })
 
-        def ranked(at: int) -> list[str]:
-            return sorted(
-                (a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS and at - x["last"] <= INACTIVE_DAYS * DAY),
-                key=lambda a: -stats[a]["rating"],
-            )
-
-        def belt_check(at: int, fight: dict | None) -> None:
-            holder = belt["holder"]
-            if holder and at - stats[holder]["last"] > INACTIVE_DAYS * DAY:
-                belt["history"].append({"ts": at, "holder": None, "how": f"vacated ({self.name(holder)} inactive)"})
-                belt["holder"] = holder = None
-            if holder and fight and fight["loser"] == holder:
-                belt["holder"], belt["since"] = fight["winner"], at
-                belt["history"].append({"ts": at, "holder": fight["winner"], "how": f"beat {self.name(holder)}", "fight": fight["id"]})
-                return
-            if not holder:
-                r = ranked(at)
-                if len(r) >= BELT_MIN_RANKED:
-                    belt["holder"], belt["since"] = r[0], at
-                    belt["history"].append({"ts": at, "holder": r[0], "how": "crowned as #1"})
+        def ranked() -> list[str]:
+            return sorted((a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS), key=lambda a: -stats[a]["rating"])
 
         for f in sorted(self.s["fights"], key=lambda f: f["ts"]):
             if f["mode"] != mode or f["status"] != "ok":
@@ -138,16 +118,12 @@ class Ladder:
                 w["finishes"][f["method"]] += 1
             w["last"] = l["last"] = f["ts"]
             w["best_rating"] = max(w["best_rating"], w["rating"])
-            belt_check(f["ts"], f)
 
-        if now is not None:
-            belt_check(now, None)
-        board = ranked(now) if now is not None else []
+        board = ranked()
         for acct, x in stats.items():
             x["rank"] = board.index(acct) + 1 if acct in board else None
             x["provisional"] = x["fights"] < PROVISIONAL_FIGHTS
-            x["inactive"] = now is not None and not x["provisional"] and now - x["last"] > INACTIVE_DAYS * DAY
-        return {"stats": stats, "board": board, "changes": changes, "belt": belt}
+        return {"stats": stats, "board": board, "changes": changes}
 
     # ------------------------------------------------------------ chat handling
     def handle(self, msg: dict[str, Any]) -> list[str]:
@@ -168,9 +144,6 @@ class Ladder:
         low = body.lower()
         if low.startswith("!"):
             return self._command(msg, low[1:].split())
-        m = re.match(r"^\s*(dispute|wrong|undo|cancel|delete)\s*#?\s*(\d+)\b", low)
-        if m:
-            return self._dispute(msg, int(m.group(2)))
 
         pending = next((q for q in self.s["pending"] if q["sender"] == msg["sender_id"]), None)
         if pending:
@@ -277,7 +250,7 @@ class Ladder:
         for f in reversed(self.s["fights"]):
             if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
                 continue
-            if abs(d["ts"] - f["ts"]) > DUPLICATE_HOURS * H or f["reported_by"] == d["sender"]:
+            if abs(d["ts"] - f["ts"]) > DUPLICATE_MINUTES * MIN or f["reported_by"] == d["sender"]:
                 continue
             same_winner = f["winner"] == d["winner"]
             same_score = f.get("score") is None or d["score"] is None or tuple(f["score"]) == tuple(d["score"])
@@ -290,12 +263,11 @@ class Ladder:
                 return [f"👍 Already got that one (#{f['id']}). Thanks for confirming."]
             f["status"] = "disputed"
             self._add_review("conflict", f"Doesn't match #{f['id']} — both players reported different results", d, fight_id=f["id"])
-            return [f"⚠️ That doesn't match #{f['id']} ({self._describe(f)}). Both paused until {self.admin} sorts it."]
+            return [f"⚠️ That doesn't match #{f['id']} ({self._describe(f)}). Both paused, message {self.admin} to sort it."]
         return self._record(d)
 
     def _record(self, d: dict) -> list[str]:
         mode = d["mode"]
-        before = self.replay(mode, now=d["ts"])
         fid = self.s["next_fight_id"]
         self.s["next_fight_id"] += 1
         fight = {
@@ -307,22 +279,15 @@ class Ladder:
         self._resolve_unreadable(d)
         after = self.replay(mode, now=d["ts"])
         ch = after["changes"][fid]
-        wn, ln = self.name(d["winner"]), self.name(d["loser"])
 
         def fmt(acct: str, pair: tuple[float, float]) -> str:
             delta = round(pair[1]) - round(pair[0])
             x = after["stats"][acct]
-            tag = f" (provisional {x['fights']}/{PROVISIONAL_FIGHTS})" if x["provisional"] else ""
+            tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
             return f"{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}){tag}"
 
-        lines = [
-            f"✅ #{fid} {MODES[mode]}: {self._describe(fight)}",
-            f"{fmt(d['winner'], ch['winner'])} · {fmt(d['loser'], ch['loser'])}",
-        ]
-        if after["belt"]["holder"] != before["belt"]["holder"] and after["belt"]["holder"]:
-            lines.append(f"🏆 {self.name(after['belt']['holder'])} is the {MODES[mode]} champ!")
-        lines.append(f"Wrong? Reply: dispute {fid}")
-        return ["\n".join(lines)]
+        return [f"✅ #{fid} {MODES[mode]} · {self._describe(fight)} · "
+                f"{fmt(d['winner'], ch['winner'])} · {fmt(d['loser'], ch['loser'])}"]
 
     def _describe(self, f: dict) -> str:
         s = f"{self.name(f['winner'])} def. {self.name(f['loser'])}"
@@ -332,24 +297,7 @@ class Ladder:
             s += f" ({f['method']})"
         return s
 
-    # ------------------------------------------------------------ disputes & review
-    def _dispute(self, msg: dict, fid: int) -> list[str]:
-        f = next((x for x in self.s["fights"] if x["id"] == fid), None)
-        if not f or f["status"] == "void":
-            return [f"Couldn't find fight #{fid}."]
-        who = msg["sender_id"]
-        if who not in (f["winner"], f["loser"], f["reported_by"]):
-            return [f"Only the two fighters can dispute #{fid}."]
-        if who == f["reported_by"] and not f.get("confirmed_by"):
-            f["status"] = "void"
-            f["note"] = "removed by the person who posted it"
-            return [f"🗑️ #{fid} removed. Post it again if it needs fixing."]
-        if f["status"] == "disputed":
-            return [f"#{fid} is already waiting for {self.admin} to check it."]
-        f["status"] = "disputed"
-        self._add_review("dispute", f"{self.name(who)} disputed it", {"text": msg["body"], "sender": who, "ts": msg["ts"], "uid": msg["uid"]}, fight_id=fid)
-        return [f"⚠️ #{fid} paused (not counted) until {self.admin} checks it."]
-
+    # ------------------------------------------------------------ review
     def _add_review(self, kind: str, reason: str, d: dict, fight_id: int | None = None) -> None:
         rid = self.s["next_review_id"]
         self.s["next_review_id"] += 1
@@ -393,17 +341,16 @@ class Ladder:
         if cmd in ("help", "commands", "how"):
             return [
                 "🥊 Post results like:  beat sam 2-1 mma  ·  lost to temp sb\n"
-                "Commands: !board  !board mma  !rank  !rank sam  !h2h sam  !belt  !recent\n"
-                f"Wrong result? Reply: dispute <number>{site}"
+                "Commands: !board  !board mma  !rank  !rank sam  !h2h sam  !recent\n"
+                f"Something wrong? Message {self.admin}.{site}"
             ]
         if cmd in ("board", "leaderboard", "top", "rankings"):
             modes = [mode] if mode else list(MODES)
             out = []
             for md in modes:
                 r = self.replay(md, now=now)
-                belt = r["belt"]["holder"]
                 rows = [
-                    f"{i}. {'🏆 ' if a == belt else ''}{self.name(a)} {round(r['stats'][a]['rating'])}"
+                    f"{i}. {self.name(a)} {round(r['stats'][a]['rating'])}"
                     for i, a in enumerate(r["board"][: 10 if mode else 5], 1)
                 ]
                 out.append(f"{MODES[md]}\n" + ("\n".join(rows) if rows else f"Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed)."))
@@ -422,8 +369,7 @@ class Ladder:
                 if not x:
                     lines.append(f"{MODES[md]}: no fights yet")
                     continue
-                where = (f"#{x['rank']}" if x["rank"] else
-                         f"provisional {x['fights']}/{PROVISIONAL_FIGHTS}" if x["provisional"] else "inactive")
+                where = f"#{x['rank']}" if x["rank"] else f"provisional {x['fights']}/{PROVISIONAL_FIGHTS}"
                 streak = f" · {'W' if x['streak'] > 0 else 'L'}{abs(x['streak'])} streak" if x["streak"] else ""
                 lines.append(f"{MODES[md]}: {where} · {round(x['rating'])} · {x['wins']}-{x['losses']}{streak}")
             return ["\n".join(lines) + site]
@@ -451,12 +397,6 @@ class Ladder:
                         bw += gw; aw += gl
                 lines.append(f"{MODES[md]}: {aw}-{bw}")
             return ["\n".join(lines)]
-        if cmd in ("belt", "champ", "champs", "belts"):
-            lines = []
-            for md in MODES:
-                h = self.replay(md, now=now)["belt"]["holder"]
-                lines.append(f"🏆 {MODES[md]}: {self.name(h) if h else 'vacant'}")
-            return ["\n".join(lines)]
         if cmd in ("recent", "last", "results"):
             fights = [f for f in self.s["fights"] if f["status"] == "ok" and (not mode or f["mode"] == mode)][-5:]
             if not fights:
@@ -473,7 +413,7 @@ class Ladder:
             for acct, x in r["stats"].items():
                 players.append({
                     "id": acct, "name": self.name(acct), "rating": round(x["rating"]), "rd": round(x["rd"]),
-                    "rank": x["rank"], "provisional": x["provisional"], "inactive": x["inactive"],
+                    "rank": x["rank"], "provisional": x["provisional"],
                     "fights": x["fights"], "wins": x["wins"], "losses": x["losses"],
                     "sets_won": x["sets_won"], "sets_lost": x["sets_lost"], "streak": x["streak"],
                     "finishes": x["finishes"], "best": round(x["best_rating"]), "last": x["last"],
@@ -481,9 +421,6 @@ class Ladder:
             players.sort(key=lambda p: (p["rank"] is None, p["rank"] or 0, -p["rating"]))
             modes[md] = {
                 "label": label, "players": players,
-                "belt": {"holder": r["belt"]["holder"], "holder_name": self.name(r["belt"]["holder"]) if r["belt"]["holder"] else None,
-                         "since": r["belt"]["since"],
-                         "history": [dict(h, holder_name=self.name(h["holder"]) if h["holder"] else None) for h in r["belt"]["history"]]},
                 "changes": {str(k): [round(v["winner"][1] - v["winner"][0]), round(v["loser"][1] - v["loser"][0])]
                             for k, v in r["changes"].items()},
             }
@@ -496,5 +433,5 @@ class Ladder:
             "players": {a: p["name"] for a, p in self.s["players"].items()},
             "log": self.s["log"][-60:][::-1], "meta": self.s["meta"], "bot_name": self.s["bot"].get("online_id"),
             "admin": self.admin,
-            "settings": {"provisional": PROVISIONAL_FIGHTS, "inactive_days": INACTIVE_DAYS, "belt_min": BELT_MIN_RANKED},
+            "settings": {"provisional": PROVISIONAL_FIGHTS, "duplicate_minutes": DUPLICATE_MINUTES},
         }

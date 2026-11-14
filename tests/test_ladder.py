@@ -74,7 +74,7 @@ def say(lad, who, body, t):
 
 def test_result_logged_and_rated(lad):
     out = say(lad, "a1", "beat sam 2-1 mma", T0)
-    assert out[0].startswith("✅ #1 MMA: JonoTheGoat def. Sam_K 2–1")
+    assert out[0].startswith("✅ #1 MMA · JonoTheGoat def. Sam_K 2–1 · JonoTheGoat ")
     f = lad.s["fights"][0]
     assert (f["winner"], f["loser"], f["score"], f["mode"]) == ("a1", "a2", [2, 1], "mma")
     st = lad.replay("mma", now=T0)["stats"]
@@ -84,14 +84,14 @@ def test_result_logged_and_rated(lad):
 
 def test_both_players_posting_counts_once(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
-    out = say(lad, "a2", "lost to jono 2-1 mma", T0 + H)
+    out = say(lad, "a2", "lost to jono 2-1 mma", T0 + 5 * 60_000)
     assert "Already got that one" in out[0]
     assert len(lad.s["fights"]) == 1
 
 
 def test_conflicting_reports_pause_for_admin(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
-    out = say(lad, "a2", "beat jono 2-0 mma", T0 + H)
+    out = say(lad, "a2", "beat jono 2-0 mma", T0 + 5 * 60_000)
     assert "doesn't match" in out[0]
     assert lad.s["fights"][0]["status"] == "disputed"
     assert lad.s["review"][-1]["kind"] == "conflict"
@@ -125,19 +125,6 @@ def test_ambiguous_name_asks_and_number_answers(lad):
     assert lad.s["fights"][0]["loser"] in {"a3", "a6"}
 
 
-def test_dispute_by_poster_removes(lad):
-    say(lad, "a1", "beat sam mma", T0)
-    out = say(lad, "a1", "dispute 1", T0 + H)
-    assert "removed" in out[0] and lad.s["fights"][0]["status"] == "void"
-
-
-def test_dispute_by_opponent_pauses(lad):
-    say(lad, "a1", "beat sam mma", T0)
-    out = say(lad, "a2", "dispute #1", T0 + H)
-    assert "paused" in out[0] and lad.s["fights"][0]["status"] == "disputed"
-    assert say(lad, "a3", "dispute 1", T0 + H)[0].startswith("Only the two fighters")
-
-
 def test_banter_ignored(lad):
     for text in ["jono smashed it lol", "that beat was fire", "I'd beat sam easily", "ggs"]:
         assert say(lad, "a2", text, T0) == []
@@ -158,27 +145,25 @@ def test_unanswered_question_expires_to_review(lad):
     assert lad.s["pending"] == [] and lad.s["review"][-1]["kind"] == "unanswered"
 
 
-def test_board_needs_five_fights_and_belt(lad):
+def test_board_needs_five_fights_and_never_drops_people(lad):
     t = T0
-    for _ in range(3):  # 3 sets of 2-0 = 6 fights each for a1 and a2
+    for _ in range(2):
         say(lad, "a1", "beat sam 2-0 mma", t); t += 4 * H
-    r = lad.replay("mma", now=t)
-    assert r["board"] == ["a1", "a2"] and r["belt"]["holder"] is None  # belt needs 3 ranked
-    for _ in range(3):
-        say(lad, "a3", "beat reaper 2-0 mma", t); t += 4 * H
-    r = lad.replay("mma", now=t)
-    assert r["belt"]["holder"] == r["board"][0]
-    champ = r["belt"]["holder"]
-    challenger = "a3" if champ != "a3" else "a1"
-    say(lad, challenger, f"beat {PLAYERS[champ]} mma", t)
-    assert lad.replay("mma", now=t)["belt"]["holder"] == challenger
+    assert lad.replay("mma", now=t)["board"] == []          # 4 fights each: still provisional
+    say(lad, "a1", "beat sam 2-0 mma", t)
+    assert lad.replay("mma", now=t + 365 * DAY)["board"] == ["a1", "a2"]   # a year idle: still ranked
 
 
-def test_inactive_drop_off_board(lad):
-    t = T0
-    for _ in range(3):
-        say(lad, "a1", "beat sam 2-0 mma", t); t += 4 * H
-    assert lad.replay("mma", now=t + 31 * DAY)["board"] == []
+def test_one_line_reply(lad):
+    out = say(lad, "a1", "beat sam 2-1 mma", T0)
+    assert "\n" not in out[0] and "dispute" not in out[0]
+
+
+def test_duplicate_only_within_ten_minutes(lad):
+    say(lad, "a1", "beat sam mma", T0)
+    assert "Already got" in say(lad, "a2", "lost to jono mma", T0 + 9 * 60_000)[0]
+    say(lad, "a2", "lost to jono mma", T0 + 2 * H)          # a separate fight later on
+    assert len(lad.s["fights"]) == 2
 
 
 def test_commands(lad):
@@ -186,7 +171,6 @@ def test_commands(lad):
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
     assert "MMA: 1-2" in say(lad, "a2", "!h2h jono", T0 + 2)[0]
     assert "MMA" in say(lad, "a2", "!board", T0 + 3)[0]
-    assert "vacant" in say(lad, "a2", "!belt", T0 + 4)[0]
     assert "#1" in say(lad, "a2", "!recent", T0 + 5)[0]
 
 
