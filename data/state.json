@@ -1024,7 +1024,8 @@
   "143#459433480710509",
   "143#459433542963605",
   "143#459433567111612",
-  "143#459433595583232"
+  "143#459433595583232",
+  "143#459433631696820"
  ],
  "fights": [
   {
@@ -1349,6 +1350,22 @@
    "msg_uid": "143#459433274149676",
    "text": "Fenio def granite 2-1",
    "status": "ok"
+  },
+  {
+   "id": 18,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "6028910841825523632",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794662623815,
+   "msg_uid": "143#459433631696820#0",
+   "text": "Vs van 1-0 SnB",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -1656,9 +1673,14 @@
    "ts": 1794661249980,
    "text": "✅ Stand & Bang result\n- FenioFtw_ def. Granite_chin23 2–1\n- FenioFtw_ 1498 (+55)\n- Granite_chin23 1431 (−53)",
    "sent": true
+  },
+  {
+   "ts": 1794662626127,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1579 (+79) (1/5 fights)\n- vanz_nz 1421 (−79) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 18,
+ "next_fight_id": 19,
  "next_review_id": 8,
  "meta": {
   "status": "ok",
@@ -1670,7 +1692,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794662488082,
+  "last_run": 1794662626127,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
