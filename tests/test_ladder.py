@@ -195,3 +195,9 @@ def test_bot_ignores_itself_and_repeats(lad):
     say(lad, "a1", "beat sam mma", T0)
     again = lad.handle({"uid": "m1", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "beat sam mma", "ts": T0})
     assert again == [] and len(lad.s["fights"]) == 1
+
+
+def test_people_who_left_are_not_guessed(lad):
+    lad.sync_members([(a, n) for a, n in PLAYERS.items() if a != "a4"] + [("bot", "Bot")])  # Samurai_77 left
+    out = say(lad, "a1", "beat samu mma", T0)
+    assert lad.s["fights"] == [] or lad.s["fights"][0]["loser"] != "a4"

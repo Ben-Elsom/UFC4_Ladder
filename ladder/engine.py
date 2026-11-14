@@ -65,7 +65,9 @@ class Ladder:
                 p["in_group"] = False
 
     def _name_pool(self) -> dict[str, str]:
-        return {a: p["name"] for a, p in self.s["players"].items()}
+        """People a name could mean: current members, plus ex-members who already have fights logged."""
+        fought = {x for f in self.s["fights"] if f["status"] != "void" for x in (f["winner"], f["loser"])}
+        return {a: p["name"] for a, p in self.s["players"].items() if p.get("in_group", True) or a in fought}
 
     def _recent_opponents(self, acct: str) -> list[str]:
         out: list[str] = []
