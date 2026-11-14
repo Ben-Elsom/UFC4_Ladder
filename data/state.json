@@ -763,7 +763,9 @@
   "141#459430908328081",
   "141#459430910635016",
   "141#459430912891104",
-  "141#459430924496773"
+  "141#459430924496773",
+  "141#459430933456135",
+  "141#459430934882085"
  ],
  "fights": [
   {
@@ -879,38 +881,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "5190974766751866546",
-   "uid": "141#459430864304045",
-   "ts": 1794651813687,
-   "text": "2-1 to me against granite",
-   "drafts": [
-    {
-     "sender": "5190974766751866546",
-     "uid": "141#459430864304045#0",
-     "ts": 1794651813687,
-     "text": "2-1 to me against granite",
-     "won": true,
-     "score": [
-      2,
-      1
-     ],
-     "text_score": "2-1",
-     "mode": null,
-     "method": null,
-     "opp": "4444062021544416430",
-     "options": null,
-     "unknown": false,
-     "name_text": "granite"
-    }
-   ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794651813687,
-   "kind": "batch"
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -963,6 +934,16 @@
    "text": "Blumzylol won 2-0",
    "sender": "6459805198974452339",
    "ts": 1794651726376,
+   "fight_id": null,
+   "resolved": false
+  },
+  {
+   "id": 6,
+   "kind": "unanswered",
+   "reason": "No mode",
+   "text": "2-1 to me against granite",
+   "sender": "5190974766751866546",
+   "ts": 1794651813687,
    "fight_id": null,
    "resolved": false
   }
@@ -1065,7 +1046,7 @@
   }
  ],
  "next_fight_id": 8,
- "next_review_id": 6,
+ "next_review_id": 7,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -1076,7 +1057,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794652076283,
+  "last_run": 1794652142611,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
