@@ -93,8 +93,9 @@ def test_both_players_posting_counts_once(lad):
 def test_conflicting_reports_ask_which_is_right(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     out = say(lad, "a2", "beat jono 2-1 mma", T0 + 5 * 60_000)
-    assert out[0] == ("🤔 That doesn't look quite right. What was the result? Reply 1, 2 or 3:\n"
-                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review\n(Not a result? Reply nvm)")
+    assert out[0] == ("JonoTheGoat and Sam_K, that doesn't look quite right. What was the result?\n"
+                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review\n"
+                      "Reply 1, 2 or 3\nNot a result? Reply nvm")
     assert lad.s["fights"][0]["status"] == "disputed"
     out = say(lad, "a1", "2", T0 + 6 * 60_000)              # jono (the other player) confirms Sam's version
     assert out[0].startswith("✅ #1 MMA sorted · Sam_K def. JonoTheGoat 2–1")
@@ -123,7 +124,7 @@ def test_mode_is_never_guessed_from_earlier_fights(lad):
 def test_ambiguous_name_asks_and_number_answers(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("a6", "Temp99071")])
     out = say(lad, "a1", "beat temp 1-0 mma", T0)
-    assert "Which one" in out[0]
+    assert "did you mean?" in out[0]
     out = say(lad, "a1", "2", T0 + 60_000)
     assert out[0].startswith("✅")
     assert lad.s["fights"][0]["loser"] in {"a3", "a6"}
@@ -137,7 +138,7 @@ def test_banter_ignored(lad):
 
 def test_unknown_name_asks_who(lad):
     out = say(lad, "a2", "beat zzqx 2-1 mma", T0)
-    assert "couldn't find anyone in this chat called \"zzqx\"" in out[0]
+    assert "couldn't find anyone called \"zzqx\" in this chat" in out[0]
     out = say(lad, "a2", "reaper", T0 + 60_000)
     assert out[0].startswith("✅ #1 MMA · Sam_K def. xX_Reaper_Xx 2–1")
 
@@ -195,11 +196,11 @@ def test_people_who_left_are_not_guessed(lad):
 def test_vs_lines_asks_mode_for_each_result(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
-    assert "Which" in out[0] and "maori" in out[0]           # two Maoris: asks which
+    assert "did you mean?" in out[0] and "maori" in out[0]           # two Maoris: asks which
     out = say(lad, "w", "2", T0 + 60_000)
-    assert out[0].startswith("🥊 Result 1 of 2, vs maoripunisher_ 0-4 (you lost): MMA or Stand & Bang?")
+    assert out[0].startswith("Result 1 of 2: mrwhoopdatahh lost to maoripunisher_ 0-4\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm")
     out = say(lad, "w", "snb", T0 + 120_000)
-    assert out[0].startswith("🥊 Result 2 of 2, vs Sam_K 1-0 (you won): MMA or Stand & Bang?")
+    assert out[0].startswith("Result 2 of 2: mrwhoopdatahh def. Sam_K 1-0\nMMA or Stand & Bang?")
     out = say(lad, "w", "mma", T0 + 180_000)
     assert out[0].count("✅") == 2
     f1, f2 = lad.s["fights"]
@@ -294,7 +295,7 @@ def test_no_score_means_no_result(lad):
 
 def test_bare_score_asks_who_then_later_score_updates_the_set(lad):
     out = say(lad, "a2", "1 -1", T0)                                   # sweatytrixter's mid-set post
-    assert out[0].startswith("🤔 Who was that 1-1 against?")
+    assert out[0].startswith("Sam_K, who was that 1-1 against?")
     out = say(lad, "a2", "reaper", T0 + 60_000)
     assert "MMA or Stand & Bang" in out[0]
     out = say(lad, "a2", "snb", T0 + 90_000)
@@ -351,7 +352,7 @@ def test_conflict_other_goes_to_review(lad):
 @pytest.mark.parametrize("reply", ["nvm", "Nvm 😂", "never mind", "nevermind wasn't a result", "ignore that", "jk"])
 def test_nvm_drops_question_without_review(lad, reply):
     out = say(lad, "a2", "Surely 2-0😆", T0)
-    assert out[0].startswith("🤔 Who was that 2-0 against?") and "Reply nvm" in out[0]
+    assert out[0].startswith("Sam_K, who was that 2-0 against?") and "Reply nvm" in out[0]
     out = say(lad, "a2", reply, T0 + 30_000)
     assert out == ["👍 No worries, ignored that one."]
     lad.expire_questions(T0 + 10 * 60_000)
@@ -376,4 +377,4 @@ def test_nvm_then_a_real_answer_still_works(lad):
     say(lad, "a2", "Surely 2-0", T0)
     assert say(lad, "a2", "nm just chilling", T0 + 10_000) == ["👍 No worries, ignored that one."]
     say(lad, "a2", "Surely 2-0", T0 + 20_000)
-    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("🥊")
+    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("Sam_K def. JonoTheGoat 2-0\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm")
