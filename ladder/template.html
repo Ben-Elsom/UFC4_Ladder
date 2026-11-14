@@ -129,7 +129,7 @@ function modeSeg() {
 function fightRow(f) {
   const ch = (D.modes[f.mode].changes || {})[f.id];
   const score = f.score ? ` ${f.score[0]}–${f.score[1]}` : '';
-  const how = f.method ? ` <span class="pill">${esc(f.method)}</span>` : '';
+  const how = '';
   const status = f.status === 'disputed' ? ' <span class="pill amber">paused</span>' : f.status === 'void' ? ' <span class="pill">removed</span>' : '';
   const deltas = ch && f.status === 'ok' ? `<span class="hide-sm">${signed(ch[0])} / ${signed(ch[1])}</span>` : '';
   return `<div class="fight"><span class="fid">#${f.id}</span>
@@ -168,14 +168,12 @@ const views = {
       h += `<h2>${esc(M.label)}</h2>`;
       if (!p) { h += `<div class="card empty">No ${esc(M.label)} fights yet.</div>`; continue; }
       const where = p.rank ? `#${p.rank}` : `${p.fights}/${D.settings.provisional}`;
-      const fin = p.finishes, finTotal = fin.KO + fin.TKO + fin.SUB;
       h += `<div class="grid">
         <div class="stat"><b>${where}</b><span>${p.rank ? 'Rank' : 'Provisional'}</span></div>
         <div class="stat"><b>${p.rating}</b><span>Rating (best ${p.best})</span></div>
         <div class="stat"><b>${p.wins}–${p.losses}</b><span>Fights W–L</span></div>
         <div class="stat"><b>${p.sets_won}–${p.sets_lost}</b><span>Results posted W–L</span></div>
-        <div class="stat"><b>${p.streak > 0 ? 'W' + p.streak : p.streak < 0 ? 'L' + (-p.streak) : '–'}</b><span>Streak</span></div>
-        <div class="stat"><b>${finTotal}</b><span>KO ${fin.KO} · TKO ${fin.TKO} · Sub ${fin.SUB}</span></div></div>`;
+        <div class="stat"><b>${p.streak > 0 ? 'W' + p.streak : p.streak < 0 ? 'L' + (-p.streak) : '–'}</b><span>Streak</span></div></div>`;
       const opp = {};
       for (const f of D.fights) {
         if (f.status !== 'ok' || f.mode !== m || (f.winner !== fighter && f.loser !== fighter)) continue;
@@ -201,21 +199,20 @@ const views = {
         <div><code>beat sam 2-1 mma</code></div><div class="muted">You beat Sam two fights to one in MMA</div>
         <div><code>lost to temp sb</code></div><div class="muted">Temp beat you in Stand &amp; Bang</div>
         <div><code>jono beat sam 2-0 stand and bang</code></div><div class="muted">Posting for two other people</div>
-        <div><code>w vs reaper mma ko</code></div><div class="muted">Single fight, won by KO</div>
+        <div><code>w vs reaper mma</code></div><div class="muted">Single fight (no score means one fight)</div>
         <div><code>gg sam, lost 1-2 mma</code></div><div class="muted">Sam won 2–1</div>
       </div>
       <ul>
         <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>temp</code> finds Temp48213.</li>
         <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. No score means a single fight.</li>
         <li><b>Mode:</b> add <code>mma</code> or <code>sb</code> (<code>stand and bang</code> and <code>s&amp;b</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
-        <li><b>How it ended</b> (optional): <code>ko</code>, <code>tko</code>, <code>sub</code> or <code>dec</code>. Only used for stats.</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>
       <p>Within a few seconds the bot replies with a result number and both players' new ratings, so you can check it understood you:</p>
       <span class="msg">✅ #14 MMA · JonoTheGoat def. Sam_K 2–1 · JonoTheGoat 1612 (+14) · Sam_K 1540 (−14)</span>
       <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>sb</code>.</p>
       <h2>Questions or problems</h2>
-      <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}${D.meta && D.meta.admin_psn ? ` (${esc(D.meta.admin_psn)})` : ''}</b> on PlayStation and he'll sort it out.</p>
+      <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
       <div class="card examples">
         <div><code>!board</code></div><div class="muted">Top 5 in both modes. <code>!board mma</code> shows the top 10.</div>

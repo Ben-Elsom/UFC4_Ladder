@@ -87,7 +87,7 @@ class Ladder:
             return stats.setdefault(acct, {
                 "rating": glicko.START_RATING, "rd": glicko.START_RD, "vol": glicko.START_VOL,
                 "last": None, "fights": 0, "wins": 0, "losses": 0, "sets_won": 0, "sets_lost": 0,
-                "streak": 0, "finishes": {"KO": 0, "TKO": 0, "SUB": 0, "DEC": 0}, "best_rating": glicko.START_RATING,
+                "streak": 0, "best_rating": glicko.START_RATING,
             })
 
         def ranked() -> list[str]:
@@ -114,8 +114,6 @@ class Ladder:
             w["sets_won"] += 1; l["sets_lost"] += 1
             w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
             l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
-            if f.get("method") in w["finishes"]:
-                w["finishes"][f["method"]] += 1
             w["last"] = l["last"] = f["ts"]
             w["best_rating"] = max(w["best_rating"], w["rating"])
 
@@ -156,7 +154,7 @@ class Ladder:
             return []
         draft = {
             "sender": msg["sender_id"], "uid": msg["uid"], "ts": msg["ts"], "text": body,
-            "winner": None, "loser": None, "score": rep.score, "mode": rep.mode, "method": rep.method,
+            "winner": None, "loser": None, "score": rep.score, "mode": rep.mode, "method": None,
         }
         strong = rep.score is not None or rep.mode is not None
         if rep.implicit and not strong:
@@ -293,8 +291,6 @@ class Ladder:
         s = f"{self.name(f['winner'])} def. {self.name(f['loser'])}"
         if f.get("score"):
             s += f" {f['score'][0]}–{f['score'][1]}"
-        if f.get("method"):
-            s += f" ({f['method']})"
         return s
 
     # ------------------------------------------------------------ review
@@ -339,11 +335,29 @@ class Ladder:
         mode, rest = self._mode_arg(args)
         site = f"\nFull stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
-            return [
-                "🥊 Post results like:  beat sam 2-1 mma  ·  lost to temp sb\n"
-                "Commands: !board  !board mma  !rank  !rank sam  !h2h sam  !recent\n"
-                f"Something wrong? Message {self.admin}.{site}"
+            lines = [
+                "🥊 UFC 4 LADDER: HOW IT WORKS",
+                "",
+                "POST A RESULT (after you play)",
+                "👉 beat sam 2-1 mma",
+                "👉 lost to temp sb",
+                "• Best of 3? Add the score, e.g. 2-1",
+                "• Say the mode: mma or sb",
+                "• Part of their name is fine",
+                "",
+                "COMMANDS",
+                "!board – top 5 in both modes",
+                "!board mma – top 10 in MMA",
+                "!rank – your rank and record",
+                "!rank sam – someone else's",
+                "!h2h sam – your record vs Sam",
+                "!recent – last 5 results",
+                "",
+                f"❓ Problems or questions? Message {self.admin}",
             ]
+            if self.site:
+                lines.append(f"📊 Full stats: {self.site}")
+            return ["\n".join(lines)]
         if cmd in ("board", "leaderboard", "top", "rankings"):
             modes = [mode] if mode else list(MODES)
             out = []
@@ -416,7 +430,7 @@ class Ladder:
                     "rank": x["rank"], "provisional": x["provisional"],
                     "fights": x["fights"], "wins": x["wins"], "losses": x["losses"],
                     "sets_won": x["sets_won"], "sets_lost": x["sets_lost"], "streak": x["streak"],
-                    "finishes": x["finishes"], "best": round(x["best_rating"]), "last": x["last"],
+                    "best": round(x["best_rating"]), "last": x["last"],
                 })
             players.sort(key=lambda p: (p["rank"] is None, p["rank"] or 0, -p["rating"]))
             modes[md] = {
