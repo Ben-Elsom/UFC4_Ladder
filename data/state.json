@@ -1,0 +1,17 @@
+{
+ "version": 1,
+ "bot": {},
+ "players": {},
+ "seen": [],
+ "fights": [],
+ "pending": [],
+ "review": [],
+ "log": [],
+ "next_fight_id": 1,
+ "next_review_id": 1,
+ "meta": {
+  "status": "login_failed",
+  "error": "RuntimeError: PSN_NPSSO is not set",
+  "last_error": 1794639228754
+ }
+}
