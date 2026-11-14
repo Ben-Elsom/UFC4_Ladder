@@ -75,7 +75,7 @@ def say(lad, who, body, t):
 
 def test_result_logged_and_rated(lad):
     out = say(lad, "a1", "beat sam 2-1 mma", T0)
-    assert out[0].startswith("✅ #1 MMA · JonoTheGoat def. Sam_K 2–1 · JonoTheGoat ")
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1\n- JonoTheGoat ")
     f = lad.s["fights"][0]
     assert (f["winner"], f["loser"], f["score"], f["mode"]) == ("a1", "a2", [2, 1], "mma")
     st = lad.replay("mma", now=T0)["stats"]
@@ -93,12 +93,12 @@ def test_both_players_posting_counts_once(lad):
 def test_conflicting_reports_ask_which_is_right(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     out = say(lad, "a2", "beat jono 2-1 mma", T0 + 5 * 60_000)
-    assert out[0] == ("JonoTheGoat and Sam_K, that doesn't look quite right. What was the result?\n"
-                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review\n"
-                      "Reply 1, 2 or 3\nNot a result? Reply nvm")
+    assert out[0] == ("- JonoTheGoat and Sam_K, that doesn't look quite right. What was the result?\n"
+                      "  - 1) JonoTheGoat def. Sam_K 2–1\n  - 2) Sam_K def. JonoTheGoat 2–1\n  - 3) Other: needs BJkid2000 to review\n"
+                      "- Reply 1, 2 or 3\n- Not a result? Reply nvm")
     assert lad.s["fights"][0]["status"] == "disputed"
     out = say(lad, "a1", "2", T0 + 6 * 60_000)              # jono (the other player) confirms Sam's version
-    assert out[0].startswith("✅ #1 MMA sorted · Sam_K def. JonoTheGoat 2–1")
+    assert out[0].startswith("✅ MMA result sorted\n- Sam_K def. JonoTheGoat 2–1")
     assert lad.s["fights"][0]["status"] == "ok" and len(lad.s["fights"]) == 1
 
 
@@ -112,7 +112,7 @@ def test_missing_mode_asks_then_answer(lad):
     out = say(lad, "a1", "beat sam 2-0", T0)
     assert "MMA or Stand & Bang" in out[0]
     out = say(lad, "a1", "mma", T0 + 60_000)
-    assert out[0].startswith("✅ #1 MMA")
+    assert out[0].startswith("✅ MMA result")
 
 
 def test_mode_is_never_guessed_from_earlier_fights(lad):
@@ -140,7 +140,7 @@ def test_unknown_name_asks_who(lad):
     out = say(lad, "a2", "beat zzqx 2-1 mma", T0)
     assert "couldn't find anyone called \"zzqx\" in this chat" in out[0]
     out = say(lad, "a2", "reaper", T0 + 60_000)
-    assert out[0].startswith("✅ #1 MMA · Sam_K def. xX_Reaper_Xx 2–1")
+    assert out[0].startswith("✅ MMA result\n- Sam_K def. xX_Reaper_Xx 2–1")
 
 
 def test_unanswered_question_expires_to_review(lad):
@@ -162,7 +162,7 @@ def test_board_needs_five_fights_and_never_drops_people(lad):
 
 def test_one_line_reply(lad):
     out = say(lad, "a1", "beat sam 2-1 mma", T0)
-    assert "\n" not in out[0] and "dispute" not in out[0]
+    assert out[0].count("\n") == 3 and "dispute" not in out[0] and "#" not in out[0]
 
 
 def test_duplicate_only_within_ten_minutes(lad):
@@ -177,7 +177,7 @@ def test_commands(lad):
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
     assert "MMA: 1-2" in say(lad, "a2", "!record jono", T0 + 2)[0]
     assert "MMA" in say(lad, "a2", "!board", T0 + 3)[0]
-    assert "#1" in say(lad, "a2", "!recent", T0 + 5)[0]
+    assert "- MMA: " in say(lad, "a2", "!recent", T0 + 5)[0]
 
 
 def test_bot_ignores_itself_and_repeats(lad):
@@ -198,9 +198,9 @@ def test_vs_lines_asks_mode_for_each_result(lad):
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
     assert "did you mean?" in out[0] and "maori" in out[0]           # two Maoris: asks which
     out = say(lad, "w", "2", T0 + 60_000)
-    assert out[0].startswith("Result 1 of 2: mrwhoopdatahh lost to maoripunisher_ 0-4\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm")
+    assert out[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- mrwhoopdatahh lost to maoripunisher_ 0-4 (result 1 of 2)\n- Not a result? Reply nvm")
     out = say(lad, "w", "snb", T0 + 120_000)
-    assert out[0].startswith("Result 2 of 2: mrwhoopdatahh def. Sam_K 1-0\nMMA or Stand & Bang?")
+    assert out[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- mrwhoopdatahh def. Sam_K 1-0 (result 2 of 2)")
     out = say(lad, "w", "mma", T0 + 180_000)
     assert out[0].count("✅") == 2
     f1, f2 = lad.s["fights"]
@@ -210,7 +210,7 @@ def test_vs_lines_asks_mode_for_each_result(lad):
 
 def test_vs_line_single_with_mode(lad):
     out = say(lad, "a1", "vs sam 2-1 mma", T0)
-    assert out[0].startswith("✅ #1 MMA · JonoTheGoat def. Sam_K 2–1")
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1")
     out = say(lad, "a2", "vs jono 1-2 mma", T0 + 60_000)    # opponent posts the same thing
     assert "Already got" in out[0]
 
@@ -237,7 +237,7 @@ def test_nickname_default_picks_without_asking():
     l = Ladder(s, nicknames={"maori": "maoripunisher_"})
     l.sync_members([("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
     out = l.handle({"uid": "1", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "vs maori 0-4 snb", "ts": T0})
-    assert out[0].startswith("✅ #1 Stand & Bang · maoripunisher_ def. mrwhoopdatahh 4–0")
+    assert out[0].startswith("✅ Stand & Bang result\n- maoripunisher_ def. mrwhoopdatahh 4–0")
     out = l.handle({"uid": "2", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "beat crazy 1-0 mma", "ts": T0 + 1})
     assert "Crazy_Maori6" in out[0]                           # the other Maori is still reachable
 
@@ -259,7 +259,7 @@ def test_long_replies_are_split_under_the_limit():
 def test_set_posted_mid_way_then_finished_is_one_result(lad):
     say(lad, "a1", "vs sam 1-1 mma", T0)
     out = say(lad, "a1", "beat sam 2-1 mma", T0 + 25 * 60_000)        # the decider
-    assert out[0].startswith("🔄 #1 MMA updated (was 1–1) · JonoTheGoat def. Sam_K 2–1")
+    assert out[0].startswith("🔄 MMA result updated (was 1–1)\n- JonoTheGoat def. Sam_K 2–1")
     assert len(lad.s["fights"]) == 1
     st = lad.replay("mma")["stats"]
     assert (st["a1"]["wins"], st["a1"]["losses"]) == (2, 1)
@@ -295,33 +295,33 @@ def test_no_score_means_no_result(lad):
 
 def test_bare_score_asks_who_then_later_score_updates_the_set(lad):
     out = say(lad, "a2", "1 -1", T0)                                   # sweatytrixter's mid-set post
-    assert out[0].startswith("Sam_K, who was that 1-1 against?")
+    assert out[0].startswith("- Sam_K, who was that 1-1 against?")
     out = say(lad, "a2", "reaper", T0 + 60_000)
     assert "MMA or Stand & Bang" in out[0]
     out = say(lad, "a2", "snb", T0 + 90_000)
     assert "split 1–1" in out[0]
     out = say(lad, "a2", "Safe as bruv 2-1 ", T0 + 20 * 60_000)       # the decider, no name
-    assert out[0].startswith("🔄 #1 Stand & Bang updated (was 1–1) · Sam_K def. xX_Reaper_Xx 2–1")
+    assert out[0].startswith("🔄 Stand & Bang result updated (was 1–1)\n- Sam_K def. xX_Reaper_Xx 2–1")
     assert len(lad.s["fights"]) == 1
 
 
 def test_bare_score_with_a_name_your_score_first(lad):
     out = say(lad, "a1", "sam 1-2 snb", T0)
-    assert out[0].startswith("✅ #1 Stand & Bang · Sam_K def. JonoTheGoat 2–1")
+    assert out[0].startswith("✅ Stand & Bang result\n- Sam_K def. JonoTheGoat 2–1")
 
 
 def test_lost_word_beats_score_order(lad):
     say(lad, "a1", "lost 2-1", T0)                                     # asks who
     out = say(lad, "a1", "sam", T0 + 1000)
     out = say(lad, "a1", "mma", T0 + 2000)
-    assert out[0].startswith("✅ #1 MMA · Sam_K def. JonoTheGoat 2–1")
+    assert out[0].startswith("✅ MMA result\n- Sam_K def. JonoTheGoat 2–1")
 
 
 def test_score_to_name_means_they_won(lad):
     lad.sync_members(list(PLAYERS.items()) + [("g", "grubby_flea257"), ("d", "dad_scopez")])
     say(lad, "g", "2-1 to scopes", T0)
     out = say(lad, "g", "snb", T0 + 1000)
-    assert out[0].startswith("✅ #1 Stand & Bang · dad_scopez def. grubby_flea257 2–1")
+    assert out[0].startswith("✅ Stand & Bang result\n- dad_scopez def. grubby_flea257 2–1")
     out = say(lad, "d", "2-1 me against grubby snb", T0 + 60_000)  # scopez posts the same: no conflict
     assert "Already got" in out[0]
 
@@ -329,7 +329,7 @@ def test_score_to_name_means_they_won(lad):
 def test_wordy_mode_answer_is_accepted(lad):
     say(lad, "a2", "2-1 me against jono", T0)
     out = say(lad, "a2", "Snb I won against jono and maori that's all I've played today I think", T0 + 60_000)
-    assert out[0].startswith("✅ #1 Stand & Bang · Sam_K def. JonoTheGoat 2–1")
+    assert out[0].startswith("✅ Stand & Bang result\n- Sam_K def. JonoTheGoat 2–1")
 
 
 def test_unanswered_conflict_goes_to_review(lad):
@@ -352,7 +352,7 @@ def test_conflict_other_goes_to_review(lad):
 @pytest.mark.parametrize("reply", ["nvm", "Nvm 😂", "never mind", "nevermind wasn't a result", "ignore that", "jk"])
 def test_nvm_drops_question_without_review(lad, reply):
     out = say(lad, "a2", "Surely 2-0😆", T0)
-    assert out[0].startswith("Sam_K, who was that 2-0 against?") and "Reply nvm" in out[0]
+    assert out[0].startswith("- Sam_K, who was that 2-0 against?") and "Reply nvm" in out[0]
     out = say(lad, "a2", reply, T0 + 30_000)
     assert out == ["👍 No worries, ignored that one."]
     lad.expire_questions(T0 + 10 * 60_000)
@@ -369,7 +369,7 @@ def test_nvm_on_conflict_keeps_first_result(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     say(lad, "a2", "beat jono 2-1 mma", T0 + 60_000)
     out = say(lad, "a2", "nvm", T0 + 90_000)
-    assert out[0].startswith("👍 No worries, ignored. #1 stays as JonoTheGoat def. Sam_K")
+    assert out[0].startswith("👍 No worries, ignored\n- Result stays as JonoTheGoat def. Sam_K")
     assert lad.s["fights"][0]["status"] == "ok" and lad.s["review"] == []
 
 
@@ -377,7 +377,7 @@ def test_nvm_then_a_real_answer_still_works(lad):
     say(lad, "a2", "Surely 2-0", T0)
     assert say(lad, "a2", "nm just chilling", T0 + 10_000) == ["👍 No worries, ignored that one."]
     say(lad, "a2", "Surely 2-0", T0 + 20_000)
-    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("Sam_K def. JonoTheGoat 2-0\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm")
+    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- Sam_K def. JonoTheGoat 2-0\n- Not a result? Reply nvm")
 
 
 def test_pick_gives_random_fight_settings():
@@ -390,10 +390,10 @@ def test_pick_gives_random_fight_settings():
         out = l.handle({"uid": f"p{i}", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "!pick", "ts": T0 + i})
         assert len(out) == 1
         lines = out[0].split("\n")
-        assert lines[1].removeprefix("Weight class: ") in WEIGHT_CLASSES
-        assert lines[2] in ("Rounds: 3", "Rounds: 5")
-        assert lines[3] in ("Time: Accelerated", "Time: Real time")
-        assert lines[4] in ("HUD: Shown", "HUD: Hidden")
+        assert lines[1].removeprefix("- Weight class: ") in WEIGHT_CLASSES
+        assert lines[2] in ("- Rounds: 3", "- Rounds: 5")
+        assert lines[3] in ("- Time: Accelerated", "- Time: Real time")
+        assert lines[4] in ("- HUD: Shown", "- HUD: Hidden")
         seen.add(out[0])
     assert len(seen) > 1                       # actually random
     assert not s["fights"] and not s["pending"]   # no side effects

@@ -24,7 +24,8 @@ H = 60 * MIN
 DAY = 24 * H
 
 
-NVM_LINE = "Not a result? Reply nvm"
+NVM_LINE = "- Not a result? Reply nvm"
+SUB = "  - "   # second-level bullet
 
 WEIGHT_CLASSES = [
     "Women's Strawweight", "Women's Flyweight", "Women's Bantamweight",
@@ -36,10 +37,10 @@ WEIGHT_CLASSES = [
 def pick_settings(rng=random) -> str:
     return "\n".join([
         "🎲 Random fight settings",
-        f"Weight class: {rng.choice(WEIGHT_CLASSES)}",
-        f"Rounds: {rng.choice([3, 5])}",
-        f"Time: {rng.choice(['Accelerated', 'Real time'])}",
-        f"HUD: {rng.choice(['Shown', 'Hidden'])}",
+        f"- Weight class: {rng.choice(WEIGHT_CLASSES)}",
+        f"- Rounds: {rng.choice([3, 5])}",
+        f"- Time: {rng.choice(['Accelerated', 'Real time'])}",
+        f"- HUD: {rng.choice(['Shown', 'Hidden'])}",
     ])
 NVM_RE = re.compile(r"^\W*(nvm|nvmd|nm|never\s*mind|nevermind|ignore( (it|that|me))?|forget (it|that)|cancel|not a result|wasn'?t a result|just (joking|kidding)|jk)\b", re.I)
 
@@ -232,10 +233,10 @@ class Ladder:
              "mine": b.mine, "theirs": b.theirs, "mode": b.mode}
         self._set_pending(q, "who")
         meaning = "you won" if b.mine > b.theirs else "you lost" if b.mine < b.theirs else "it was a split"
-        hint = "" if b.mine == b.theirs else f" If not, post it again like: lost to bjkid {min(b.mine, b.theirs)}-{max(b.mine, b.theirs)}"
-        return [f"{self.name(sender)}, who was that {b.mine}-{b.theirs} against?\n"
-                f"Reply with their name\n"
-                f"Your score goes first, so {meaning}.{hint}\n{NVM_LINE}"]
+        hint = "" if b.mine == b.theirs else f"\n{SUB}If not, post it again like: lost to bjkid {min(b.mine, b.theirs)}-{max(b.mine, b.theirs)}"
+        return [f"- {self.name(sender)}, who was that {b.mine}-{b.theirs} against?\n"
+                f"{SUB}Reply with their name\n"
+                f"- Your score goes first, so {meaning}{hint}\n{NVM_LINE}"]
 
     def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
         for f in reversed(self.s["fights"]):
@@ -266,8 +267,8 @@ class Ladder:
             elif status == "ask":
                 d["ask_side"], d["options"], d["other_text"] = side, ids, (l_text if side == "winner" else w_text)
                 self._set_pending(d, "name")
-                opts = "\n".join(f"{i}) {self.name(a)}" for i, a in enumerate(ids, 1))
-                return [f"{self.name(sender)}, which \"{text}\" did you mean?\n{opts}\nReply with the number\n{NVM_LINE}"]
+                opts = "\n".join(f"{SUB}{i}) {self.name(a)}" for i, a in enumerate(ids, 1))
+                return [f"- {self.name(sender)}, which \"{text}\" did you mean?\n{opts}\n- Reply with the number\n{NVM_LINE}"]
             else:
                 if not strong:
                     return []  # probably just chat
@@ -277,8 +278,8 @@ class Ladder:
                     return self._vs_batch({"sender_id": sender, "uid": d["uid"], "ts": d["ts"]}, d["text"],
                                           [VsLine(name=text, mine=mine, theirs=theirs, mode=d["mode"], text=d["text"])])
                 self._add_review("unreadable", f"Unknown player: \"{text}\"", d)
-                return [f"❓ I couldn't find anyone in this chat called \"{text}\". Post it again using part of their PSN name, "
-                        f"e.g. beat bjkid 2-1 mma."]
+                return [f"❓ I couldn't find anyone in this chat called \"{text}\"\n"
+                        f"- Post it again using part of their PSN name\n{SUB}e.g. beat bjkid 2-1 mma"]
         if d["winner"] == d["loser"]:
             return []
         return self._fill_mode(d)
@@ -288,9 +289,9 @@ class Ladder:
         if d["mode"] is None:
             self._set_pending(d, "mode")
             sc = f" {d['score'][0]}-{d['score'][1]}" if d.get("score") else ""
-            who = "" if d["sender"] in (d["winner"], d["loser"]) else f"{self.name(d['sender'])}: "
-            return [f"{who}{self.name(d['winner'])} def. {self.name(d['loser'])}{sc}\n"
-                    f"MMA or Stand & Bang?\nReply mma or snb\n{NVM_LINE}"]
+            who = "" if d["sender"] in (d["winner"], d["loser"]) else f"{self.name(d['sender'])}, "
+            return [f"- {who}MMA or Stand & Bang?\n{SUB}Reply mma or snb\n"
+                    f"- {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}\n{NVM_LINE}"]
         return self._finalise(d)
 
     def _set_pending(self, d: dict, kind: str) -> None:
@@ -308,7 +309,7 @@ class Ladder:
             f = next((x for x in self.s["fights"] if x["id"] == q["fight_id"]), None)
             if f is not None:
                 f["status"] = "ok"
-                return [f"👍 No worries, ignored. #{f['id']} stays as {self._describe(f)}."]
+                return [f"👍 No worries, ignored\n- Result stays as {self._describe(f)}"]
         return ["👍 No worries, ignored that one."]
 
     def _answer(self, q: dict, body: str, msg: dict) -> list[str] | None:
@@ -323,7 +324,7 @@ class Ladder:
                 return None
             status, ids = self._resolve(name, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
             if status == "none":
-                return [f"{self.name(q['sender'])}, I couldn't find \"{name}\" in this chat\nReply with part of their PSN name\n{NVM_LINE}"]
+                return [f"- {self.name(q['sender'])}, I couldn't find \"{name}\" in this chat\n{SUB}Reply with part of their PSN name\n{NVM_LINE}"]
             self.s["pending"].remove(q)
             return self._vs_batch(msg | {"uid": q["uid"], "ts": q["ts"]}, q["text"],
                                   [VsLine(name=self.name(ids[0]) if status == "ok" else name,
@@ -389,10 +390,11 @@ class Ladder:
                 if new:
                     self._set_pending(q, "batch")
                 if d.get("unknown"):
-                    return [f"{self.name(q['sender'])}, I couldn't find anyone called \"{d['name_text']}\" in this chat ({d['text']})\n"
-                            f"Who did you play? Reply with part of their PSN name, e.g. bjkid for BJkid2000\n{NVM_LINE}"]
-                opts = "\n".join(f"{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
-                return [f"{self.name(q['sender'])}, which \"{d['name_text']}\" did you mean?\n{opts}\nReply with the number\n{NVM_LINE}"]
+                    return [f"- {self.name(q['sender'])}, I couldn't find anyone called \"{d['name_text']}\" in this chat\n"
+                            f"{SUB}You posted: {d['text']}\n"
+                            f"- Who did you play?\n{SUB}Reply with part of their PSN name, e.g. bjkid for BJkid2000\n{NVM_LINE}"]
+                opts = "\n".join(f"{SUB}{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
+                return [f"- {self.name(q['sender'])}, which \"{d['name_text']}\" did you mean?\n{opts}\n- Reply with the number\n{NVM_LINE}"]
         missing = [d for d in q["drafts"] if d["mode"] is None]
         if missing:
             # Ask about each result in turn, never guess from earlier fights.
@@ -402,19 +404,19 @@ class Ladder:
             if new:
                 self._set_pending(q, "batch")
             n, i = len(q["drafts"]), q["drafts"].index(d) + 1
-            which = f"Result {i} of {n}: " if n > 1 else ""
+            which = f" (result {i} of {n})" if n > 1 else ""
             hi, lo = d["score"]
             me, opp = self.name(q["sender"]), self.name(d["opp"])
             res = (f"{me} and {opp} split {hi}-{lo}" if hi == lo else
                    f"{me} def. {opp} {hi}-{lo}" if d["won"] else f"{me} lost to {opp} {lo}-{hi}")
-            return [f"{which}{res}\nMMA or Stand & Bang?\nReply mma or snb\n{NVM_LINE}"]
+            return [f"- MMA or Stand & Bang?\n{SUB}Reply mma or snb\n- {res}{which}\n{NVM_LINE}"]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
         for d in q["drafts"]:
             d["winner"], d["loser"] = (d["sender"], d["opp"]) if d["won"] else (d["opp"], d["sender"])
             out += self._finalise(d)
-        return ["\n".join(out)] if out else []
+        return ["\n\n".join(out)] if out else []
 
     def _answer_conflict(self, q: dict, body: str, words: list[str]) -> list[str] | None:
         f = next((x for x in self.s["fights"] if x["id"] == q["fight_id"]), None)
@@ -425,7 +427,7 @@ class Ladder:
             self.s["pending"].remove(q)
             self._add_review("conflict", "Results don't match: players asked for admin",
                              q, fight_id=f["id"])
-            return [f"👍 Sent to {self.admin} to check. Result #{f['id']} won't count until it's sorted."]
+            return [f"👍 Sent to {self.admin} to check\n- The result won't count until it's sorted"]
         if choice not in ("1", "2"):
             # or they named the winner
             status, ids = self._resolve(body, {a: self.name(a) for a in q["players"]})
@@ -438,7 +440,7 @@ class Ladder:
         if choice == "2":
             f["winner"], f["loser"], f["score"] = q["new"]["winner"], q["new"]["loser"], q["new"]["score"]
         f["status"] = "ok"
-        return [self._confirm(f, f"✅ #{f['id']} {MODES[f['mode']]} sorted")]
+        return [self._confirm(f, f"✅ {MODES[f['mode']]} result sorted")]
 
     def _answer_batch(self, q: dict, body: str, words: list[str], now: int) -> list[str] | None:
         if q.get("waiting") == "name":
@@ -449,7 +451,7 @@ class Ladder:
                     return None
                 status, ids = self._resolve(body, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
                 if status == "none":
-                    return [f"{self.name(q['sender'])}, I still couldn't find \"{body.strip()}\" in this chat\nTry a different part of their PSN name\n{NVM_LINE}"]
+                    return [f"- {self.name(q['sender'])}, I still couldn't find \"{body.strip()}\" in this chat\n{SUB}Try a different part of their PSN name\n{NVM_LINE}"]
                 if status == "ask":
                     d["unknown"], d["options"], d["name_text"] = False, ids, body.strip()
                     q["asked_at"] = now
@@ -508,7 +510,7 @@ class Ladder:
         f["score"] = list(d["score"]) if d["score"] else None
         f["updated_ts"] = d["ts"]
         self._resolve_unreadable(d)
-        return [self._confirm(f, f"🔄 #{f['id']} {MODES[f['mode']]} updated (was {was})")]
+        return [self._confirm(f, f"🔄 {MODES[f['mode']]} result updated (was {was})")]
 
     def _finalise(self, d: dict) -> list[str]:
         carried_on = self._continues(d)
@@ -529,17 +531,17 @@ class Ladder:
                     f["score"] = list(d["score"])
                 f["method"] = f.get("method") or d["method"]
                 self._resolve_unreadable(d)
-                return [f"👍 Already got that one (#{f['id']}). Thanks for confirming."]
+                return [f"👍 Already got that one\n- {self._describe(f)}\n- Thanks for confirming"]
             f["status"] = "disputed"
             new = {"winner": d["winner"], "loser": d["loser"], "score": list(d["score"]) if d["score"] else None}
             q = {"sender": d["sender"], "players": [f["winner"], f["loser"]], "uid": d["uid"], "ts": d["ts"],
                  "text": d["text"], "fight_id": f["id"], "new": new}
             self._set_pending(q, "conflict")
-            return [f"{self.name(f['winner'])} and {self.name(f['loser'])}, that doesn't look quite right. What was the result?\n"
-                    f"1) {self._describe(f)}\n"
-                    f"2) {self._describe({**f, **new})}\n"
-                    f"3) Other: needs {self.admin} to review\n"
-                    f"Reply 1, 2 or 3\n{NVM_LINE}"]
+            return [f"- {self.name(f['winner'])} and {self.name(f['loser'])}, that doesn't look quite right. What was the result?\n"
+                    f"{SUB}1) {self._describe(f)}\n"
+                    f"{SUB}2) {self._describe({**f, **new})}\n"
+                    f"{SUB}3) Other: needs {self.admin} to review\n"
+                    f"- Reply 1, 2 or 3\n{NVM_LINE}"]
         return self._record(d)
 
     def _record(self, d: dict) -> list[str]:
@@ -553,7 +555,7 @@ class Ladder:
         }
         self.s["fights"].append(fight)
         self._resolve_unreadable(d)
-        return [self._confirm(fight, f"✅ #{fid} {MODES[mode]}")]
+        return [self._confirm(fight, f"✅ {MODES[mode]} result")]
 
     def _confirm(self, fight: dict, head: str) -> str:
         after = self.replay(fight["mode"])
@@ -565,8 +567,8 @@ class Ladder:
             tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
             return f"{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}){tag}"
 
-        return (f"{head} · {self._describe(fight)} · "
-                f"{fmt(fight['winner'], ch['winner'])} · {fmt(fight['loser'], ch['loser'])}")
+        return (f"{head}\n- {self._describe(fight)}\n"
+                f"- {fmt(fight['winner'], ch['winner'])}\n- {fmt(fight['loser'], ch['loser'])}")
 
     def _describe(self, f: dict) -> str:
         sc = f.get("score")
@@ -621,29 +623,29 @@ class Ladder:
         cmd, args = parts[0], parts[1:]
         now = msg["ts"]
         mode, rest = self._mode_arg(args)
-        site = f"\nFull stats: {self.site}" if self.site else ""
+        site = f"\n\n📊 Full stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
             lines = [
                 "🥊 POST A RESULT (after you play)",
-                "Always put the score in. No score = the bot ignores it.",
-                "👉 beat bjkid 2-1 mma",
-                "👉 lost to temp 0-1 snb  (one fight = 1-0)",
-                "👉 vs bjkid 2-1 mma  (your score first)",
-                "• Just a score? The bot asks who it was against",
-                "• Posted 1-1 mid-set? Post the final score after and it updates",
-                "• Add the mode (mma or snb) or the bot will ask",
-                "• Bot asked you something by mistake? Reply nvm",
-                "✅ The bot confirms every result. No reply within a minute? It didn't go through, post it again.",
+                "- Always put the score in. No score = the bot ignores it",
+                f"{SUB}beat bjkid 2-1 mma",
+                f"{SUB}lost to temp 0-1 snb  (one fight = 1-0)",
+                f"{SUB}vs bjkid 2-1 mma  (your score first)",
+                "- Just a score? The bot asks who it was against",
+                "- Posted 1-1 mid-set? Post the final score after and it updates",
+                "- Add the mode (mma or snb) or the bot will ask",
+                "- Bot asked you something by mistake? Reply nvm",
+                "- The bot confirms every result. No reply within a minute? It didn't go through, post it again",
                 "",
                 "📋 COMMANDS",
-                "!board – full rankings, both modes",
-                "!board mma – just MMA",
-                "!board snb – just Stand & Bang",
-                "!rank – your rank and record",
-                "!rank bjkid – someone else's",
-                "!record bjkid – your record vs BJkid2000",
-                "!recent – last 5 results",
-                "!pick – random weight class, rounds, time and HUD",
+                "- !board – full rankings, both modes",
+                "- !board mma – just MMA",
+                "- !board snb – just Stand & Bang",
+                "- !rank – your rank and record",
+                "- !rank bjkid – someone else's",
+                "- !record bjkid – your record vs BJkid2000",
+                "- !recent – last 5 results",
+                "- !pick – random weight class, rounds, time and HUD",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
             ]
@@ -657,14 +659,14 @@ class Ladder:
             out = []
             for md in [mode] if mode else list(MODES):
                 r = self.replay(md, now=now)
-                rows = [f"{i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"], 1)]
+                rows = [f"- {i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"], 1)]
                 prov = [a for a, x in r["stats"].items() if x["provisional"]]
-                text = f"🏆 {MODES[md].upper()}\n" + ("\n".join(rows) if rows else f"Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed).")
+                text = f"🏆 {MODES[md].upper()}\n" + ("\n".join(rows) if rows else f"- Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed)")
                 if prov:
-                    text += f"\n+{len(prov)} still getting their first {PROVISIONAL_FIGHTS} fights"
+                    text += f"\n- +{len(prov)} still getting their first {PROVISIONAL_FIGHTS} fights"
                 out.append(text)
             if self.site:
-                out[-1] += f"\n📊 {self.site}"
+                out[-1] += f"\n\n📊 {self.site}"
             return out
         if cmd in ("rank", "me", "stats"):
             acct = msg["sender_id"]
@@ -678,11 +680,11 @@ class Ladder:
                 r = self.replay(md, now=now)
                 x = r["stats"].get(acct)
                 if not x:
-                    lines.append(f"{MODES[md]}: no fights yet")
+                    lines.append(f"- {MODES[md]}: no fights yet")
                     continue
                 where = f"#{x['rank']}" if x["rank"] else f"provisional {x['fights']}/{PROVISIONAL_FIGHTS}"
                 streak = f" · {'W' if x['streak'] > 0 else 'L'}{abs(x['streak'])} streak" if x["streak"] else ""
-                lines.append(f"{MODES[md]}: {where} · {round(x['rating'])} · {x['wins']}-{x['losses']}{streak}")
+                lines.append(f"- {MODES[md]}: {where} · {round(x['rating'])} · {x['wins']}-{x['losses']}{streak}")
             return ["\n".join(lines) + site]
         if cmd in ("record", "h2h", "vs", "versus"):
             if not rest:
@@ -706,13 +708,13 @@ class Ladder:
                         aw += gw; bw += gl
                     else:
                         bw += gw; aw += gl
-                lines.append(f"{MODES[md]}: {aw}-{bw}")
+                lines.append(f"- {MODES[md]}: {aw}-{bw}")
             return ["\n".join(lines)]
         if cmd in ("recent", "last", "results"):
             fights = [f for f in self.s["fights"] if f["status"] == "ok" and (not mode or f["mode"] == mode)][-5:]
             if not fights:
                 return ["No fights yet."]
-            return ["\n".join(f"#{f['id']} {MODES[f['mode']]}: {self._describe(f)}" for f in reversed(fights))]
+            return ["🕒 Last results\n" + "\n".join(f"- {MODES[f['mode']]}: {self._describe(f)}" for f in reversed(fights))]
         return []
 
     # ------------------------------------------------------------ snapshot for the website
