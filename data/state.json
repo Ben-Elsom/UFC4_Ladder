@@ -612,7 +612,11 @@
   "139#459430033103469",
   "139#459430035604548",
   "139#459430036168972",
-  "139#459430037643486"
+  "139#459430037643486",
+  "139#459430041126213",
+  "139#459430042140129",
+  "139#459430044177761",
+  "139#459430052252760"
  ],
  "fights": [
   {
@@ -630,40 +634,25 @@
    "msg_uid": "139#459429746601342#0",
    "text": "Vs grubby 1-0 mma",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "2069786748782752179",
-   "uid": "139#459430035604548",
-   "ts": 1794648576580,
-   "text": "I went 2-1 against echo",
-   "drafts": [
-    {
-     "sender": "2069786748782752179",
-     "uid": "139#459430035604548#0",
-     "ts": 1794648576580,
-     "text": "I went 2-1 against echo",
-     "won": true,
-     "score": [
-      2,
-      1
-     ],
-     "text_score": "2-1",
-     "mode": null,
-     "method": null,
-     "opp": "2622241265805770209",
-     "options": null,
-     "unknown": false,
-     "name_text": "went echo"
-    }
+   "id": 2,
+   "mode": "mma",
+   "winner": "2069786748782752179",
+   "loser": "2622241265805770209",
+   "score": [
+    2,
+    1
    ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794648576580,
-   "kind": "batch"
+   "method": null,
+   "reported_by": "2069786748782752179",
+   "ts": 1794648576580,
+   "msg_uid": "139#459430035604548#0",
+   "text": "I went 2-1 against echo",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [],
  "log": [
   {
@@ -675,9 +664,14 @@
    "ts": 1794648581360,
    "text": "🥊 vs echo_goescrazy 2-1 (you won): MMA or Stand & Bang? Reply mma or snb.",
    "sent": true
+  },
+  {
+   "ts": 1794648606882,
+   "text": "✅ #2 MMA · mika_09876 def. echo_goescrazy 2–1 · mika_09876 1557 (+57) (3/5 fights) · echo_goescrazy 1443 (−57) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 2,
+ "next_fight_id": 3,
  "next_review_id": 1,
  "meta": {
   "status": "ok",
@@ -689,7 +683,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794648592772,
+  "last_run": 1794648654635,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
