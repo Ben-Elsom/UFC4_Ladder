@@ -435,7 +435,11 @@
   "137#459428762218119",
   "137#459428763391822",
   "137#459428766670438",
-  "137#459428785197697"
+  "137#459428785197697",
+  "137#459428788582499",
+  "137#459428792591023",
+  "137#459428792837867",
+  "137#459428795092968"
  ],
  "fights": [],
  "pending": [],
@@ -444,6 +448,11 @@
   {
    "ts": 1794643674287,
    "text": "👋 I'm the ladder bot. I keep the MMA and Stand & Bang rankings for this chat.\nAfter a fight, post the result like:  beat sam 2-1 mma  (or  lost to temp sb)\nI'll reply with everyone's new rating. Type !help for commands.",
+   "sent": true
+  },
+  {
+   "ts": 1794643727599,
+   "text": "🥊 Post results like:  beat sam 2-1 mma  ·  lost to temp sb\nCommands: !board  !board mma  !rank  !rank sam  !h2h sam  !recent\nSomething wrong? Message Ben.\nFull stats: https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
   }
  ],
@@ -460,7 +469,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 60.0,
-  "last_run": 1794643674287,
+  "last_run": 1794643739092,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
