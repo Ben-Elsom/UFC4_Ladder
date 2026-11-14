@@ -94,7 +94,7 @@ def test_conflicting_reports_ask_which_is_right(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     out = say(lad, "a2", "beat jono 2-1 mma", T0 + 5 * 60_000)
     assert out[0] == ("🤔 That doesn't look quite right. What was the result? Reply 1, 2 or 3:\n"
-                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review")
+                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review\n(Not a result? Reply nvm)")
     assert lad.s["fights"][0]["status"] == "disputed"
     out = say(lad, "a1", "2", T0 + 6 * 60_000)              # jono (the other player) confirms Sam's version
     assert out[0].startswith("✅ #1 MMA sorted · Sam_K def. JonoTheGoat 2–1")
@@ -346,3 +346,34 @@ def test_conflict_other_goes_to_review(lad):
     assert out[0].startswith("👍 Sent to")
     assert lad.s["pending"] == [] and lad.s["review"][-1]["fight_id"] == 1
     assert lad.s["fights"][0]["status"] == "disputed"         # doesn't count until the admin sorts it
+
+
+@pytest.mark.parametrize("reply", ["nvm", "Nvm 😂", "never mind", "nevermind wasn't a result", "ignore that", "jk"])
+def test_nvm_drops_question_without_review(lad, reply):
+    out = say(lad, "a2", "Surely 2-0😆", T0)
+    assert out[0].startswith("🤔 Who was that 2-0 against?") and "Reply nvm" in out[0]
+    out = say(lad, "a2", reply, T0 + 30_000)
+    assert out == ["👍 No worries, ignored that one."]
+    lad.expire_questions(T0 + 10 * 60_000)
+    assert lad.s["pending"] == [] and lad.s["review"] == [] and lad.s["fights"] == []
+
+
+def test_nvm_on_mode_question(lad):
+    say(lad, "a1", "beat sam 1-0", T0)
+    assert say(lad, "a1", "nvm", T0 + 10_000) == ["👍 No worries, ignored that one."]
+    assert lad.s["fights"] == [] and lad.s["pending"] == []
+
+
+def test_nvm_on_conflict_keeps_first_result(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a2", "beat jono 2-1 mma", T0 + 60_000)
+    out = say(lad, "a2", "nvm", T0 + 90_000)
+    assert out[0].startswith("👍 No worries, ignored. #1 stays as JonoTheGoat def. Sam_K")
+    assert lad.s["fights"][0]["status"] == "ok" and lad.s["review"] == []
+
+
+def test_nvm_then_a_real_answer_still_works(lad):
+    say(lad, "a2", "Surely 2-0", T0)
+    assert say(lad, "a2", "nm just chilling", T0 + 10_000) == ["👍 No worries, ignored that one."]
+    say(lad, "a2", "Surely 2-0", T0 + 20_000)
+    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("🥊")

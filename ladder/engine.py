@@ -23,6 +23,14 @@ H = 60 * MIN
 DAY = 24 * H
 
 
+NVM_HINT = " (Not a result? Reply nvm)"
+NVM_RE = re.compile(r"^\W*(nvm|nvmd|nm|never\s*mind|nevermind|ignore( (it|that|me))?|forget (it|that)|cancel|not a result|wasn'?t a result|just (joking|kidding)|jk)\b", re.I)
+
+
+def is_nevermind(body: str) -> bool:
+    return len(body) <= 60 and bool(NVM_RE.match(body.strip()))
+
+
 def new_state() -> dict[str, Any]:
     return {
         "version": 1,
@@ -158,6 +166,8 @@ class Ladder:
 
         pending = next((q for q in self.s["pending"]
                         if q["sender"] == msg["sender_id"] or msg["sender_id"] in q.get("players", ())), None)
+        if pending and is_nevermind(body):
+            return self._nevermind(pending)
         if pending:
             answer = self._answer(pending, body, msg)
             if answer is not None:
@@ -207,7 +217,7 @@ class Ladder:
         meaning = "you won" if b.mine > b.theirs else "you lost" if b.mine < b.theirs else "it was a split"
         hint = "" if b.mine == b.theirs else f" If not, post it again like: lost to bjkid {min(b.mine, b.theirs)}-{max(b.mine, b.theirs)}"
         return [f"🤔 Who was that {b.mine}-{b.theirs} against? Reply with their name. "
-                f"(Your score goes first, so {meaning}.{hint})"]
+                f"(Your score goes first, so {meaning}.{hint}){NVM_HINT}"]
 
     def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
         for f in reversed(self.s["fights"]):
@@ -239,7 +249,7 @@ class Ladder:
                 d["ask_side"], d["options"], d["other_text"] = side, ids, (l_text if side == "winner" else w_text)
                 self._set_pending(d, "name")
                 opts = "  ".join(f"{i}) {self.name(a)}" for i, a in enumerate(ids, 1))
-                return [f"🤔 Which one did you mean? {opts}\nReply with the number."]
+                return [f"🤔 Which one did you mean? {opts}\nReply with the number.{NVM_HINT}"]
             else:
                 if not strong:
                     return []  # probably just chat
@@ -260,7 +270,7 @@ class Ladder:
         if d["mode"] is None:
             self._set_pending(d, "mode")
             sc = f" {d['score'][0]}-{d['score'][1]}" if d.get("score") else ""
-            return [f"🥊 {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}: MMA or Stand & Bang? Reply mma or snb."]
+            return [f"🥊 {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}: MMA or Stand & Bang? Reply mma or snb.{NVM_HINT}"]
         return self._finalise(d)
 
     def _set_pending(self, d: dict, kind: str) -> None:
@@ -270,6 +280,16 @@ class Ladder:
         d["kind"] = kind
         d["asked_at"] = d.get("asked_at") or d["ts"]
         self.s["pending"].append(d)
+
+    def _nevermind(self, q: dict) -> list[str]:
+        """'nvm': they weren't posting a result, so drop the question (no Needs review)."""
+        self.s["pending"].remove(q)
+        if q["kind"] == "conflict":
+            f = next((x for x in self.s["fights"] if x["id"] == q["fight_id"]), None)
+            if f is not None:
+                f["status"] = "ok"
+                return [f"👍 No worries, ignored. #{f['id']} stays as {self._describe(f)}."]
+        return ["👍 No worries, ignored that one."]
 
     def _answer(self, q: dict, body: str, msg: dict) -> list[str] | None:
         words = body.lower().split()
@@ -350,9 +370,9 @@ class Ladder:
                     self._set_pending(q, "batch")
                 if d.get("unknown"):
                     return [f"❓ I couldn't find anyone in this chat called \"{d['name_text']}\" ({d['text']}). "
-                            f"Who did you play? Reply with part of their PSN name, e.g. bjkid for BJkid2000."]
+                            f"Who did you play? Reply with part of their PSN name, e.g. bjkid for BJkid2000.{NVM_HINT}"]
                 opts = "  ".join(f"{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
-                return [f"🤔 \"{d['name_text']}\" could be more than one person. Which did you mean? {opts}  (reply with the number)"]
+                return [f"🤔 \"{d['name_text']}\" could be more than one person. Which did you mean? {opts}  (reply with the number){NVM_HINT}"]
         missing = [d for d in q["drafts"] if d["mode"] is None]
         if missing:
             # Ask about each result in turn, never guess from earlier fights.
@@ -365,7 +385,7 @@ class Ladder:
             which = f"Result {i} of {n}, " if n > 1 else ""
             hi, lo = d["score"]
             res = "a split" if hi == lo else "you won" if d["won"] else "you lost"
-            return [f"🥊 {which}vs {self.name(d['opp'])} {d['text_score']} ({res}): MMA or Stand & Bang? Reply mma or snb."]
+            return [f"🥊 {which}vs {self.name(d['opp'])} {d['text_score']} ({res}): MMA or Stand & Bang? Reply mma or snb.{NVM_HINT}"]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
@@ -496,7 +516,7 @@ class Ladder:
             return ["🤔 That doesn't look quite right. What was the result? Reply 1, 2 or 3:\n"
                     f"1) {self._describe(f)}\n"
                     f"2) {self._describe({**f, **new})}\n"
-                    f"3) Other: needs {self.admin} to review"]
+                    f"3) Other: needs {self.admin} to review\n(Not a result? Reply nvm)"]
         return self._record(d)
 
     def _record(self, d: dict) -> list[str]:
@@ -589,6 +609,7 @@ class Ladder:
                 "• Just a score? The bot asks who it was against",
                 "• Posted 1-1 mid-set? Post the final score after and it updates",
                 "• Add the mode (mma or snb) or the bot will ask",
+                "• Bot asked you something by mistake? Reply nvm",
                 "✅ The bot confirms every result. No reply within a minute? It didn't go through, post it again.",
                 "",
                 "📋 COMMANDS",
