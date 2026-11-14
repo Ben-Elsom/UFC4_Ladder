@@ -62,7 +62,7 @@ T0 = 1_760_000_000_000
 def lad():
     s = new_state()
     s["bot"] = {"account_id": "bot", "online_id": "Bot"}
-    l = Ladder(s, admin_name="BenE")
+    l = Ladder(s, admin_name="BJkid2000")
     l.sync_members([(a, n) for a, n in PLAYERS.items()] + [("bot", "Bot")])
     l._n = 0
     return l
@@ -93,7 +93,8 @@ def test_both_players_posting_counts_once(lad):
 def test_conflicting_reports_ask_which_is_right(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     out = say(lad, "a2", "beat jono 2-1 mma", T0 + 5 * 60_000)
-    assert "doesn't match result #1" in out[0] and "Reply 1" in out[0]
+    assert out[0] == ("🤔 That doesn't look quite right. What was the result? Reply 1, 2 or 3:\n"
+                      "1) JonoTheGoat def. Sam_K 2–1\n2) Sam_K def. JonoTheGoat 2–1\n3) Other: needs BJkid2000 to review")
     assert lad.s["fights"][0]["status"] == "disputed"
     out = say(lad, "a1", "2", T0 + 6 * 60_000)              # jono (the other player) confirms Sam's version
     assert out[0].startswith("✅ #1 MMA sorted · Sam_K def. JonoTheGoat 2–1")
@@ -336,3 +337,12 @@ def test_unanswered_conflict_goes_to_review(lad):
     lad.expire_questions(T0 + 7 * 60_000)
     r = lad.s["review"][-1]
     assert r["kind"] == "unanswered" and r["fight_id"] == 1 and lad.s["fights"][0]["status"] == "disputed"
+
+
+def test_conflict_other_goes_to_review(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a2", "beat jono 2-0 mma", T0 + 60_000)
+    out = say(lad, "a2", "3", T0 + 2 * 60_000)
+    assert out[0].startswith("👍 Sent to")
+    assert lad.s["pending"] == [] and lad.s["review"][-1]["fight_id"] == 1
+    assert lad.s["fights"][0]["status"] == "disputed"         # doesn't count until the admin sorts it

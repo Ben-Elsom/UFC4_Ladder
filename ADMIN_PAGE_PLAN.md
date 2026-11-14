@@ -12,6 +12,10 @@ A private section of the website, for the admin only, where he can:
 - change who the winner or loser is (pick from the group members)
 - change the score numbers and the mode
 - (sensible extra) clear items from Needs review
+- **pause and resume the bot** with one button. While paused the bot doesn't read or reply to
+  the chat. On resume it must not go back and process what was posted during the pause: mark those
+  messages as seen, the same way the first run treats old history. Show "Bot paused" clearly on the
+  admin page and on the public site's Needs review status card.
 
 Edits should recalculate ratings straight away. The public site updates within a minute.
 The bot should **not** announce admin edits in the chat.
@@ -59,6 +63,11 @@ and `ladder/serve.py` owns it. So the admin page has to run on that server.
 3. Edit form: winner/loser dropdowns (current group members plus anyone with past fights), score inputs,
    mode (MMA / Stand & Bang), Save. Validate that winner and loser differ and the score isn't 0-0.
 4. Needs review list with a Dismiss button (same as `ladder.admin resolve`).
+5. A **Pause bot / Resume bot** button at the top of the page. Store the flag in `state["meta"]["paused"]`.
+   `ladder/serve.py` checks it each tick: while paused it skips `run()` but keeps saving and publishing,
+   so the site shows the paused status. On resume it marks everything posted meanwhile as seen.
+   Until the page exists, Claude can pause from the CLI: add `python -m ladder.admin pause` / `resume`
+   that set the same flag.
 
 Match the public site's look (`ladder/template.html`: Barlow Condensed headings, same colour tokens).
 Make it work well on a phone.

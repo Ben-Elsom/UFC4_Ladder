@@ -379,6 +379,11 @@ class Ladder:
         if f is None or len(words) > 3 or has_score(body):
             return None
         choice = words[0].strip(").") if words else ""
+        if choice == "3" or (words and words[0] == "other"):
+            self.s["pending"].remove(q)
+            self._add_review("conflict", "Two different results posted; players chose 'other' for the admin to sort",
+                             q, fight_id=f["id"])
+            return [f"👍 Sent to {self.admin} to check. Result #{f['id']} won't count until it's sorted."]
         if choice not in ("1", "2"):
             # or they named the winner
             status, ids = self._resolve(body, {a: self.name(a) for a in q["players"]})
@@ -488,10 +493,10 @@ class Ladder:
             q = {"sender": d["sender"], "players": [f["winner"], f["loser"]], "uid": d["uid"], "ts": d["ts"],
                  "text": d["text"], "fight_id": f["id"], "new": new}
             self._set_pending(q, "conflict")
-            mine = self._describe({**f, **new})
-            return [f"⚠️ That doesn't match result #{f['id']}, which {self.name(f['reported_by'])} posted as: "
-                    f"{self._describe(f)}. You've posted: {mine}. Which is right? "
-                    f"Reply 1 for \"{self._describe(f)}\" or 2 for \"{mine}\". Either of you can answer."]
+            return ["🤔 That doesn't look quite right. What was the result? Reply 1, 2 or 3:\n"
+                    f"1) {self._describe(f)}\n"
+                    f"2) {self._describe({**f, **new})}\n"
+                    f"3) Other: needs {self.admin} to review"]
         return self._record(d)
 
     def _record(self, d: dict) -> list[str]:
