@@ -1,12 +1,9 @@
-name: Ladder bot
+name: Ladder bot (backup)
 
+# The bot now runs all the time on the Oracle server (ladder/serve.py).
+# This is only a manual backup: don't run it while the server is running.
 on:
-  schedule:
-    - cron: "7 * * * *"      # every hour, 7 minutes past
-  workflow_dispatch:          # "Run workflow" button for a manual check
-  push:
-    branches: [main]
-    paths: ["data/**", "ladder/**", "config.json"]
+  workflow_dispatch:
 
 permissions:
   contents: write
