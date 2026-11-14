@@ -247,3 +247,32 @@ def test_long_replies_are_split_under_the_limit():
     board = "\n".join(f"{i}. player_number_{i} 1500" for i in range(1, 80))
     assert all(len(p) <= MAX_MESSAGE for p in split_message(board))
     assert split_message("short") == ["short"]
+
+
+def test_set_posted_mid_way_then_finished_is_one_result(lad):
+    say(lad, "a1", "vs sam 1-1 mma", T0)
+    out = say(lad, "a1", "beat sam 2-1 mma", T0 + 25 * 60_000)        # the decider
+    assert out[0].startswith("🔄 #1 MMA updated (was 1–1) · JonoTheGoat def. Sam_K 2–1")
+    assert len(lad.s["fights"]) == 1
+    st = lad.replay("mma")["stats"]
+    assert (st["a1"]["wins"], st["a1"]["losses"]) == (2, 1)
+
+
+def test_other_player_can_finish_the_set_and_mode_carries_over(lad):
+    say(lad, "a1", "beat sam mma", T0)                                # 1-0 after game one
+    out = say(lad, "a2", "lost to jono 2-0", T0 + 20 * 60_000)        # no mode: uses the set's
+    assert "updated (was 1–0)" in out[0] and len(lad.s["fights"]) == 1
+    assert lad.s["fights"][0]["score"] == [2, 0]
+
+
+def test_finished_set_then_new_set_is_separate(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a2", "beat jono 2-0 mma", T0 + 30 * 60_000)             # a new set, not a continuation
+    say(lad, "a1", "beat sam 2-1 mma", T0 + 50 * 60_000)              # same score again, new set
+    assert len(lad.s["fights"]) == 3
+
+
+def test_update_window_closes_after_an_hour(lad):
+    say(lad, "a1", "vs sam 1-1 mma", T0)
+    say(lad, "a1", "beat sam 2-1 mma", T0 + 2 * H)
+    assert len(lad.s["fights"]) == 2

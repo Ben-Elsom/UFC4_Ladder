@@ -211,6 +211,7 @@ const views = {
       <ul>
         <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>bjkid</code> finds BJkid2000.</li>
         <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. No score means a single fight.</li>
+        <li><b>Posted part-way through a set?</b> If you post <code>1-1</code> and then play the decider, just post the final score (<code>2-1</code>) within an hour. The bot updates the same result instead of adding a new one.</li>
         <li><b>Mode:</b> add <code>mma</code> or <code>snb</code> (<code>sb</code>, <code>s&amp;b</code> and <code>stand and bang</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>

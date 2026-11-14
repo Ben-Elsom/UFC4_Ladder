@@ -16,6 +16,7 @@ from .parser import SELF, detect_mode, parse, parse_vs_lines
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
 DUPLICATE_MINUTES = 10     # both players reporting the same result within this window = one result
+SET_UPDATE_MINUTES = 60    # 1-1 then 2-1 within this long of the last post = the same set, updated
 MODE_GUESS_HOURS = 6       # no mode given? use what the pair last played within this window
 QUESTION_EXPIRES_HOURS = 24
 MIN = 60 * 1000
@@ -341,7 +342,45 @@ class Ladder:
             return self._advance_batch(q)
         return None
 
+    def _games(self, f: dict, acct: str) -> int:
+        gw, gl = f.get("score") or (1, 0)
+        return gw if f["winner"] == acct else gl
+
+    def _continues(self, d: dict) -> dict | None:
+        """Is this the same set carrying on? e.g. 1-1 posted, then 2-1 after the decider.
+
+        Only the latest result between the two, in the same mode, posted (or last updated)
+        within SET_UPDATE_MINUTES, where neither player's tally went down and at least one went up.
+        """
+        pair = {d["winner"], d["loser"]}
+        dw, dl = d["score"] or (1, 0)
+        new = {d["winner"]: dw, d["loser"]: dl}
+        for f in reversed(self.s["fights"]):
+            if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
+                continue
+            if d["ts"] - f.get("updated_ts", f["ts"]) > SET_UPDATE_MINUTES * MIN:
+                return None
+            old = {a: self._games(f, a) for a in pair}
+            if all(new[a] >= old[a] for a in pair) and sum(new.values()) > sum(old.values()):
+                return f
+            return None
+        return None
+
+    def _update_set(self, f: dict, d: dict) -> list[str]:
+        old = f.get("score") or [1, 0]
+        was = f"{old[0]}–{old[1]}"
+        f.setdefault("updates", []).append({"ts": d["ts"], "by": d["sender"], "text": d["text"],
+                                            "was": {"winner": f["winner"], "loser": f["loser"], "score": f.get("score")}})
+        f["winner"], f["loser"] = d["winner"], d["loser"]
+        f["score"] = list(d["score"]) if d["score"] else None
+        f["updated_ts"] = d["ts"]
+        self._resolve_unreadable(d)
+        return [self._confirm(f, f"🔄 #{f['id']} {MODES[f['mode']]} updated (was {was})")]
+
     def _finalise(self, d: dict) -> list[str]:
+        carried_on = self._continues(d)
+        if carried_on:
+            return self._update_set(carried_on, d)
         pair = {d["winner"], d["loser"]}
         for f in reversed(self.s["fights"]):
             if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
@@ -374,8 +413,11 @@ class Ladder:
         }
         self.s["fights"].append(fight)
         self._resolve_unreadable(d)
-        after = self.replay(mode, now=d["ts"])
-        ch = after["changes"][fid]
+        return [self._confirm(fight, f"✅ #{fid} {MODES[mode]}")]
+
+    def _confirm(self, fight: dict, head: str) -> str:
+        after = self.replay(fight["mode"])
+        ch = after["changes"][fight["id"]]
 
         def fmt(acct: str, pair: tuple[float, float]) -> str:
             delta = round(pair[1]) - round(pair[0])
@@ -383,8 +425,8 @@ class Ladder:
             tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
             return f"{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}){tag}"
 
-        return [f"✅ #{fid} {MODES[mode]} · {self._describe(fight)} · "
-                f"{fmt(d['winner'], ch['winner'])} · {fmt(d['loser'], ch['loser'])}"]
+        return (f"{head} · {self._describe(fight)} · "
+                f"{fmt(fight['winner'], ch['winner'])} · {fmt(fight['loser'], ch['loser'])}")
 
     def _describe(self, f: dict) -> str:
         sc = f.get("score")
@@ -445,6 +487,7 @@ class Ladder:
                 "👉 lost to temp snb",
                 "👉 vs bjkid 2-1 mma  (your score first)",
                 "• Best of 3? Add the score, e.g. 2-1",
+                "• Posted 1-1 before the decider? Just post the final score after, it updates the same result",
                 "• Say the mode: mma or snb",
                 "• Part of their name is fine",
                 "✅ The bot replies in the chat to confirm every result. No confirmation within a minute? It didn't go through, so check how you wrote it and post again.",
