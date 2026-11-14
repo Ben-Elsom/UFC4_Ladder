@@ -18,6 +18,7 @@ PLAYERS = {"a1": "JonoTheGoat", "a2": "Sam_K", "a3": "Temp48213", "a4": "Samurai
     ("gg sam, lost 1-2 mma", "sam", SELF, (2, 1), "mma"),
     ("just beat temp48 in a close one 2-1 Stand n bang", SELF, "temp48", (2, 1), "sb"),
     ("i got subbed by temp mma", "temp", SELF, None, "mma"),
+    ("beat bjkid 2-1 SnB", SELF, "bjkid", (2, 1), "sb"),
 ])
 def test_parse_results(text, winner, loser, score, mode):
     r = parse(text)

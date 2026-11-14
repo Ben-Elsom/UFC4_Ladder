@@ -342,12 +342,12 @@ class Ladder:
                 "👉 beat bjkid 2-1 mma",
                 "👉 lost to temp sb",
                 "• Best of 3? Add the score, e.g. 2-1",
-                "• Say the mode: mma or sb",
+                "• Say the mode: mma or snb",
                 "• Part of their name is fine",
                 "",
                 "COMMANDS",
-                "!board – top 5 in both modes",
-                "!board mma – top 10 in MMA",
+                "!board – full rankings, both modes",
+                "!board mma – just MMA",
                 "!rank – your rank and record",
                 "!rank bjkid – someone else's",
                 "!h2h bjkid – your record vs BJkid2000",
@@ -359,16 +359,19 @@ class Ladder:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]
         if cmd in ("board", "leaderboard", "top", "rankings"):
-            modes = [mode] if mode else list(MODES)
+            # Everyone ranked, one message per mode so long lists stay readable.
             out = []
-            for md in modes:
+            for md in [mode] if mode else list(MODES):
                 r = self.replay(md, now=now)
-                rows = [
-                    f"{i}. {self.name(a)} {round(r['stats'][a]['rating'])}"
-                    for i, a in enumerate(r["board"][: 10 if mode else 5], 1)
-                ]
-                out.append(f"{MODES[md]}\n" + ("\n".join(rows) if rows else f"Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed)."))
-            return ["\n\n".join(out) + site]
+                rows = [f"{i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"], 1)]
+                prov = [a for a, x in r["stats"].items() if x["provisional"]]
+                text = f"🏆 {MODES[md].upper()}\n" + ("\n".join(rows) if rows else f"Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed).")
+                if prov:
+                    text += f"\n+{len(prov)} still getting their first {PROVISIONAL_FIGHTS} fights"
+                out.append(text)
+            if self.site:
+                out[-1] += f"\n📊 {self.site}"
+            return out
         if cmd in ("rank", "me", "stats"):
             acct = msg["sender_id"]
             if rest:
@@ -445,6 +448,7 @@ class Ladder:
         return {
             "generated": now, "modes": modes, "fights": fights[::-1], "review": review[::-1], "pending": pending,
             "players": {a: p["name"] for a, p in self.s["players"].items()},
+            "members": [a for a, p in self.s["players"].items() if p.get("in_group", True)],
             "log": self.s["log"][-60:][::-1], "meta": self.s["meta"], "bot_name": self.s["bot"].get("online_id"),
             "admin": self.admin,
             "settings": {"provisional": PROVISIONAL_FIGHTS, "duplicate_minutes": DUPLICATE_MINUTES},

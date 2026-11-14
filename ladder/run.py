@@ -91,8 +91,8 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
 
     if now - meta.get("last_weekly", now) >= WEEKLY_POST_DAYS * DAY:
         lines = ladder._command({"sender_id": acct, "ts": now}, ["board"])
-        if lines:
-            say("📅 Weekly standings\n\n" + lines[0])
+        for i, text in enumerate(lines):
+            say(("📅 Weekly standings\n\n" if i == 0 else "") + text)
         meta["last_weekly"] = now
 
     # Login lifetime: remember when the current code was first used.

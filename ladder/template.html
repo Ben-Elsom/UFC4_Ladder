@@ -152,6 +152,10 @@ const views = {
       : `<div class="empty">Nobody is ranked in ${esc(M.label)} yet. You need ${D.settings.provisional} fights to show up here.</div>`) + `</div>`;
     if (prov.length) h += `<h3>Provisional</h3><p class="muted" style="margin-top:0">Still settling in. Ranked after ${D.settings.provisional} fights.</p><div class="card"><table><tbody>` +
       prov.map(p => `<tr><td>${nameLink(p.id, p.name)}</td><td class="num">${p.rating}</td><td class="num">${p.wins}–${p.losses}</td><td class="num muted">${p.fights}/${D.settings.provisional} fights</td></tr>`).join('') + `</tbody></table></div>`;
+    const played = new Set(M.players.map(p => p.id));
+    const none = (D.members || []).filter(id => !played.has(id)).sort((a, b) => D.players[a].localeCompare(D.players[b]));
+    if (none.length) h += `<h3>No ${esc(M.label)} fights yet</h3><p class="muted" style="margin-top:0">Everyone else in the group chat. Post a result to get started.</p><div class="card"><table><tbody>` +
+      none.map(id => `<tr><td>${nameLink(id, D.players[id])}</td><td class="num muted">1500</td></tr>`).join('') + `</tbody></table></div>`;
     return h;
   },
   fights() {
@@ -205,7 +209,7 @@ const views = {
       <ul>
         <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>bjkid</code> finds BJkid2000.</li>
         <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. No score means a single fight.</li>
-        <li><b>Mode:</b> add <code>mma</code> or <code>sb</code> (<code>stand and bang</code> and <code>s&amp;b</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
+        <li><b>Mode:</b> add <code>mma</code> or <code>snb</code> (<code>sb</code>, <code>s&amp;b</code> and <code>stand and bang</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>
       <p>Within a few seconds the bot replies with a result number and both players' new ratings, so you can check it understood you:</p>
@@ -215,7 +219,7 @@ const views = {
       <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
       <div class="card examples">
-        <div><code>!board</code></div><div class="muted">Top 5 in both modes. <code>!board mma</code> shows the top 10.</div>
+        <div><code>!board</code></div><div class="muted">Full rankings in both modes. <code>!board mma</code> for just MMA.</div>
         <div><code>!rank</code></div><div class="muted">Your rank, rating and record. <code>!rank bjkid</code> for someone else.</div>
         <div><code>!h2h bjkid</code></div><div class="muted">Your record against BJkid2000.</div>
         <div><code>!recent</code></div><div class="muted">Last 5 results</div>
