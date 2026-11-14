@@ -677,7 +677,17 @@
   "140#459430294494884",
   "140#459430302899197",
   "140#459430305602970",
-  "140#459430313019364"
+  "140#459430313019364",
+  "140#459430314407633",
+  "140#459430314878650",
+  "140#459430316656100",
+  "140#459430318246257",
+  "140#459430319431696",
+  "140#459430320092329",
+  "140#459430320143841",
+  "140#459430323268965",
+  "140#459430325248232",
+  "140#459430326916527"
  ],
  "fights": [
   {
@@ -726,6 +736,22 @@
    "ts": 1794649279113,
    "msg_uid": "140#459430215453036#0",
    "text": "2-1 me against fenioftw",
+   "status": "ok"
+  },
+  {
+   "id": 4,
+   "mode": "sb",
+   "winner": "8890823238041145135",
+   "loser": "6459805198974452339",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "6459805198974452339",
+   "ts": 1794649680649,
+   "msg_uid": "140#459430318246257#0",
+   "text": "1-0 to maori",
    "status": "ok"
   }
  ],
@@ -812,9 +838,19 @@
    "ts": 1794649298836,
    "text": "✅ #3 Stand & Bang · dad_scopez def. FenioFtw_ 2–1 · dad_scopez 1557 (+57) (3/5 fights) · FenioFtw_ 1443 (−57) (3/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794649684827,
+   "text": "🥊 vs maoripunisher_ 0-1 (you lost): MMA or Stand & Bang? Reply mma or snb.",
+   "sent": true
+  },
+  {
+   "ts": 1794649704790,
+   "text": "✅ #4 Stand & Bang · maoripunisher_ def. grubby_flea257 1–0 · maoripunisher_ 1579 (+79) (1/5 fights) · grubby_flea257 1421 (−79) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 4,
+ "next_fight_id": 5,
  "next_review_id": 4,
  "meta": {
   "status": "ok",
@@ -826,7 +862,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794649659921,
+  "last_run": 1794649724549,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
