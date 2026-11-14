@@ -784,7 +784,12 @@
   "141#459431129964222",
   "141#459431130277577",
   "141#459431130878475",
-  "141#459431135356474"
+  "141#459431135356474",
+  "141#459431143449609",
+  "141#459431144463743",
+  "141#459431147428679",
+  "141#459431149554608",
+  "141#459431155151803"
  ],
  "fights": [
   {
@@ -897,6 +902,22 @@
    "ts": 1794651637677,
    "msg_uid": "141#459430819245489",
    "text": "i beat grubby 2-0 mma",
+   "status": "ok"
+  },
+  {
+   "id": 8,
+   "mode": "mma",
+   "winner": "2622241265805770209",
+   "loser": "1622088612165582170",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "2622241265805770209",
+   "ts": 1794652904100,
+   "msg_uid": "141#459431143449609#0",
+   "text": "2-1 to me against bunky",
    "status": "ok"
   }
  ],
@@ -1062,9 +1083,19 @@
    "ts": 1794651815386,
    "text": "🥊 vs Granite_chin23 2-1 (you won): MMA or Stand & Bang? Reply mma or snb. (Not a result? Reply nvm)",
    "sent": true
+  },
+  {
+   "ts": 1794652901820,
+   "text": "echo_goescrazy def. bunky_skudz 2-1\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794652924627,
+   "text": "✅ #8 MMA · echo_goescrazy def. bunky_skudz 2–1 · echo_goescrazy 1433 (+68) · bunky_skudz 1377 (−123) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 8,
+ "next_fight_id": 9,
  "next_review_id": 7,
  "meta": {
   "status": "ok",
@@ -1076,7 +1107,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794652887954,
+  "last_run": 1794652952668,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
