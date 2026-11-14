@@ -718,7 +718,9 @@
   "140#459430615071389",
   "140#459430625582413",
   "140#459430629993861",
-  "140#459430631872671"
+  "140#459430631872671",
+  "140#459430635086954",
+  "140#459430639051013"
  ],
  "fights": [
   {
@@ -800,40 +802,25 @@
    "msg_uid": "140#459430468880531",
    "text": "i beat echo 2-0 mma",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "5098608185326150737",
-   "uid": "140#459430629993861",
-   "ts": 1794650898413,
-   "text": "2-0 to me against mika",
-   "drafts": [
-    {
-     "sender": "5098608185326150737",
-     "uid": "140#459430629993861#0",
-     "ts": 1794650898413,
-     "text": "2-0 to me against mika",
-     "won": true,
-     "score": [
-      2,
-      0
-     ],
-     "text_score": "2-0",
-     "mode": null,
-     "method": null,
-     "opp": "2069786748782752179",
-     "options": null,
-     "unknown": false,
-     "name_text": "mika"
-    }
+   "id": 6,
+   "mode": "sb",
+   "winner": "5098608185326150737",
+   "loser": "2069786748782752179",
+   "score": [
+    2,
+    0
    ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794650898413,
-   "kind": "batch"
+   "method": null,
+   "reported_by": "5098608185326150737",
+   "ts": 1794650898413,
+   "msg_uid": "140#459430629993861#0",
+   "text": "2-0 to me against mika",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -955,9 +942,14 @@
    "ts": 1794650902572,
    "text": "🥊 vs mika_09876 2-0 (you won): MMA or Stand & Bang? Reply mma or snb. (Not a result? Reply nvm)",
    "sent": true
+  },
+  {
+   "ts": 1794650927563,
+   "text": "✅ #6 Stand & Bang · Vboatt08 def. mika_09876 2–0 · Vboatt08 1632 (+132) (2/5 fights) · mika_09876 1368 (−132) (2/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 6,
+ "next_fight_id": 7,
  "next_review_id": 5,
  "meta": {
   "status": "ok",
@@ -969,7 +961,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794650913945,
+  "last_run": 1794650975529,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
