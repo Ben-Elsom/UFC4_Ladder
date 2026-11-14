@@ -796,19 +796,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "5190974766751866546",
-   "uid": "140#459430501234765",
-   "ts": 1794650395448,
-   "text": "Surely 2-0😆",
-   "mine": 2,
-   "theirs": 0,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1794650395448
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -842,6 +830,16 @@
    "fight_id": null,
    "resolved": true,
    "resolution": "removed by admin"
+  },
+  {
+   "id": 4,
+   "kind": "unanswered",
+   "reason": "No opponent",
+   "text": "Surely 2-0😆",
+   "sender": "5190974766751866546",
+   "ts": 1794650395448,
+   "fight_id": null,
+   "resolved": false
   }
  ],
  "log": [
@@ -917,7 +915,7 @@
   }
  ],
  "next_fight_id": 6,
- "next_review_id": 4,
+ "next_review_id": 5,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -928,7 +926,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794650562540,
+  "last_run": 1794650701205,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
