@@ -929,7 +929,10 @@
   "142#459432135608348",
   "142#459432136351354",
   "142#459432136529767",
-  "142#459432137051606"
+  "142#459432137051606",
+  "142#459432139778449",
+  "142#459432143796191",
+  "142#459432152947378"
  ],
  "fights": [
   {
@@ -1445,6 +1448,11 @@
    "ts": 1794656780106,
    "text": "👍 No worries, ignored that one.",
    "sent": true
+  },
+  {
+   "ts": 1794656808435,
+   "text": "🏆 MMA\n- 1. mrwhoopdatahh 1679\n- 2. blumzylol 1618\n- 3. echo_goescrazy 1383\n- +4 still getting their first 5 fights\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 16,
@@ -1459,7 +1467,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794656791522,
+  "last_run": 1794656853337,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
