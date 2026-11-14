@@ -543,6 +543,7 @@ class Ladder:
                 "📋 COMMANDS",
                 "!board – full rankings, both modes",
                 "!board mma – just MMA",
+                "!board snb – just Stand & Bang",
                 "!rank – your rank and record",
                 "!rank bjkid – someone else's",
                 "!record bjkid – your record vs BJkid2000",
