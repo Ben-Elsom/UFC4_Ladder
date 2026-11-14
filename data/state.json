@@ -1152,7 +1152,10 @@
   "145#459434263962006",
   "145#459434399018752",
   "145#459434402635349",
-  "145#459434502918580"
+  "145#459434502918580",
+  "145#459434506519483",
+  "145#459434508389146",
+  "145#459434513145311"
  ],
  "fights": [
   {
@@ -1636,7 +1639,38 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "7835799679513912497",
+   "uid": "145#459434506519483",
+   "ts": 1794666041091,
+   "text": "2 stand and bang 1 mma vs grubby 3-0 to me",
+   "drafts": [
+    {
+     "sender": "7835799679513912497",
+     "uid": "145#459434506519483#0",
+     "ts": 1794666041091,
+     "text": "2 stand and bang 1 mma vs grubby 3-0 to me",
+     "won": true,
+     "score": [
+      3,
+      0
+     ],
+     "text_score": "3-0",
+     "mode": null,
+     "method": null,
+     "opp": "6459805198974452339",
+     "options": null,
+     "unknown": false,
+     "name_text": "grubby"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794666041091,
+   "kind": "batch"
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -1991,6 +2025,11 @@
    "ts": 1794664932273,
    "text": "🎲 Random fight settings\n- Weight class: Men's Featherweight\n- Rounds: 3\n- Time: Accelerated\n- HUD: Hidden",
    "sent": true
+  },
+  {
+   "ts": 1794666042155,
+   "text": "- mrwhoopdatahh, was that MMA or Stand & Bang?\n- mrwhoopdatahh def. grubby_flea257 3-0\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 23,
@@ -2005,7 +2044,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794666028248,
+  "last_run": 1794666089615,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
