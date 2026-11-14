@@ -285,8 +285,7 @@ class Ladder:
         if d["mode"] is None:
             self._set_pending(d, "mode")
             sc = f" {d['score'][0]}-{d['score'][1]}" if d.get("score") else ""
-            who = "" if d["sender"] in (d["winner"], d["loser"]) else f"{self.name(d['sender'])}, "
-            return [f"- {who}MMA or Stand & Bang?\n"
+            return [f"- {self.name(d['sender'])}, was that MMA or Stand & Bang?\n"
                     f"- {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}\n{NVM_LINE}"]
         return self._finalise(d)
 
@@ -405,7 +404,7 @@ class Ladder:
             me, opp = self.name(q["sender"]), self.name(d["opp"])
             res = (f"{me} and {opp} split {hi}-{lo}" if hi == lo else
                    f"{me} def. {opp} {hi}-{lo}" if d["won"] else f"{me} lost to {opp} {lo}-{hi}")
-            return [f"- MMA or Stand & Bang?\n- {res}{which}\n{NVM_LINE}"]
+            return [f"- {me}, was that MMA or Stand & Bang?\n- {res}{which}\n{NVM_LINE}"]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
