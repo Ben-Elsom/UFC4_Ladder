@@ -156,7 +156,8 @@ class Ladder:
         if low.startswith("!"):
             return self._command(msg, low[1:].split())
 
-        pending = next((q for q in self.s["pending"] if q["sender"] == msg["sender_id"]), None)
+        pending = next((q for q in self.s["pending"]
+                        if q["sender"] == msg["sender_id"] or msg["sender_id"] in q.get("players", ())), None)
         if pending:
             answer = self._answer(pending, body, msg)
             if answer is not None:
@@ -242,8 +243,14 @@ class Ladder:
             else:
                 if not strong:
                     return []  # probably just chat
+                if sender in (d["winner"], d["loser"]) and d.get("score"):
+                    hi, lo = d["score"]
+                    mine, theirs = (hi, lo) if d["winner"] == sender else (lo, hi)
+                    return self._vs_batch({"sender_id": sender, "uid": d["uid"], "ts": d["ts"]}, d["text"],
+                                          [VsLine(name=text, mine=mine, theirs=theirs, mode=d["mode"], text=d["text"])])
                 self._add_review("unreadable", f"Couldn't work out who \"{text}\" is", d)
-                return [f"❓ Couldn't tell who \"{text}\" is. Post it again using part of their PSN name."]
+                return [f"❓ I couldn't find anyone in this chat called \"{text}\". Post it again using part of their PSN name, "
+                        f"e.g. beat bjkid 2-1 mma."]
         if d["winner"] == d["loser"]:
             return []
         return self._fill_mode(d)
@@ -268,6 +275,8 @@ class Ladder:
         words = body.lower().split()
         if q["kind"] == "batch":
             return self._answer_batch(q, body, words, msg["ts"])
+        if q["kind"] == "conflict":
+            return self._answer_conflict(q, body, words)
         if q["kind"] == "who":
             name = " ".join(w for w in words if w not in ("vs", "v", "against", "it", "was", "with"))
             if not name or len(words) > 4 or has_score(body):
@@ -281,7 +290,7 @@ class Ladder:
                                           mine=q["mine"], theirs=q["theirs"], mode=q["mode"], text=q["text"])])
         if q["kind"] == "mode":
             mode = detect_mode(body)
-            if mode and len(words) <= 4:
+            if mode and not has_score(body):
                 self.s["pending"].remove(q)
                 q["mode"] = mode
                 return self._finalise(q)
@@ -319,16 +328,13 @@ class Ladder:
             if ln.mine == ln.theirs == 0:
                 continue
             status, ids = self._resolve(ln.name, pool, exclude={sender}, prefer=prefer)
-            if status == "none":
-                self._add_review("unreadable", f"Couldn't work out who \"{ln.name}\" is", {"text": ln.text, "sender": sender, "ts": msg["ts"]})
-                notes.append(f"❓ Couldn't tell who \"{ln.name}\" is. Post that one again using part of their PSN name.")
-                continue
             drafts.append({
                 "sender": sender, "uid": f"{msg['uid']}#{i}", "ts": msg["ts"], "text": ln.text,
                 "won": ln.mine > ln.theirs, "score": (max(ln.mine, ln.theirs), min(ln.mine, ln.theirs)),
                 "text_score": f"{ln.mine}-{ln.theirs}",
                 "mode": ln.mode or whole_mode, "method": None,
                 "opp": ids[0] if status == "ok" else None, "options": ids if status == "ask" else None,
+                "unknown": status == "none",
                 "name_text": ln.name,
             })
         if not drafts:
@@ -342,8 +348,11 @@ class Ladder:
                 q["waiting"], q["asking"] = "name", q["drafts"].index(d)
                 if new:
                     self._set_pending(q, "batch")
+                if d.get("unknown"):
+                    return [f"❓ I couldn't find anyone in this chat called \"{d['name_text']}\" ({d['text']}). "
+                            f"Who did you play? Reply with part of their PSN name, e.g. bjkid for BJkid2000."]
                 opts = "  ".join(f"{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
-                return [f"🤔 Which \"{d['name_text']}\" did you mean? {opts}  (reply with the number)"]
+                return [f"🤔 \"{d['name_text']}\" could be more than one person. Which did you mean? {opts}  (reply with the number)"]
         missing = [d for d in q["drafts"] if d["mode"] is None]
         if missing:
             # Ask about each result in turn, never guess from earlier fights.
@@ -354,7 +363,9 @@ class Ladder:
                 self._set_pending(q, "batch")
             n, i = len(q["drafts"]), q["drafts"].index(d) + 1
             which = f"Result {i} of {n}, " if n > 1 else ""
-            return [f"🥊 {which}vs {self.name(d['opp'])} {d['text_score']}: MMA or Stand & Bang? Reply mma or snb."]
+            hi, lo = d["score"]
+            res = "a split" if hi == lo else "you won" if d["won"] else "you lost"
+            return [f"🥊 {which}vs {self.name(d['opp'])} {d['text_score']} ({res}): MMA or Stand & Bang? Reply mma or snb."]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
@@ -363,11 +374,41 @@ class Ladder:
             out += self._finalise(d)
         return ["\n".join(out)] if out else []
 
+    def _answer_conflict(self, q: dict, body: str, words: list[str]) -> list[str] | None:
+        f = next((x for x in self.s["fights"] if x["id"] == q["fight_id"]), None)
+        if f is None or len(words) > 3 or has_score(body):
+            return None
+        choice = words[0].strip(").") if words else ""
+        if choice not in ("1", "2"):
+            # or they named the winner
+            status, ids = self._resolve(body, {a: self.name(a) for a in q["players"]})
+            if status != "ok":
+                return None
+            choice = "1" if ids[0] == f["winner"] else "2" if ids[0] == q["new"]["winner"] else ""
+            if not choice:
+                return None
+        self.s["pending"].remove(q)
+        if choice == "2":
+            f["winner"], f["loser"], f["score"] = q["new"]["winner"], q["new"]["loser"], q["new"]["score"]
+        f["status"] = "ok"
+        return [self._confirm(f, f"✅ #{f['id']} {MODES[f['mode']]} sorted")]
+
     def _answer_batch(self, q: dict, body: str, words: list[str], now: int) -> list[str] | None:
         if q.get("waiting") == "name":
             d = q["drafts"][q["asking"]]
             pick = None
-            if len(words) == 1 and words[0].strip(").") in {"1", "2", "3"}:
+            if d.get("unknown"):
+                if has_score(body) or len(words) > 3:
+                    return None
+                status, ids = self._resolve(body, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+                if status == "none":
+                    return [f"❓ Still couldn't find \"{body.strip()}\" in this chat. Try a different part of their PSN name."]
+                if status == "ask":
+                    d["unknown"], d["options"], d["name_text"] = False, ids, body.strip()
+                    q["asked_at"] = now
+                    return self._advance_batch(q)
+                pick = ids[0]
+            elif len(words) == 1 and words[0].strip(").") in {"1", "2", "3"}:
                 i = int(words[0].strip(").")) - 1
                 if i < len(d["options"]):
                     pick = d["options"][i]
@@ -381,7 +422,7 @@ class Ladder:
             q["asked_at"] = now
             return self._advance_batch(q)
         mode = detect_mode(body)
-        if mode and len(words) <= 4:
+        if mode and not has_score(body):
             q["drafts"][q["asking"]]["mode"] = mode
             q["asked_at"] = now           # fresh 5 minutes for the next question
             return self._advance_batch(q)
@@ -443,8 +484,14 @@ class Ladder:
                 self._resolve_unreadable(d)
                 return [f"👍 Already got that one (#{f['id']}). Thanks for confirming."]
             f["status"] = "disputed"
-            self._add_review("conflict", f"Doesn't match #{f['id']} — both players reported different results", d, fight_id=f["id"])
-            return [f"⚠️ That doesn't match #{f['id']} ({self._describe(f)}). Both paused, message {self.admin} to sort it."]
+            new = {"winner": d["winner"], "loser": d["loser"], "score": list(d["score"]) if d["score"] else None}
+            q = {"sender": d["sender"], "players": [f["winner"], f["loser"]], "uid": d["uid"], "ts": d["ts"],
+                 "text": d["text"], "fight_id": f["id"], "new": new}
+            self._set_pending(q, "conflict")
+            mine = self._describe({**f, **new})
+            return [f"⚠️ That doesn't match result #{f['id']}, which {self.name(f['reported_by'])} posted as: "
+                    f"{self._describe(f)}. You've posted: {mine}. Which is right? "
+                    f"Reply 1 for \"{self._describe(f)}\" or 2 for \"{mine}\". Either of you can answer."]
         return self._record(d)
 
     def _record(self, d: dict) -> list[str]:
@@ -503,10 +550,12 @@ class Ladder:
         for q in list(self.s["pending"]):
             if now - (q.get("asked_at") or q["ts"]) > QUESTION_EXPIRES_MINUTES * MIN:
                 self.s["pending"].remove(q)
-                what = {"mode": "which mode", "who": "who it was against", "name": "which player they meant"}.get(q["kind"], "a question")
+                what = {"mode": "which mode", "who": "who it was against", "name": "which player they meant",
+                        "conflict": "which of two different results was right"}.get(q["kind"], "a question")
                 if q["kind"] == "batch":
                     what = "which mode" if q.get("waiting") == "mode" else "which player they meant"
-                self._add_review("unanswered", f"No answer within {QUESTION_EXPIRES_MINUTES} minutes when asked {what}", q)
+                self._add_review("unanswered", f"No answer within {QUESTION_EXPIRES_MINUTES} minutes when asked {what}", q,
+                                 fight_id=q.get("fight_id"))
 
     # ------------------------------------------------------------ commands
     def _mode_arg(self, args: list[str]) -> tuple[str | None, list[str]]:

@@ -70,7 +70,7 @@ def lad():
 
 def say(lad, who, body, t):
     lad._n += 1
-    return lad.handle({"uid": f"m{lad._n}", "sender_id": who, "sender_name": PLAYERS.get(who, who), "body": body, "ts": t})
+    return lad.handle({"uid": f"m{lad._n}", "sender_id": who, "sender_name": lad.s["players"].get(who, {}).get("name") or PLAYERS.get(who, who), "body": body, "ts": t})
 
 
 def test_result_logged_and_rated(lad):
@@ -90,12 +90,14 @@ def test_both_players_posting_counts_once(lad):
     assert len(lad.s["fights"]) == 1
 
 
-def test_conflicting_reports_pause_for_admin(lad):
+def test_conflicting_reports_ask_which_is_right(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
-    out = say(lad, "a2", "beat jono 2-0 mma", T0 + 5 * 60_000)
-    assert "doesn't match" in out[0]
+    out = say(lad, "a2", "beat jono 2-1 mma", T0 + 5 * 60_000)
+    assert "doesn't match result #1" in out[0] and "Reply 1" in out[0]
     assert lad.s["fights"][0]["status"] == "disputed"
-    assert lad.s["review"][-1]["kind"] == "conflict"
+    out = say(lad, "a1", "2", T0 + 6 * 60_000)              # jono (the other player) confirms Sam's version
+    assert out[0].startswith("✅ #1 MMA sorted · Sam_K def. JonoTheGoat 2–1")
+    assert lad.s["fights"][0]["status"] == "ok" and len(lad.s["fights"]) == 1
 
 
 def test_same_pair_other_mode_is_not_duplicate(lad):
@@ -132,12 +134,11 @@ def test_banter_ignored(lad):
     assert lad.s["fights"] == [] and lad.s["pending"] == []
 
 
-def test_unknown_name_flagged_then_cleared_by_repost(lad):
+def test_unknown_name_asks_who(lad):
     out = say(lad, "a2", "beat zzqx 2-1 mma", T0)
-    assert "Couldn't tell" in out[0]
-    assert lad.s["review"][0]["kind"] == "unreadable"
-    say(lad, "a2", "beat reaper 2-1 mma", T0 + H)
-    assert lad.s["review"][0]["resolved"]
+    assert "couldn't find anyone in this chat called \"zzqx\"" in out[0]
+    out = say(lad, "a2", "reaper", T0 + 60_000)
+    assert out[0].startswith("✅ #1 MMA · Sam_K def. xX_Reaper_Xx 2–1")
 
 
 def test_unanswered_question_expires_to_review(lad):
@@ -195,9 +196,9 @@ def test_vs_lines_asks_mode_for_each_result(lad):
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
     assert "Which" in out[0] and "maori" in out[0]           # two Maoris: asks which
     out = say(lad, "w", "2", T0 + 60_000)
-    assert out[0].startswith("🥊 Result 1 of 2, vs maoripunisher_ 0-4: MMA or Stand & Bang?")
+    assert out[0].startswith("🥊 Result 1 of 2, vs maoripunisher_ 0-4 (you lost): MMA or Stand & Bang?")
     out = say(lad, "w", "snb", T0 + 120_000)
-    assert out[0].startswith("🥊 Result 2 of 2, vs Sam_K 1-0: MMA or Stand & Bang?")
+    assert out[0].startswith("🥊 Result 2 of 2, vs Sam_K 1-0 (you won): MMA or Stand & Bang?")
     out = say(lad, "w", "mma", T0 + 180_000)
     assert out[0].count("✅") == 2
     f1, f2 = lad.s["fights"]
@@ -312,3 +313,26 @@ def test_lost_word_beats_score_order(lad):
     out = say(lad, "a1", "sam", T0 + 1000)
     out = say(lad, "a1", "mma", T0 + 2000)
     assert out[0].startswith("✅ #1 MMA · Sam_K def. JonoTheGoat 2–1")
+
+
+def test_score_to_name_means_they_won(lad):
+    lad.sync_members(list(PLAYERS.items()) + [("g", "grubby_flea257"), ("d", "dad_scopez")])
+    say(lad, "g", "2-1 to scopes", T0)
+    out = say(lad, "g", "snb", T0 + 1000)
+    assert out[0].startswith("✅ #1 Stand & Bang · dad_scopez def. grubby_flea257 2–1")
+    out = say(lad, "d", "2-1 me against grubby snb", T0 + 60_000)  # scopez posts the same: no conflict
+    assert "Already got" in out[0]
+
+
+def test_wordy_mode_answer_is_accepted(lad):
+    say(lad, "a2", "2-1 me against jono", T0)
+    out = say(lad, "a2", "Snb I won against jono and maori that's all I've played today I think", T0 + 60_000)
+    assert out[0].startswith("✅ #1 Stand & Bang · Sam_K def. JonoTheGoat 2–1")
+
+
+def test_unanswered_conflict_goes_to_review(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a2", "beat jono 2-1 mma", T0 + 60_000)
+    lad.expire_questions(T0 + 7 * 60_000)
+    r = lad.s["review"][-1]
+    assert r["kind"] == "unanswered" and r["fight_id"] == 1 and lad.s["fights"][0]["status"] == "disputed"

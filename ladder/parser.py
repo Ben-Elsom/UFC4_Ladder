@@ -248,6 +248,8 @@ def parse_bare(text: str) -> Bare | None:
     if max(a, b) < 1:
         return None
     mode = detect_mode(t)
+    # "2-1 to scopes" = scopes won it; "2-1 to me" = I won it
+    to_who = re.match(r"\s*(?:to|for)\s+([a-z0-9_\-]+)", t[m.end():])
     t = t[: m.start()] + " " + t[m.end():]
     for _, pat in MODE_PATTERNS + METHOD_PATTERNS:
         t = re.sub(pat, " ", t)
@@ -255,6 +257,8 @@ def parse_bare(text: str) -> Bare | None:
     toks = [tok for tok in toks if tok and not tok.isdigit()]
     won = any(tok in WIN_VERBS or tok in WON_VERBS for tok in toks)
     lost = any(tok in LOSS_VERBS for tok in toks)
+    if to_who and to_who.group(1) not in FILLER:
+        won, lost = (True, False) if to_who.group(1) in SELF_WORDS else (False, True)
     if lost and not won:
         a, b = min(a, b), max(a, b)
     elif won and not lost:
