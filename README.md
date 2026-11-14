@@ -26,3 +26,8 @@ logs results, replies with new ratings, and rebuilds the website in `docs/`.
 ## Testing
     .venv/bin/python -m pytest -q
     .venv/bin/python -m ladder.run --fake chat.json --state /tmp/state.json --site /tmp/site
+
+## Admin fixes (until the admin page exists)
+On the server (`ssh ladder`, in `~/UFC4_Ladder`): `.venv/bin/python -m ladder.admin list | void N | restore N | edit N --winner x --loser y --score 2-1 --mode snb | swap N | resolve N`.
+The running bot picks the change up straight away. A private admin web page is planned but parked; see `ADMIN_PAGE_PLAN.md`.
+
