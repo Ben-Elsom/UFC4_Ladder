@@ -378,3 +378,22 @@ def test_nvm_then_a_real_answer_still_works(lad):
     assert say(lad, "a2", "nm just chilling", T0 + 10_000) == ["👍 No worries, ignored that one."]
     say(lad, "a2", "Surely 2-0", T0 + 20_000)
     assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("Sam_K def. JonoTheGoat 2-0\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm")
+
+
+def test_pick_gives_random_fight_settings():
+    from ladder.engine import WEIGHT_CLASSES
+    s = new_state(); s["bot"] = {"account_id": "bot"}
+    l = Ladder(s, admin_name="BJkid2000")
+    l.sync_members(list(PLAYERS.items()))
+    seen = set()
+    for i in range(60):
+        out = l.handle({"uid": f"p{i}", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "!pick", "ts": T0 + i})
+        assert len(out) == 1
+        lines = out[0].split("\n")
+        assert lines[1].removeprefix("Weight class: ") in WEIGHT_CLASSES
+        assert lines[2] in ("Rounds: 3", "Rounds: 5")
+        assert lines[3] in ("Time: Accelerated", "Time: Real time")
+        assert lines[4] in ("HUD: Shown", "HUD: Hidden")
+        seen.add(out[0])
+    assert len(seen) > 1                       # actually random
+    assert not s["fights"] and not s["pending"]   # no side effects

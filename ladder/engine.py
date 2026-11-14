@@ -6,6 +6,7 @@ fight is just changing that one entry.
 
 from __future__ import annotations
 
+import random
 import re
 from typing import Any
 
@@ -24,6 +25,22 @@ DAY = 24 * H
 
 
 NVM_LINE = "Not a result? Reply nvm"
+
+WEIGHT_CLASSES = [
+    "Women's Strawweight", "Women's Flyweight", "Women's Bantamweight",
+    "Men's Flyweight", "Men's Bantamweight", "Men's Featherweight", "Men's Lightweight",
+    "Men's Welterweight", "Men's Middleweight", "Men's Light Heavyweight", "Men's Heavyweight",
+]
+
+
+def pick_settings(rng=random) -> str:
+    return "\n".join([
+        "🎲 Random fight settings",
+        f"Weight class: {rng.choice(WEIGHT_CLASSES)}",
+        f"Rounds: {rng.choice([3, 5])}",
+        f"Time: {rng.choice(['Accelerated', 'Real time'])}",
+        f"HUD: {rng.choice(['Shown', 'Hidden'])}",
+    ])
 NVM_RE = re.compile(r"^\W*(nvm|nvmd|nm|never\s*mind|nevermind|ignore( (it|that|me))?|forget (it|that)|cancel|not a result|wasn'?t a result|just (joking|kidding)|jk)\b", re.I)
 
 
@@ -626,12 +643,15 @@ class Ladder:
                 "!rank bjkid – someone else's",
                 "!record bjkid – your record vs BJkid2000",
                 "!recent – last 5 results",
+                "!pick – random weight class, rounds, time and HUD",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
             ]
             if self.site:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]
+        if cmd in ("pick", "random", "roll"):
+            return [pick_settings()]
         if cmd in ("board", "leaderboard", "top", "rankings"):
             # Everyone ranked, one message per mode so long lists stay readable.
             out = []
