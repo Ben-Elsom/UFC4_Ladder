@@ -762,7 +762,8 @@
   "141#459430889385805",
   "141#459430908328081",
   "141#459430910635016",
-  "141#459430912891104"
+  "141#459430912891104",
+  "141#459430924496773"
  ],
  "fights": [
   {
@@ -880,36 +881,6 @@
  ],
  "pending": [
   {
-   "sender": "6459805198974452339",
-   "uid": "141#459430841952386",
-   "ts": 1794651726376,
-   "text": "Blumzylol won 2-0",
-   "drafts": [
-    {
-     "sender": "6459805198974452339",
-     "uid": "141#459430841952386#0",
-     "ts": 1794651726376,
-     "text": "Blumzylol won 2-0",
-     "won": true,
-     "score": [
-      2,
-      0
-     ],
-     "text_score": "2-0",
-     "mode": null,
-     "method": null,
-     "opp": "8133734209062276856",
-     "options": null,
-     "unknown": false,
-     "name_text": "blumzylol"
-    }
-   ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794651726376,
-   "kind": "batch"
-  },
-  {
    "sender": "5190974766751866546",
    "uid": "141#459430864304045",
    "ts": 1794651813687,
@@ -984,6 +955,16 @@
    "fight_id": null,
    "resolved": true,
    "resolution": "not a result (banter)"
+  },
+  {
+   "id": 5,
+   "kind": "unanswered",
+   "reason": "No mode",
+   "text": "Blumzylol won 2-0",
+   "sender": "6459805198974452339",
+   "ts": 1794651726376,
+   "fight_id": null,
+   "resolved": false
   }
  ],
  "log": [
@@ -1084,7 +1065,7 @@
   }
  ],
  "next_fight_id": 8,
- "next_review_id": 5,
+ "next_review_id": 6,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -1095,7 +1076,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794652009565,
+  "last_run": 1794652076283,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
