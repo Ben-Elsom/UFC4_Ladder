@@ -905,7 +905,9 @@
   "142#459432067509616",
   "142#459432073041276",
   "142#459432076094404",
-  "142#459432083568049"
+  "142#459432083568049",
+  "142#459432092952153",
+  "142#459432095058132"
  ],
  "fights": [
   {
@@ -1179,6 +1181,36 @@
    "asking": 0,
    "asked_at": 1794656466043,
    "kind": "batch"
+  },
+  {
+   "sender": "5190974766751866546",
+   "uid": "142#459432092952153",
+   "ts": 1794656613094,
+   "text": "3-0 to me against granite and blumzy in a 2v1",
+   "drafts": [
+    {
+     "sender": "5190974766751866546",
+     "uid": "142#459432092952153#0",
+     "ts": 1794656613094,
+     "text": "3-0 to me against granite and blumzy in a 2v1",
+     "won": true,
+     "score": [
+      3,
+      0
+     ],
+     "text_score": "3-0",
+     "mode": null,
+     "method": null,
+     "opp": "4444062021544416430",
+     "options": null,
+     "unknown": false,
+     "name_text": "granite blumzy 2v1"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794656613094,
+   "kind": "batch"
   }
  ],
  "review": [
@@ -1407,6 +1439,11 @@
    "ts": 1794656472366,
    "text": "- Granite_chin23, was that MMA or Stand & Bang?\n- Granite_chin23 def. maoripunisher_ 3-0\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794656594327,
+   "text": "- dad_scopez, was that MMA or Stand & Bang?\n- dad_scopez def. Granite_chin23 3-0\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 16,
@@ -1421,7 +1458,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794656575195,
+  "last_run": 1794656594327,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
