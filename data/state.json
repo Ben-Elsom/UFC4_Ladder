@@ -12,6 +12,6 @@
  "meta": {
   "status": "login_failed",
   "error": "RuntimeError: PSN_NPSSO is not set",
-  "last_error": 1794639228754
+  "last_error": 1794639402037
  }
 }
