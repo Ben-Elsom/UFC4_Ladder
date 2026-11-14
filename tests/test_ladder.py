@@ -186,3 +186,39 @@ def test_people_who_left_are_not_guessed(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items() if a != "a4"] + [("bot", "Bot")])  # Samurai_77 left
     out = say(lad, "a1", "beat samu mma", T0)
     assert lad.s["fights"] == [] or lad.s["fights"][0]["loser"] != "a4"
+
+
+def test_vs_lines_several_results_one_question(lad):
+    lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
+    out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
+    assert "Which" in out[0] and "maori" in out[0]           # two Maoris: asks once
+    out = say(lad, "w", "2", T0 + 60_000)
+    assert "MMA or Stand & Bang" in out[0]                    # then the mode, once for both
+    out = say(lad, "w", "snb", T0 + 120_000)
+    assert out[0].count("✅") == 2
+    f1, f2 = lad.s["fights"]
+    assert (f1["winner"], f1["loser"], f1["score"], f1["mode"]) == ("m2", "w", [4, 0], "sb")
+    assert (f2["winner"], f2["loser"], f2["score"], f2["mode"]) == ("w", "a2", [1, 0], "sb")
+
+
+def test_vs_line_single_with_mode(lad):
+    out = say(lad, "a1", "vs sam 2-1 mma", T0)
+    assert out[0].startswith("✅ #1 MMA · JonoTheGoat def. Sam_K 2–1")
+    out = say(lad, "a2", "vs jono 1-2 mma", T0 + 60_000)    # opponent posts the same thing
+    assert "Already got" in out[0]
+
+
+def test_vs_line_draw_not_counted(lad):
+    out = say(lad, "a1", "vs sam 2-2 mma", T0)
+    assert "draw" in out[0] and lad.s["fights"] == []
+
+
+def test_nickname_default_picks_without_asking():
+    s = new_state()
+    s["bot"] = {"account_id": "bot"}
+    l = Ladder(s, nicknames={"maori": "maoripunisher_"})
+    l.sync_members([("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
+    out = l.handle({"uid": "1", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "vs maori 0-4 snb", "ts": T0})
+    assert out[0].startswith("✅ #1 Stand & Bang · maoripunisher_ def. mrwhoopdatahh 4–0")
+    out = l.handle({"uid": "2", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "beat crazy mma", "ts": T0 + 1})
+    assert "Crazy_Maori6" in out[0]                           # the other Maori is still reachable

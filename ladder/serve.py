@@ -106,7 +106,7 @@ def main() -> None:
             pending_push = pending_push or changed
             if now_s - last_push >= PUSH_MIN_GAP or now_s - last_push > HEARTBEAT_PUSH:
                 build_site(Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin",
-                                  site_url=cfg.get("site_url", "")).snapshot(int(now_s * 1000)), SITE)
+                                  site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames")).snapshot(int(now_s * 1000)), SITE)
                 publish()
                 last_push, pending_push = now_s, False
         time.sleep(backoff)

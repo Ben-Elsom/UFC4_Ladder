@@ -10,8 +10,8 @@ import re
 from typing import Any
 
 from . import glicko
-from .names import resolve
-from .parser import SELF, detect_mode, parse
+from .names import norm, resolve as _fuzzy_resolve
+from .parser import SELF, detect_mode, parse, parse_vs_lines
 
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
@@ -40,8 +40,11 @@ def new_state() -> dict[str, Any]:
 
 
 class Ladder:
-    def __init__(self, state: dict[str, Any], admin_name: str = "the admin", site_url: str = ""):
+    def __init__(self, state: dict[str, Any], admin_name: str = "the admin", site_url: str = "",
+                 nicknames: dict[str, str] | None = None):
         self.s = state
+        # Admin-set defaults, e.g. {"maori": "maoripunisher_"}: that word always means that player.
+        self.nicknames = {norm(k): v.lower() for k, v in (nicknames or {}).items()}
         self.admin = admin_name
         self.site = site_url
         self._seen = set(state["seen"])
@@ -62,6 +65,15 @@ class Ladder:
         for acct, p in self.s["players"].items():
             if acct not in current:
                 p["in_group"] = False
+
+    def _resolve(self, text: str, pool: dict[str, str], exclude: set[str] = frozenset(),
+                 prefer: list[str] | None = None) -> tuple[str, list[str]]:
+        target = self.nicknames.get(norm(text))
+        if target:
+            for acct, name in pool.items():
+                if name.lower() == target and acct not in exclude:
+                    return "ok", [acct]
+        return _fuzzy_resolve(text, pool, exclude=exclude, prefer=prefer)
 
     def _name_pool(self) -> dict[str, str]:
         """People a name could mean: current members, plus ex-members who already have fights logged."""
@@ -149,6 +161,10 @@ class Ladder:
             if answer is not None:
                 return answer
 
+        vs = parse_vs_lines(body)
+        if vs:
+            return self._vs_batch(msg, body, vs)
+
         rep = parse(body)
         if rep is None:
             return []
@@ -175,7 +191,7 @@ class Ladder:
             exclude = {other} if other else set()
             if other is None and SELF in (w_text, l_text):
                 exclude = {sender}
-            status, ids = resolve(text, pool, exclude=exclude, prefer=prefer)
+            status, ids = self._resolve(text, pool, exclude=exclude, prefer=prefer)
             if status == "ok":
                 d[side] = ids[0]
             elif status == "ask":
@@ -214,6 +230,8 @@ class Ladder:
 
     def _answer(self, q: dict, body: str, msg: dict) -> list[str] | None:
         words = body.lower().split()
+        if q["kind"] == "batch":
+            return self._answer_batch(q, body, words)
         if q["kind"] == "mode":
             mode = detect_mode(body)
             if mode and len(words) <= 4:
@@ -228,7 +246,7 @@ class Ladder:
             if i < len(q["options"]):
                 pick = q["options"][i]
         elif len(words) <= 2:
-            status, ids = resolve(body, {a: self.name(a) for a in q["options"]})
+            status, ids = self._resolve(body, {a: self.name(a) for a in q["options"]})
             if status == "ok":
                 pick = ids[0]
         if pick is None:
@@ -242,6 +260,86 @@ class Ladder:
             q["asked_at"] = None
             return self._fill_names(q, w, l, True)
         return self._fill_mode(q)
+
+    # ------------------------------------------------------------ "vs name score" messages
+    def _vs_batch(self, msg: dict, body: str, lines: list) -> list[str]:
+        """One message with one or more 'vs name a-b' lines. First number is the poster's."""
+        sender = msg["sender_id"]
+        pool, prefer = self._name_pool(), self._recent_opponents(sender)
+        whole_mode = detect_mode(body)
+        drafts, notes = [], []
+        for i, ln in enumerate(lines):
+            if ln.mine == ln.theirs:
+                notes.append(f"❓ \"{ln.text}\" is a draw, so it wasn't counted.")
+                continue
+            status, ids = self._resolve(ln.name, pool, exclude={sender}, prefer=prefer)
+            if status == "none":
+                self._add_review("unreadable", f"Couldn't work out who \"{ln.name}\" is", {"text": ln.text, "sender": sender, "ts": msg["ts"]})
+                notes.append(f"❓ Couldn't tell who \"{ln.name}\" is. Post that one again using part of their PSN name.")
+                continue
+            drafts.append({
+                "sender": sender, "uid": f"{msg['uid']}#{i}", "ts": msg["ts"], "text": ln.text,
+                "won": ln.mine > ln.theirs, "score": (max(ln.mine, ln.theirs), min(ln.mine, ln.theirs)),
+                "mode": ln.mode or whole_mode, "method": None,
+                "opp": ids[0] if status == "ok" else None, "options": ids if status == "ask" else None,
+                "name_text": ln.name,
+            })
+        if not drafts:
+            return notes
+        q = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body, "drafts": drafts}
+        return notes + self._advance_batch(q, new=True)
+
+    def _advance_batch(self, q: dict, new: bool = False) -> list[str]:
+        for d in q["drafts"]:
+            if d["opp"] is None:
+                q["waiting"], q["asking"] = "name", q["drafts"].index(d)
+                if new:
+                    self._set_pending(q, "batch")
+                opts = "  ".join(f"{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
+                return [f"🤔 Which \"{d['name_text']}\" did you mean? {opts}  (reply with the number)"]
+        for d in q["drafts"]:
+            if d["mode"] is None:
+                for f in reversed(self.s["fights"]):
+                    if (f["status"] != "void" and {f["winner"], f["loser"]} == {d["sender"], d["opp"]}
+                            and d["ts"] - f["ts"] <= MODE_GUESS_HOURS * H):
+                        d["mode"] = f["mode"]
+                        break
+        if any(d["mode"] is None for d in q["drafts"]):
+            q["waiting"] = "mode"
+            if new:
+                self._set_pending(q, "batch")
+            n = sum(1 for d in q["drafts"] if d["mode"] is None)
+            return [f"🥊 Got {n} result{'s' if n > 1 else ''}: MMA or Stand & Bang? Reply mma or snb."]
+        if q in self.s["pending"]:
+            self.s["pending"].remove(q)
+        out = []
+        for d in q["drafts"]:
+            d["winner"], d["loser"] = (d["sender"], d["opp"]) if d["won"] else (d["opp"], d["sender"])
+            out += self._finalise(d)
+        return ["\n".join(out)] if out else []
+
+    def _answer_batch(self, q: dict, body: str, words: list[str]) -> list[str] | None:
+        if q.get("waiting") == "name":
+            d = q["drafts"][q["asking"]]
+            pick = None
+            if len(words) == 1 and words[0].strip(").") in {"1", "2", "3"}:
+                i = int(words[0].strip(").")) - 1
+                if i < len(d["options"]):
+                    pick = d["options"][i]
+            elif len(words) <= 2:
+                status, ids = self._resolve(body, {a: self.name(a) for a in d["options"]})
+                if status == "ok":
+                    pick = ids[0]
+            if pick is None:
+                return None
+            d["opp"] = pick
+            return self._advance_batch(q)
+        mode = detect_mode(body)
+        if mode and len(words) <= 4:
+            for d in q["drafts"]:
+                d["mode"] = d["mode"] or mode
+            return self._advance_batch(q)
+        return None
 
     def _finalise(self, d: dict) -> list[str]:
         pair = {d["winner"], d["loser"]}
@@ -341,6 +439,7 @@ class Ladder:
                 "POST A RESULT (after you play)",
                 "👉 beat bjkid 2-1 mma",
                 "👉 lost to temp snb",
+                "👉 vs bjkid 2-1 mma  (your score first)",
                 "• Best of 3? Add the score, e.g. 2-1",
                 "• Say the mode: mma or snb",
                 "• Part of their name is fine",
@@ -376,7 +475,7 @@ class Ladder:
         if cmd in ("rank", "me", "stats"):
             acct = msg["sender_id"]
             if rest:
-                status, ids = resolve(" ".join(rest), self._name_pool())
+                status, ids = self._resolve(" ".join(rest), self._name_pool())
                 if status != "ok":
                     return [f"Couldn't tell who \"{' '.join(rest)}\" is."]
                 acct = ids[0]
@@ -397,7 +496,7 @@ class Ladder:
             pool = self._name_pool()
             people = []
             for word in rest[:2]:
-                status, ids = resolve(word, pool, exclude=set(people))
+                status, ids = self._resolve(word, pool, exclude=set(people))
                 if status != "ok":
                     return [f"Couldn't tell who \"{word}\" is."]
                 people.append(ids[0])

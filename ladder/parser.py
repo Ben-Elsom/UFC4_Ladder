@@ -169,3 +169,41 @@ def parse(text: str) -> Report | None:
         loser_tokens=loser.split() if loser != SELF else [],
         implicit=not obj_text,
     )
+
+
+# ---------------------------------------------------------------- "vs name score" lines
+# e.g.  my fights today
+#       vs maori - 0-4
+#       vs mika - 1-0 mma
+# The first number is always the poster's score.
+VS_LINE = re.compile(
+    r"^\s*(?:vs\.?|v\.?|versus|against)\s+(?P<name>.+?)\s*[-:–—,]?\s*"
+    r"(?P<a>\d{1,2})\s*(?:-|–|—|:|/|to)\s*(?P<b>\d{1,2})(?!\d)\s*(?P<rest>.*)$",
+    re.IGNORECASE,
+)
+
+
+@dataclass
+class VsLine:
+    name: str
+    mine: int
+    theirs: int
+    mode: str | None
+    text: str
+
+
+def parse_vs_lines(text: str) -> list[VsLine]:
+    out: list[VsLine] = []
+    for line in re.split(r"[\n;]+", text):
+        m = VS_LINE.match(line.strip())
+        if not m:
+            continue
+        name = m.group("name")
+        for _, pat in MODE_PATTERNS:
+            name = re.sub(pat, " ", name, flags=re.IGNORECASE)
+        name = " ".join(tok for tok in re.findall(r"[A-Za-z0-9_\-]+", name) if tok.lower() not in FILLER)
+        if not name:
+            continue
+        out.append(VsLine(name=name, mine=int(m.group("a")), theirs=int(m.group("b")),
+                          mode=detect_mode(line), text=line.strip()))
+    return out

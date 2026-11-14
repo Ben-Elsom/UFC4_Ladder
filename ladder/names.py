@@ -61,6 +61,12 @@ def score(query: str, name: str) -> float:
     # Start of the name: "jon" for JonoTheGoat
     if len(q) >= 3 and n.startswith(q):
         best = max(best, 0.80 + 0.15 * len(q) / len(n))
+    if len(q) >= 4 and n.startswith(q):
+        # "maori" for maoripunisher_ is as good a guess as for Crazy_Maori6
+        best = max(best, 0.88 + 0.07 * len(q) / len(n))
+    # Somewhere inside the name: "whoop" for mrwhoopdatahh
+    if len(q) >= 4 and q in n:
+        best = max(best, 0.82 + 0.08 * len(q) / len(n))
     # One piece of the name: "goat" for JonoTheGoat
     for p in parts(name):
         if q == p:
