@@ -1082,7 +1082,12 @@
   "144#459433917927502",
   "144#459433920556790",
   "144#459433921507514",
-  "144#459433922580552"
+  "144#459433922580552",
+  "144#459433939564917",
+  "144#459433940533050",
+  "144#459433940965698",
+  "144#459433943653506",
+  "144#459433945572787"
  ],
  "fights": [
   {
@@ -1457,7 +1462,38 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "6459805198974452339",
+   "uid": "144#459433940965698",
+   "ts": 1794663831897,
+   "text": "Me and granite 2-2 record",
+   "drafts": [
+    {
+     "sender": "6459805198974452339",
+     "uid": "144#459433940965698#0",
+     "ts": 1794663831897,
+     "text": "Me and granite 2-2 record",
+     "won": false,
+     "score": [
+      2,
+      2
+     ],
+     "text_score": "2-2",
+     "mode": null,
+     "method": null,
+     "opp": "4444062021544416430",
+     "options": null,
+     "unknown": false,
+     "name_text": "granite record"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794663831897,
+   "kind": "batch"
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -1777,6 +1813,11 @@
    "ts": 1794663694848,
    "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1650 (+28) (3/5 fights)\n- vanz_nz 1350 (−28) (3/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794663839191,
+   "text": "- grubby_flea257, was that MMA or Stand & Bang?\n- grubby_flea257 and Granite_chin23 split 2-2\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 21,
@@ -1791,7 +1832,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794663789326,
+  "last_run": 1794663850618,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
