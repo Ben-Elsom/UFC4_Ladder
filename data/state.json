@@ -558,7 +558,8 @@
   "139#459429463287588",
   "139#459429473234440",
   "139#459429473872031",
-  "139#459429480105607"
+  "139#459429480105607",
+  "139#459429510077127"
  ],
  "fights": [
   {
@@ -608,35 +609,7 @@
    "status": "disputed"
   }
  ],
- "pending": [
-  {
-   "sender": "5190974766751866546",
-   "uid": "139#459429424362643",
-   "ts": 1794646188916,
-   "text": "2-1 out of 3 best of 3s to me against maori",
-   "drafts": [
-    {
-     "sender": "5190974766751866546",
-     "uid": "139#459429424362643#0",
-     "ts": 1794646188916,
-     "text": "2-1 out of 3 best of 3s to me against maori",
-     "won": true,
-     "score": [
-      2,
-      1
-     ],
-     "mode": null,
-     "method": null,
-     "opp": "6450564279765446538",
-     "options": null,
-     "name_text": "3s maori"
-    }
-   ],
-   "waiting": "mode",
-   "kind": "batch",
-   "asked_at": 1794646188916
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -686,6 +659,16 @@
    "text": "so list today \nvs Maori 0-4 Maori\nvs mika 1-0 me \nvs sweaty 3-2 me",
    "sender": "7835799679513912497",
    "ts": 1794646145614,
+   "fight_id": null,
+   "resolved": false
+  },
+  {
+   "id": 6,
+   "kind": "unanswered",
+   "reason": "No answer within 5 minutes when asked which mode",
+   "text": "2-1 out of 3 best of 3s to me against maori",
+   "sender": "5190974766751866546",
+   "ts": 1794646188916,
    "fight_id": null,
    "resolved": false
   }
@@ -775,7 +758,7 @@
   }
  ],
  "next_fight_id": 4,
- "next_review_id": 6,
+ "next_review_id": 7,
  "meta": {
   "status": "ok",
   "last_error": 1794644859780,
@@ -787,7 +770,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794646461275,
+  "last_run": 1794646527891,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
