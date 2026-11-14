@@ -198,9 +198,9 @@ def test_vs_lines_asks_mode_for_each_result(lad):
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
     assert "did you mean?" in out[0] and "maori" in out[0]           # two Maoris: asks which
     out = say(lad, "w", "2", T0 + 60_000)
-    assert out[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- mrwhoopdatahh lost to maoripunisher_ 0-4 (result 1 of 2)\n- Not a result? Reply nvm")
+    assert out[0].startswith("- MMA or Stand & Bang?\n- mrwhoopdatahh lost to maoripunisher_ 0-4 (result 1 of 2)\n- Not a result? Reply nvm")
     out = say(lad, "w", "snb", T0 + 120_000)
-    assert out[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- mrwhoopdatahh def. Sam_K 1-0 (result 2 of 2)")
+    assert out[0].startswith("- MMA or Stand & Bang?\n- mrwhoopdatahh def. Sam_K 1-0 (result 2 of 2)")
     out = say(lad, "w", "mma", T0 + 180_000)
     assert out[0].count("✅") == 2
     f1, f2 = lad.s["fights"]
@@ -377,7 +377,7 @@ def test_nvm_then_a_real_answer_still_works(lad):
     say(lad, "a2", "Surely 2-0", T0)
     assert say(lad, "a2", "nm just chilling", T0 + 10_000) == ["👍 No worries, ignored that one."]
     say(lad, "a2", "Surely 2-0", T0 + 20_000)
-    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("- MMA or Stand & Bang?\n  - Reply mma or snb\n- Sam_K def. JonoTheGoat 2-0\n- Not a result? Reply nvm")
+    assert say(lad, "a2", "jono", T0 + 30_000)[0].startswith("- MMA or Stand & Bang?\n- Sam_K def. JonoTheGoat 2-0\n- Not a result? Reply nvm")
 
 
 def test_pick_gives_random_fight_settings():

@@ -232,11 +232,7 @@ class Ladder:
         q = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body,
              "mine": b.mine, "theirs": b.theirs, "mode": b.mode}
         self._set_pending(q, "who")
-        meaning = "you won" if b.mine > b.theirs else "you lost" if b.mine < b.theirs else "it was a split"
-        hint = "" if b.mine == b.theirs else f"\n{SUB}If not, post it again like: lost to bjkid {min(b.mine, b.theirs)}-{max(b.mine, b.theirs)}"
-        return [f"- {self.name(sender)}, who was that {b.mine}-{b.theirs} against?\n"
-                f"{SUB}Reply with their name\n"
-                f"- Your score goes first, so {meaning}{hint}\n{NVM_LINE}"]
+        return [f"- {self.name(sender)}, who was that {b.mine}-{b.theirs} against?\n{NVM_LINE}"]
 
     def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
         for f in reversed(self.s["fights"]):
@@ -290,7 +286,7 @@ class Ladder:
             self._set_pending(d, "mode")
             sc = f" {d['score'][0]}-{d['score'][1]}" if d.get("score") else ""
             who = "" if d["sender"] in (d["winner"], d["loser"]) else f"{self.name(d['sender'])}, "
-            return [f"- {who}MMA or Stand & Bang?\n{SUB}Reply mma or snb\n"
+            return [f"- {who}MMA or Stand & Bang?\n"
                     f"- {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}\n{NVM_LINE}"]
         return self._finalise(d)
 
@@ -409,7 +405,7 @@ class Ladder:
             me, opp = self.name(q["sender"]), self.name(d["opp"])
             res = (f"{me} and {opp} split {hi}-{lo}" if hi == lo else
                    f"{me} def. {opp} {hi}-{lo}" if d["won"] else f"{me} lost to {opp} {lo}-{hi}")
-            return [f"- MMA or Stand & Bang?\n{SUB}Reply mma or snb\n- {res}{which}\n{NVM_LINE}"]
+            return [f"- MMA or Stand & Bang?\n- {res}{which}\n{NVM_LINE}"]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
