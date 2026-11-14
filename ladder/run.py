@@ -25,7 +25,7 @@ WEEKLY_POST_DAYS = 7
 
 INTRO = (
     "👋 I'm the ladder bot. I keep the MMA and Stand & Bang rankings for this chat.\n"
-    "After a fight, post the result like:  beat sam 2-1 mma  (or  lost to temp sb)\n"
+    "After a fight, post the result like:  beat bjkid 2-1 mma  (or  lost to temp sb)\n"
     "I'll reply with everyone's new rating. Type !help for commands."
 )
 

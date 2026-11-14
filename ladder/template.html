@@ -196,28 +196,28 @@ const views = {
       <h2>Posting a result</h2>
       <p>After you play, either fighter posts the result in the group chat. Write it however you like. These all work:</p>
       <div class="card examples">
-        <div><code>beat sam 2-1 mma</code></div><div class="muted">You beat Sam two fights to one in MMA</div>
+        <div><code>beat bjkid 2-1 mma</code></div><div class="muted">You beat BJkid2000 two fights to one in MMA</div>
         <div><code>lost to temp sb</code></div><div class="muted">Temp beat you in Stand &amp; Bang</div>
-        <div><code>jono beat sam 2-0 stand and bang</code></div><div class="muted">Posting for two other people</div>
+        <div><code>jono beat bjkid 2-0 stand and bang</code></div><div class="muted">Posting for two other people</div>
         <div><code>w vs reaper mma</code></div><div class="muted">Single fight (no score means one fight)</div>
-        <div><code>gg sam, lost 1-2 mma</code></div><div class="muted">Sam won 2–1</div>
+        <div><code>gg bjkid, lost 1-2 mma</code></div><div class="muted">BJkid2000 won 2–1</div>
       </div>
       <ul>
-        <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>temp</code> finds Temp48213.</li>
+        <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>bjkid</code> finds BJkid2000.</li>
         <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. No score means a single fight.</li>
         <li><b>Mode:</b> add <code>mma</code> or <code>sb</code> (<code>stand and bang</code> and <code>s&amp;b</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>
       <p>Within a few seconds the bot replies with a result number and both players' new ratings, so you can check it understood you:</p>
-      <span class="msg">✅ #14 MMA · JonoTheGoat def. Sam_K 2–1 · JonoTheGoat 1612 (+14) · Sam_K 1540 (−14)</span>
+      <span class="msg">✅ #14 MMA · JonoTheGoat def. BJkid2000 2–1 · JonoTheGoat 1612 (+14) · BJkid2000 1540 (−14)</span>
       <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>sb</code>.</p>
       <h2>Questions or problems</h2>
       <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
       <div class="card examples">
         <div><code>!board</code></div><div class="muted">Top 5 in both modes. <code>!board mma</code> shows the top 10.</div>
-        <div><code>!rank</code></div><div class="muted">Your rank, rating and record. <code>!rank sam</code> for someone else.</div>
-        <div><code>!h2h sam</code></div><div class="muted">Your record against Sam. <code>!h2h sam jono</code> for two others.</div>
+        <div><code>!rank</code></div><div class="muted">Your rank, rating and record. <code>!rank bjkid</code> for someone else.</div>
+        <div><code>!h2h bjkid</code></div><div class="muted">Your record against BJkid2000.</div>
         <div><code>!recent</code></div><div class="muted">Last 5 results</div>
         <div><code>!help</code></div><div class="muted">Quick reminder and a link to this page</div>
       </div>

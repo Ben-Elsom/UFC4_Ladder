@@ -339,7 +339,7 @@ class Ladder:
                 "🥊 UFC 4 LADDER: HOW IT WORKS",
                 "",
                 "POST A RESULT (after you play)",
-                "👉 beat sam 2-1 mma",
+                "👉 beat bjkid 2-1 mma",
                 "👉 lost to temp sb",
                 "• Best of 3? Add the score, e.g. 2-1",
                 "• Say the mode: mma or sb",
@@ -349,8 +349,8 @@ class Ladder:
                 "!board – top 5 in both modes",
                 "!board mma – top 10 in MMA",
                 "!rank – your rank and record",
-                "!rank sam – someone else's",
-                "!h2h sam – your record vs Sam",
+                "!rank bjkid – someone else's",
+                "!h2h bjkid – your record vs BJkid2000",
                 "!recent – last 5 results",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
@@ -389,7 +389,7 @@ class Ladder:
             return ["\n".join(lines) + site]
         if cmd in ("h2h", "vs", "record"):
             if not rest:
-                return ["Usage: !h2h sam  (or !h2h sam jono)"]
+                return ["Usage: !h2h bjkid"]
             pool = self._name_pool()
             people = []
             for word in rest[:2]:
