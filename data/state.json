@@ -895,7 +895,13 @@
   "142#459432041900679",
   "142#459432042709277",
   "142#459432046994616",
-  "142#459432049488223"
+  "142#459432049488223",
+  "142#459432051379919",
+  "142#459432052309605",
+  "142#459432055307119",
+  "142#459432057763017",
+  "142#459432064115130",
+  "142#459432065077061"
  ],
  "fights": [
   {
@@ -1139,7 +1145,38 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "4444062021544416430",
+   "uid": "142#459432055307119",
+   "ts": 1794656466043,
+   "text": "3-0 to me against punisher",
+   "drafts": [
+    {
+     "sender": "4444062021544416430",
+     "uid": "142#459432055307119#0",
+     "ts": 1794656466043,
+     "text": "3-0 to me against punisher",
+     "won": true,
+     "score": [
+      3,
+      0
+     ],
+     "text_score": "3-0",
+     "mode": null,
+     "method": null,
+     "opp": "8890823238041145135",
+     "options": null,
+     "unknown": false,
+     "name_text": "punisher"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794656466043,
+   "kind": "batch"
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -1361,6 +1398,11 @@
    "ts": 1794656382622,
    "text": "✅ Stand & Bang result\n- dad_scopez def. BJkid2000 2–0\n- dad_scopez 1688 (+18)\n- BJkid2000 1319 (−29)",
    "sent": true
+  },
+  {
+   "ts": 1794656472366,
+   "text": "- Granite_chin23, was that MMA or Stand & Bang?\n- Granite_chin23 def. maoripunisher_ 3-0\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 16,
@@ -1375,7 +1417,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794656447167,
+  "last_run": 1794656508683,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
