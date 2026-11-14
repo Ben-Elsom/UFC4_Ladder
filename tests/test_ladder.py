@@ -193,6 +193,16 @@ def test_people_who_left_are_not_guessed(lad):
     assert lad.s["fights"] == [] or lad.s["fights"][0]["loser"] != "a4"
 
 
+def test_no_new_results_against_someone_who_left_even_with_past_fights(lad):
+    say(lad, "a1", "beat samu 1-0 mma", T0)
+    assert lad.s["fights"][0]["loser"] == "a4"
+    lad.sync_members([(a, n) for a, n in PLAYERS.items() if a != "a4"] + [("bot", "Bot")])  # Samurai_77 left
+    for i, text in enumerate(["vs samurai 1-0 snb", "beat samurai 2-1 mma", "Samurai_77 beat me 2-0 sb"]):
+        say(lad, "a1", text, T0 + (i + 1) * DAY)
+    assert len(lad.s["fights"]) == 1
+    assert say(lad, "a1", "!rank samurai", T0 + 5 * DAY)[0].startswith("Samurai_77")  # still looked up for stats
+
+
 def test_vs_lines_asks_mode_for_each_result(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)

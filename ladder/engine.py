@@ -108,6 +108,23 @@ class Ladder:
         fought = {x for f in self.s["fights"] if f["status"] != "void" for x in (f["winner"], f["loser"])}
         return {a: p["name"] for a, p in self.s["players"].items() if p.get("in_group", True) or a in fought}
 
+    def _resolve_opp(self, text: str, exclude: set[str] = frozenset(),
+                     prefer: list[str] | None = None) -> tuple[str, list[str]]:
+        """Who a new result is against. Matches everyone the bot has seen, so a name that
+        means someone who left gives "left" rather than a guess at someone still here."""
+        bot = self.s["bot"].get("account_id")
+        everyone = {a: p["name"] for a, p in self.s["players"].items() if a != bot}
+        status, ids = self._resolve(text, everyone, exclude=exclude, prefer=prefer)
+        if status == "none":
+            return status, ids
+        here = [a for a in ids if self.s["players"][a].get("in_group", True)]
+        if not here:
+            return "left", ids[:1]
+        return ("ok" if len(here) == 1 else "ask"), here
+
+    def _left_msg(self, acct: str) -> str:
+        return f"🚪 {self.name(acct)} has left the chat\n- Results against them can't be added"
+
     def _recent_opponents(self, acct: str) -> list[str]:
         out: list[str] = []
         for f in reversed(self.s["fights"]):
@@ -217,7 +234,7 @@ class Ladder:
             return []
         sender = msg["sender_id"]
         if b.name:
-            status, ids = self._resolve(b.name, self._name_pool(), exclude={sender}, prefer=self._recent_opponents(sender))
+            status, ids = self._resolve_opp(b.name, exclude={sender}, prefer=self._recent_opponents(sender))
             if status != "none":
                 return self._vs_batch(msg, body, [VsLine(name=b.name, mine=b.mine, theirs=b.theirs, mode=b.mode, text=b.text)])
         # No name: is it the set they posted earlier, carrying on? (1-1 earlier, now 2-1)
@@ -247,7 +264,6 @@ class Ladder:
 
     def _fill_names(self, d: dict, w_text: str, l_text: str, strong: bool) -> list[str]:
         sender = d["sender"]
-        pool = self._name_pool()
         prefer = self._recent_opponents(sender)
         for side, text in (("winner", w_text), ("loser", l_text)):
             if text == SELF:
@@ -259,7 +275,9 @@ class Ladder:
             exclude = {other} if other else set()
             if other is None and SELF in (w_text, l_text):
                 exclude = {sender}
-            status, ids = self._resolve(text, pool, exclude=exclude, prefer=prefer)
+            status, ids = self._resolve_opp(text, exclude=exclude, prefer=prefer)
+            if status == "left":
+                return [self._left_msg(ids[0])] if strong else []
             if status == "ok":
                 d[side] = ids[0]
             elif status == "ask":
@@ -319,7 +337,10 @@ class Ladder:
             name = " ".join(w for w in words if w not in ("vs", "v", "against", "it", "was", "with"))
             if not name or len(words) > 4 or has_score(body):
                 return None
-            status, ids = self._resolve(name, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+            status, ids = self._resolve_opp(name, exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+            if status == "left":
+                self.s["pending"].remove(q)
+                return [self._left_msg(ids[0])]
             if status == "none":
                 return [f"- {self.name(q['sender'])}, I couldn't find \"{name}\" in this chat\n{SUB}Reply with part of their PSN name\n{NVM_LINE}"]
             self.s["pending"].remove(q)
@@ -359,13 +380,16 @@ class Ladder:
     def _vs_batch(self, msg: dict, body: str, lines: list) -> list[str]:
         """One message with one or more 'vs name a-b' lines. First number is the poster's."""
         sender = msg["sender_id"]
-        pool, prefer = self._name_pool(), self._recent_opponents(sender)
+        prefer = self._recent_opponents(sender)
         whole_mode = detect_mode(body)
         drafts, notes = [], []
         for i, ln in enumerate(lines):
             if ln.mine == ln.theirs == 0:
                 continue
-            status, ids = self._resolve(ln.name, pool, exclude={sender}, prefer=prefer)
+            status, ids = self._resolve_opp(ln.name, exclude={sender}, prefer=prefer)
+            if status == "left":
+                notes.append(self._left_msg(ids[0]))
+                continue
             drafts.append({
                 "sender": sender, "uid": f"{msg['uid']}#{i}", "ts": msg["ts"], "text": ln.text,
                 "won": ln.mine > ln.theirs, "score": (max(ln.mine, ln.theirs), min(ln.mine, ln.theirs)),
@@ -446,7 +470,9 @@ class Ladder:
             if d.get("unknown"):
                 if has_score(body) or len(words) > 3:
                     return None
-                status, ids = self._resolve(body, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+                status, ids = self._resolve_opp(body, exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+                if status == "left":
+                    return [f"{self._left_msg(ids[0])}\n- Reply with who else you played\n{NVM_LINE}"]
                 if status == "none":
                     return [f"- {self.name(q['sender'])}, I still couldn't find \"{body.strip()}\" in this chat\n{SUB}Try a different part of their PSN name\n{NVM_LINE}"]
                 if status == "ask":
