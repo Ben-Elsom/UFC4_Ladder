@@ -1168,7 +1168,10 @@
   "145#459434569180453",
   "145#459434573022231",
   "145#459434575976194",
-  "145#459434583207956"
+  "145#459434583207956",
+  "145#459434590114955",
+  "145#459434594106536",
+  "145#459434600832726"
  ],
  "fights": [
   {
@@ -1685,7 +1688,19 @@
    "note": "removed by admin"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "7835799679513912497",
+   "uid": "145#459434600832726",
+   "ts": 1794666409502,
+   "text": "3 matches played vs grubby\n2 stand and bang - 2-0 to me \n1 mma - 1-0 to me",
+   "mine": 2,
+   "theirs": 0,
+   "mode": null,
+   "kind": "who",
+   "asked_at": 1794666409502
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -2050,6 +2065,11 @@
    "ts": 1794666205866,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. grubby_flea257 3–0\n- mrwhoopdatahh 1560 (+161) (4/5 fights)\n- grubby_flea257 1323 (−103)",
    "sent": true
+  },
+  {
+   "ts": 1794666416683,
+   "text": "- mrwhoopdatahh, who was that 2-0 against?\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 24,
@@ -2064,7 +2084,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794666350211,
+  "last_run": 1794666416683,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
