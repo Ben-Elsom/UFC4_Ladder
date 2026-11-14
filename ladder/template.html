@@ -206,20 +206,20 @@ const views = {
         <div><code>2-1</code></div><div class="muted">Just the score: the bot asks who it was against (your score first, so you won)</div>
         <div><code>gg bjkid, lost 1-2 mma</code></div><div class="muted">BJkid2000 won 2–1</div>
         <div><code>vs bjkid 2-1 mma</code></div><div class="muted">Your score first: you won 2–1</div>
-        <div><code>my fights today<br>vs bjkid 0-4<br>vs jono 1-0</code></div><div class="muted">Several results in one message, one per line. The bot asks the mode once for all of them.</div>
+        <div><code>my fights today<br>vs bjkid 0-4<br>vs jono 1-0</code></div><div class="muted">Several results in one message, one per line. Add the mode to each line, or the bot asks about each one.</div>
       </div>
       <ul>
         <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>bjkid</code> finds BJkid2000.</li>
         <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. A single fight is <code>1-0</code>.</li>
         <li><b>Your score first:</b> when you just write numbers (<code>2-1</code>, <code>vs bjkid 0-2</code>), the first number is yours. Words like <i>beat</i> or <i>lost to</i> override that.</li>
         <li><b>Posted part-way through a set?</b> If you post <code>1-1</code> and then play the decider, just post the final score (<code>2-1</code>) within an hour. The bot updates the same result instead of adding a new one.</li>
-        <li><b>Mode:</b> add <code>mma</code> or <code>snb</code> (<code>sb</code>, <code>s&amp;b</code> and <code>stand and bang</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
+        <li><b>Mode:</b> add <code>mma</code> or <code>snb</code> (<code>sb</code>, <code>s&amp;b</code> and <code>stand and bang</code> also work). Leave it out and the bot asks (for each result, if you posted several).</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>
       <p>Within a few seconds the bot replies with a result number and both players' new ratings, so you can check it understood you:</p>
       <span class="msg">✅ #14 MMA · JonoTheGoat def. BJkid2000 2–1 · JonoTheGoat 1612 (+14) · BJkid2000 1540 (−14)</span>
       <p><b>No confirmation within a minute? Your result didn't go through.</b> Check you included the score, and post it again.</p>
-      <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>snb</code>. If you only posted a score, it asks who it was against: reply with their name.</p>
+      <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>snb</code>. If you only posted a score, it asks who it was against: reply with their name. <b>Answer within ${D.settings.question_minutes} minutes</b>, or the result is set aside for ${esc(D.admin)} to check.</p>
       <h2>Questions or problems</h2>
       <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
@@ -259,7 +259,9 @@ const views = {
     if (open.length) h += `<h3>Flagged messages</h3>` + open.map(r => `<div class="card">
       <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>R${r.id} · ${esc(r.reason)}</b><span class="muted" style="font-size:13px">${esc(r.sender_name)} · ${when(r.ts)}</span></div>
       ${r.text ? `<span class="msg">${esc(r.text)}</span>` : ''}${r.fight_id ? `<span class="muted">About result #${r.fight_id}</span>` : ''}</div>`).join('');
-    if (D.pending.length) h += `<h3>Waiting for an answer</h3><div class="card">` + D.pending.map(q => `<div class="fight" style="grid-template-columns:1fr auto"><div><b>${esc(q.sender_name)}</b> <span class="muted">was asked ${q.kind === 'mode' ? 'which mode' : 'which player they meant'}</span><span class="msg">${esc(q.text)}</span></div><div class="muted num" style="font-size:13px">${ago(q.ts)}</div></div>`).join('') + `</div>`;
+    const asked = q => { const k = q.kind === 'batch' ? q.waiting : q.kind; return k === 'mode' ? 'which mode' : k === 'who' ? 'who it was against' : 'which player they meant'; };
+    const leftMin = q => Math.max(0, Math.ceil(((q.asked_at || q.ts) + D.settings.question_minutes * 60000 - D.generated) / 60000));
+    if (D.pending.length) h += `<h3>Waiting for an answer</h3><p class="muted" style="margin-top:0">If they don't answer within ${D.settings.question_minutes} minutes, it moves to Flagged messages above.</p><div class="card">` + D.pending.map(q => `<div class="fight" style="grid-template-columns:1fr auto"><div><b>${esc(q.sender_name)}</b> <span class="muted">was asked ${asked(q)}</span><span class="msg">${esc(q.text)}</span></div><div class="muted num" style="font-size:13px">${leftMin(q) ? `moves in ${leftMin(q)} min` : 'moving now'}</div></div>`).join('') + `</div>`;
     const done = D.review.filter(r => r.resolved);
     if (done.length) h += `<details><summary>Sorted (${done.length})</summary><div class="card">` + done.slice(0, 50).map(r => `<div class="fight" style="grid-template-columns:1fr auto"><div>R${r.id} · ${esc(r.reason)} <span class="muted">→ ${esc(r.resolution || 'done')}</span></div><div class="muted num" style="font-size:13px">${ago(r.ts)}</div></div>`).join('') + `</div></details>`;
     if (D.log.length) h += `<details><summary>What the bot said (${D.log.length})</summary><div class="card">` + D.log.map(l => `<div style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="muted" style="font-size:12px">${when(l.ts)}${l.sent ? '' : l.error ? ' · failed to send' : ' · not sent (test mode)'}</span><span class="msg">${esc(l.text)}</span></div>`).join('') + `</div></details>`;

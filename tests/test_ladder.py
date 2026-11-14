@@ -111,10 +111,10 @@ def test_missing_mode_asks_then_answer(lad):
     assert out[0].startswith("✅ #1 MMA")
 
 
-def test_missing_mode_guessed_from_same_session(lad):
+def test_mode_is_never_guessed_from_earlier_fights(lad):
     say(lad, "a1", "beat sam 1-0 sb", T0)
-    out = say(lad, "a2", "beat jono 2-1", T0 + 4 * H)  # different reporter, outside duplicate window
-    assert out[0].startswith("✅ #2 Stand & Bang")
+    out = say(lad, "a2", "beat jono 2-1", T0 + 4 * H)       # same pair, no mode: still asks
+    assert "MMA or Stand & Bang" in out[0]
 
 
 def test_ambiguous_name_asks_and_number_answers(lad):
@@ -142,7 +142,9 @@ def test_unknown_name_flagged_then_cleared_by_repost(lad):
 
 def test_unanswered_question_expires_to_review(lad):
     say(lad, "a1", "beat sam 1-0", T0)
-    lad.expire_questions(T0 + 25 * H)
+    lad.expire_questions(T0 + 4 * 60_000)
+    assert lad.s["pending"] != []                           # still waiting at 4 minutes
+    lad.expire_questions(T0 + 6 * 60_000)
     assert lad.s["pending"] == [] and lad.s["review"][-1]["kind"] == "unanswered"
 
 
@@ -188,17 +190,19 @@ def test_people_who_left_are_not_guessed(lad):
     assert lad.s["fights"] == [] or lad.s["fights"][0]["loser"] != "a4"
 
 
-def test_vs_lines_several_results_one_question(lad):
+def test_vs_lines_asks_mode_for_each_result(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
     out = say(lad, "w", "my fights today\nvs maori - 0-4\nvs sam - 1-0", T0)
-    assert "Which" in out[0] and "maori" in out[0]           # two Maoris: asks once
+    assert "Which" in out[0] and "maori" in out[0]           # two Maoris: asks which
     out = say(lad, "w", "2", T0 + 60_000)
-    assert "MMA or Stand & Bang" in out[0]                    # then the mode, once for both
+    assert out[0].startswith("🥊 Result 1 of 2, vs maoripunisher_ 0-4: MMA or Stand & Bang?")
     out = say(lad, "w", "snb", T0 + 120_000)
+    assert out[0].startswith("🥊 Result 2 of 2, vs Sam_K 1-0: MMA or Stand & Bang?")
+    out = say(lad, "w", "mma", T0 + 180_000)
     assert out[0].count("✅") == 2
     f1, f2 = lad.s["fights"]
     assert (f1["winner"], f1["loser"], f1["score"], f1["mode"]) == ("m2", "w", [4, 0], "sb")
-    assert (f2["winner"], f2["loser"], f2["score"], f2["mode"]) == ("w", "a2", [1, 0], "sb")
+    assert (f2["winner"], f2["loser"], f2["score"], f2["mode"]) == ("w", "a2", [1, 0], "mma")
 
 
 def test_vs_line_single_with_mode(lad):
@@ -258,9 +262,11 @@ def test_set_posted_mid_way_then_finished_is_one_result(lad):
     assert (st["a1"]["wins"], st["a1"]["losses"]) == (2, 1)
 
 
-def test_other_player_can_finish_the_set_and_mode_carries_over(lad):
-    say(lad, "a1", "beat sam 1-0 mma", T0)                                # 1-0 after game one
-    out = say(lad, "a2", "lost to jono 2-0", T0 + 20 * 60_000)        # no mode: uses the set's
+def test_other_player_can_finish_the_set(lad):
+    say(lad, "a1", "beat sam 1-0 mma", T0)                            # 1-0 after game one
+    out = say(lad, "a2", "lost to jono 2-0", T0 + 20 * 60_000)        # no mode: asks, then updates
+    assert "MMA or Stand & Bang" in out[0]
+    out = say(lad, "a2", "mma", T0 + 21 * 60_000)
     assert "updated (was 1–0)" in out[0] and len(lad.s["fights"]) == 1
     assert lad.s["fights"][0]["score"] == [2, 0]
 

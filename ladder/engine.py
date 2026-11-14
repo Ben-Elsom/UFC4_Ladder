@@ -17,8 +17,7 @@ MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
 DUPLICATE_MINUTES = 10     # both players reporting the same result within this window = one result
 SET_UPDATE_MINUTES = 60    # 1-1 then 2-1 within this long of the last post = the same set, updated
-MODE_GUESS_HOURS = 6       # no mode given? use what the pair last played within this window
-QUESTION_EXPIRES_HOURS = 24
+QUESTION_EXPIRES_MINUTES = 5   # a bot question not answered in this long goes to Needs review
 MIN = 60 * 1000
 H = 60 * MIN
 DAY = 24 * H
@@ -250,15 +249,11 @@ class Ladder:
         return self._fill_mode(d)
 
     def _fill_mode(self, d: dict) -> list[str]:
-        if d["mode"] is None:
-            pair = {d["winner"], d["loser"]}
-            for f in reversed(self.s["fights"]):
-                if f["status"] != "void" and {f["winner"], f["loser"]} == pair and d["ts"] - f["ts"] <= MODE_GUESS_HOURS * H:
-                    d["mode"] = f["mode"]
-                    break
+        # Never guess the mode from earlier fights: always ask if it wasn't given.
         if d["mode"] is None:
             self._set_pending(d, "mode")
-            return [f"🥊 {self.name(d['winner'])} def. {self.name(d['loser'])}: MMA or Stand & Bang? Reply mma or sb."]
+            sc = f" {d['score'][0]}-{d['score'][1]}" if d.get("score") else ""
+            return [f"🥊 {self.name(d['winner'])} def. {self.name(d['loser'])}{sc}: MMA or Stand & Bang? Reply mma or snb."]
         return self._finalise(d)
 
     def _set_pending(self, d: dict, kind: str) -> None:
@@ -272,7 +267,7 @@ class Ladder:
     def _answer(self, q: dict, body: str, msg: dict) -> list[str] | None:
         words = body.lower().split()
         if q["kind"] == "batch":
-            return self._answer_batch(q, body, words)
+            return self._answer_batch(q, body, words, msg["ts"])
         if q["kind"] == "who":
             name = " ".join(w for w in words if w not in ("vs", "v", "against", "it", "was", "with"))
             if not name or len(words) > 4 or has_score(body):
@@ -305,11 +300,11 @@ class Ladder:
             return None
         self.s["pending"].remove(q)
         q[q["ask_side"]] = pick
+        q["asked_at"] = msg["ts"]          # any follow-up question gets a fresh 5 minutes
         other_side = "loser" if q["ask_side"] == "winner" else "winner"
         if q[other_side] is None:
             w = SELF if q["winner"] == q["sender"] else (self.name(q["winner"]) if q["winner"] else q["other_text"])
             l = SELF if q["loser"] == q["sender"] else (self.name(q["loser"]) if q["loser"] else q["other_text"])
-            q["asked_at"] = None
             return self._fill_names(q, w, l, True)
         return self._fill_mode(q)
 
@@ -331,6 +326,7 @@ class Ladder:
             drafts.append({
                 "sender": sender, "uid": f"{msg['uid']}#{i}", "ts": msg["ts"], "text": ln.text,
                 "won": ln.mine > ln.theirs, "score": (max(ln.mine, ln.theirs), min(ln.mine, ln.theirs)),
+                "text_score": f"{ln.mine}-{ln.theirs}",
                 "mode": ln.mode or whole_mode, "method": None,
                 "opp": ids[0] if status == "ok" else None, "options": ids if status == "ask" else None,
                 "name_text": ln.name,
@@ -348,19 +344,17 @@ class Ladder:
                     self._set_pending(q, "batch")
                 opts = "  ".join(f"{i}) {self.name(a)}" for i, a in enumerate(d["options"], 1))
                 return [f"🤔 Which \"{d['name_text']}\" did you mean? {opts}  (reply with the number)"]
-        for d in q["drafts"]:
-            if d["mode"] is None:
-                for f in reversed(self.s["fights"]):
-                    if (f["status"] != "void" and {f["winner"], f["loser"]} == {d["sender"], d["opp"]}
-                            and d["ts"] - f["ts"] <= MODE_GUESS_HOURS * H):
-                        d["mode"] = f["mode"]
-                        break
-        if any(d["mode"] is None for d in q["drafts"]):
-            q["waiting"] = "mode"
+        missing = [d for d in q["drafts"] if d["mode"] is None]
+        if missing:
+            # Ask about each result in turn, never guess from earlier fights.
+            d = missing[0]
+            q["waiting"], q["asking"] = "mode", q["drafts"].index(d)
+            q["asked_at"] = q.get("asked_at") or q["ts"]
             if new:
                 self._set_pending(q, "batch")
-            n = sum(1 for d in q["drafts"] if d["mode"] is None)
-            return [f"🥊 Got {n} result{'s' if n > 1 else ''}: MMA or Stand & Bang? Reply mma or snb."]
+            n, i = len(q["drafts"]), q["drafts"].index(d) + 1
+            which = f"Result {i} of {n}, " if n > 1 else ""
+            return [f"🥊 {which}vs {self.name(d['opp'])} {d['text_score']}: MMA or Stand & Bang? Reply mma or snb."]
         if q in self.s["pending"]:
             self.s["pending"].remove(q)
         out = []
@@ -369,7 +363,7 @@ class Ladder:
             out += self._finalise(d)
         return ["\n".join(out)] if out else []
 
-    def _answer_batch(self, q: dict, body: str, words: list[str]) -> list[str] | None:
+    def _answer_batch(self, q: dict, body: str, words: list[str], now: int) -> list[str] | None:
         if q.get("waiting") == "name":
             d = q["drafts"][q["asking"]]
             pick = None
@@ -384,11 +378,12 @@ class Ladder:
             if pick is None:
                 return None
             d["opp"] = pick
+            q["asked_at"] = now
             return self._advance_batch(q)
         mode = detect_mode(body)
         if mode and len(words) <= 4:
-            for d in q["drafts"]:
-                d["mode"] = d["mode"] or mode
+            q["drafts"][q["asking"]]["mode"] = mode
+            q["asked_at"] = now           # fresh 5 minutes for the next question
             return self._advance_batch(q)
         return None
 
@@ -506,9 +501,12 @@ class Ladder:
 
     def expire_questions(self, now: int) -> None:
         for q in list(self.s["pending"]):
-            if now - (q.get("asked_at") or q["ts"]) > QUESTION_EXPIRES_HOURS * H:
+            if now - (q.get("asked_at") or q["ts"]) > QUESTION_EXPIRES_MINUTES * MIN:
                 self.s["pending"].remove(q)
-                self._add_review("unanswered", "Bot asked a question that was never answered", q)
+                what = {"mode": "which mode", "who": "who it was against", "name": "which player they meant"}.get(q["kind"], "a question")
+                if q["kind"] == "batch":
+                    what = "which mode" if q.get("waiting") == "mode" else "which player they meant"
+                self._add_review("unanswered", f"No answer within {QUESTION_EXPIRES_MINUTES} minutes when asked {what}", q)
 
     # ------------------------------------------------------------ commands
     def _mode_arg(self, args: list[str]) -> tuple[str | None, list[str]]:
@@ -537,8 +535,8 @@ class Ladder:
                 "👉 vs bjkid 2-1 mma  (your score first)",
                 "• Just a score? The bot asks who it was against",
                 "• Posted 1-1 mid-set? Post the final score after and it updates",
-                "• Add the mode: mma or snb",
-                "✅ The bot replies to confirm every result. No reply within a minute? It didn't go through, so post it again.",
+                "• Add the mode (mma or snb) or the bot will ask",
+                "✅ The bot confirms every result. No reply within a minute? It didn't go through, post it again.",
                 "",
                 "📋 COMMANDS",
                 "!board – full rankings, both modes",
@@ -640,12 +638,14 @@ class Ladder:
         fights = [dict(f, winner_name=self.name(f["winner"]), loser_name=self.name(f["loser"]),
                        reporter_name=self.name(f["reported_by"])) for f in self.s["fights"]]
         review = [dict(r, sender_name=self.name(r["sender"]) if r.get("sender") else "") for r in self.s["review"]]
-        pending = [{"sender_name": self.name(q["sender"]), "kind": q["kind"], "text": q["text"], "ts": q["ts"]} for q in self.s["pending"]]
+        pending = [{"sender_name": self.name(q["sender"]), "kind": q["kind"], "waiting": q.get("waiting"), "text": q["text"],
+                    "ts": q["ts"], "asked_at": q.get("asked_at") or q["ts"]} for q in self.s["pending"]]
         return {
             "generated": now, "modes": modes, "fights": fights[::-1], "review": review[::-1], "pending": pending,
             "players": {a: p["name"] for a, p in self.s["players"].items()},
             "members": [a for a, p in self.s["players"].items() if p.get("in_group", True)],
             "log": self.s["log"][-60:][::-1], "meta": self.s["meta"], "bot_name": self.s["bot"].get("online_id"),
             "admin": self.admin,
-            "settings": {"provisional": PROVISIONAL_FIGHTS, "duplicate_minutes": DUPLICATE_MINUTES},
+            "settings": {"provisional": PROVISIONAL_FIGHTS, "duplicate_minutes": DUPLICATE_MINUTES,
+                         "question_minutes": QUESTION_EXPIRES_MINUTES},
         }
