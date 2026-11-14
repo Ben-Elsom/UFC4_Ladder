@@ -16,6 +16,7 @@ from .parser import SELF, VsLine, detect_mode, has_score, parse, parse_bare, par
 
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
+COMBINED_WORDS = {"combined", "combo", "both", "all", "avg", "average", "overall"}
 DUPLICATE_MINUTES = 10     # both players reporting the same result within this window = one result
 SET_UPDATE_MINUTES = 60    # 1-1 then 2-1 within this long of the last post = the same set, updated
 QUESTION_EXPIRES_MINUTES = 5   # a bot question not answered in this long goes to Needs review
@@ -612,11 +613,23 @@ class Ladder:
                 rest.append(a)
         return mode, rest
 
+    def combined(self, now: int | None = None) -> list[dict]:
+        """Players ranked (5+ fights) in both modes, best average rating first."""
+        a, b = (self.replay(md, now=now)["stats"] for md in MODES)
+        rows = [{"id": p, "mma": a[p]["rating"], "sb": b[p]["rating"], "avg": (a[p]["rating"] + b[p]["rating"]) / 2}
+                for p in a if a[p]["rank"] and p in b and b[p]["rank"]]
+        rows.sort(key=lambda r: (-round(r["avg"]), self.name(r["id"]).lower()))
+        for i, r in enumerate(rows, 1):
+            r["rank"] = i
+        return rows
+
     def _command(self, msg: dict, parts: list[str]) -> list[str]:
         if not parts:
             return []
         cmd, args = parts[0], parts[1:]
         now = msg["ts"]
+        both = any(a in COMBINED_WORDS for a in args)
+        args = [a for a in args if a not in COMBINED_WORDS]
         mode, rest = self._mode_arg(args)
         site = f"\n\n📊 Full stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
@@ -631,10 +644,11 @@ class Ladder:
             lines += [
                 "",
                 "📋 COMMANDS",
-                "- !board – full rankings, both modes",
+                "- !board – full rankings: MMA, S&B and combined",
                 "- !board mma – just MMA",
                 "- !board snb – just Stand & Bang",
-                "- !rank – your rank and record",
+                "- !board combined – average of both modes",
+                "- !rank – your rank and record, plus combined",
                 "- !rank bjkid – someone else's",
                 "- !record bjkid – your record vs BJkid2000",
                 "- !recent – last 5 results",
@@ -650,7 +664,7 @@ class Ladder:
         if cmd in ("board", "leaderboard", "top", "rankings"):
             # Everyone ranked, one message per mode so long lists stay readable.
             out = []
-            for md in [mode] if mode else list(MODES):
+            for md in [] if both else [mode] if mode else list(MODES):
                 r = self.replay(md, now=now)
                 rows = [f"- {i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"], 1)]
                 prov = [a for a, x in r["stats"].items() if x["provisional"]]
@@ -658,6 +672,10 @@ class Ladder:
                 if prov:
                     text += f"\n- +{len(prov)} still getting their first {PROVISIONAL_FIGHTS} fights"
                 out.append(text)
+            if both or not mode:
+                rows = [f"- {r['rank']}. {self.name(r['id'])} {round(r['avg'])}" for r in self.combined(now)]
+                out.append("🏆 COMBINED (average of both)\n" + ("\n".join(rows) if rows else
+                           f"- Nobody has {PROVISIONAL_FIGHTS} fights in both modes yet"))
             if self.site:
                 out[-1] += f"\n\n📊 {self.site}"
             return out
@@ -669,7 +687,7 @@ class Ladder:
                     return [f"Couldn't tell who \"{' '.join(rest)}\" is."]
                 acct = ids[0]
             lines = [self.name(acct)]
-            for md in [mode] if mode else list(MODES):
+            for md in [] if both else [mode] if mode else list(MODES):
                 r = self.replay(md, now=now)
                 x = r["stats"].get(acct)
                 if not x:
@@ -678,6 +696,10 @@ class Ladder:
                 where = f"#{x['rank']}" if x["rank"] else f"provisional {x['fights']}/{PROVISIONAL_FIGHTS}"
                 streak = f" · {'W' if x['streak'] > 0 else 'L'}{abs(x['streak'])} streak" if x["streak"] else ""
                 lines.append(f"- {MODES[md]}: {where} · {round(x['rating'])} · {x['wins']}-{x['losses']}{streak}")
+            if both or not mode:
+                c = next((r for r in self.combined(now) if r["id"] == acct), None)
+                lines.append(f"- Combined: #{c['rank']} · {round(c['avg'])}" if c else
+                             f"- Combined: needs {PROVISIONAL_FIGHTS} fights in both modes")
             return ["\n".join(lines) + site]
         if cmd in ("record", "h2h", "vs", "versus"):
             if not rest:
@@ -736,7 +758,8 @@ class Ladder:
         pending = [{"sender_name": self.name(q["sender"]), "kind": q["kind"], "waiting": q.get("waiting"), "text": q["text"],
                     "ts": q["ts"], "asked_at": q.get("asked_at") or q["ts"]} for q in self.s["pending"]]
         return {
-            "generated": now, "modes": modes, "fights": fights[::-1], "review": review[::-1], "pending": pending,
+            "generated": now, "modes": modes,
+            "combined": [{"id": r["id"], "rank": r["rank"], "avg": round(r["avg"])} for r in self.combined(now)], "fights": fights[::-1], "review": review[::-1], "pending": pending,
             "players": {a: p["name"] for a, p in self.s["players"].items()},
             "members": [a for a, p in self.s["players"].items() if p.get("in_group", True)],
             "log": self.s["log"][-60:][::-1], "meta": self.s["meta"], "bot_name": self.s["bot"].get("online_id"),

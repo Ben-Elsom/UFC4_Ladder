@@ -131,10 +131,11 @@ function modeSeg() {
 function combinedView() {
   // Ranked (5+ fights) in both modes: average the two ratings and rank by that.
   const [a, b] = MODES.map(m => Object.fromEntries(D.modes[m].players.map(p => [p.id, p])));
-  const both = Object.keys(a).filter(id => a[id].rank && b[id] && b[id].rank).map(id => ({
-    id, name: a[id].name, mma: a[id].rating, sb: b[id].rating, avg: Math.round((a[id].rating + b[id].rating) / 2),
-    wins: a[id].wins + b[id].wins, losses: a[id].losses + b[id].losses,
-  })).sort((x, y) => y.avg - x.avg || x.name.localeCompare(y.name));
+  // Same list and order as the bot's !board combined.
+  const both = (D.combined || []).map(c => ({
+    id: c.id, name: a[c.id].name, mma: a[c.id].rating, sb: b[c.id].rating, avg: c.avg,
+    wins: a[c.id].wins + b[c.id].wins, losses: a[c.id].losses + b[c.id].losses,
+  }));
   const need = D.settings.provisional;
   let h = modeSeg();
   h += `<p class="muted" style="margin-top:0">The average of each fighter's MMA and Stand &amp; Bang ratings. You need ${need} fights in both modes to show up here.</p>`;
@@ -251,8 +252,8 @@ const views = {
       <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
       <div class="card examples">
-        <div><code>!board</code></div><div class="muted">Full rankings in both modes. <code>!board mma</code> for just MMA, <code>!board snb</code> for just Stand &amp; Bang.</div>
-        <div><code>!rank</code></div><div class="muted">Your rank, rating and record. <code>!rank bjkid</code> for someone else.</div>
+        <div><code>!board</code></div><div class="muted">Full rankings: MMA, Stand &amp; Bang and Combined. <code>!board mma</code> for just MMA, <code>!board snb</code> for just Stand &amp; Bang, <code>!board combined</code> for the average of both.</div>
+        <div><code>!rank</code></div><div class="muted">Your rank, rating and record in each mode, plus your combined rank. <code>!rank bjkid</code> for someone else.</div>
         <div><code>!record bjkid</code></div><div class="muted">Your record against BJkid2000.</div>
         <div><code>!recent</code></div><div class="muted">Last 5 results</div>
         <div><code>!pick</code></div><div class="muted">Picks random fight settings: weight class, 3 or 5 rounds, accelerated or real time, HUD shown or hidden.</div>

@@ -397,3 +397,24 @@ def test_pick_gives_random_fight_settings():
         seen.add(out[0])
     assert len(seen) > 1                       # actually random
     assert not s["fights"] and not s["pending"]   # no side effects
+
+
+def test_combined_board_and_rank(lad):
+    l, t = lad, T0
+    for mode in ("mma", "snb"):
+        for _ in range(5):                       # Jono and Sam: 5 fights each in both modes
+            t += H
+            say(l, "a1", f"beat sam 2-1 {mode}", t)
+    for _ in range(5):                           # Temp only plays MMA
+        t += H
+        say(l, "a3", "beat reaper 2-0 mma", t)
+    out = say(l, "a1", "!board", t + 1)
+    assert len(out) == 3 and out[2].startswith("🏆 COMBINED")
+    assert "1. JonoTheGoat" in out[2] and "2. Sam_K" in out[2] and "Temp" not in out[2]
+    only = say(l, "a1", "!board combined", t + 2)
+    assert len(only) == 1 and only[0] == out[2]
+    assert "- Combined: #1 · " in say(l, "a1", "!rank", t + 3)[0]
+    assert "- Combined: needs 5 fights in both modes" in say(l, "a3", "!rank", t + 4)[0]
+    assert "Combined" not in say(l, "a1", "!board mma", t + 5)[0]
+    snap = l.snapshot(t + 6)
+    assert [c["id"] for c in snap["combined"]] == ["a1", "a2"]
