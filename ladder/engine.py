@@ -621,16 +621,14 @@ class Ladder:
         site = f"\n\n📊 Full stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
             lines = [
-                "🥊 POST A RESULT (after you play)",
-                "- Always put the score in. No score = the bot ignores it",
-                f"{SUB}beat bjkid 2-1 mma",
-                f"{SUB}lost to temp 0-1 snb  (one fight = 1-0)",
-                f"{SUB}vs bjkid 2-1 mma  (your score first)",
-                "- Just a score? The bot asks who it was against",
-                "- Posted 1-1 mid-set? Post the final score after and it updates",
-                "- Add the mode (mma or snb) or the bot will ask",
-                "- Bot asked you something by mistake? Reply nvm",
-                "- The bot confirms every result. No reply within a minute? It didn't go through, post it again",
+                "🥊 POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT",
+                "- vs bjkid 2-1 mma  (your score first)",
+                "- Winners are responsible for posting their results if they want them on the leaderboard",
+                f"{SUB}No green tick, no points",
+            ]
+            if self.site:
+                lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")
+            lines += [
                 "",
                 "📋 COMMANDS",
                 "- !board – full rankings, both modes",
