@@ -11,7 +11,7 @@ PLAYERS = {"a1": "JonoTheGoat", "a2": "Sam_K", "a3": "Temp48213", "a4": "Samurai
 @pytest.mark.parametrize("text,winner,loser,score,mode", [
     ("beat sam 2-1 mma", SELF, "sam", (2, 1), "mma"),
     ("lost to jonno stand and bang", "jonno", SELF, None, "sb"),
-    ("Temp beat Jono 2 0 sb", "temp", "jono", (2, 0), "sb"),
+    ("Temp beat Jono 2-0 sb", "temp", "jono", (2, 0), "sb"),
     ("w vs sam mma ko", SELF, "sam", None, "mma"),
     ("got smashed by jono 2-1 in mma", "jono", SELF, (2, 1), "mma"),
     ("sam beat me s&b", "sam", SELF, None, "sb"),
@@ -99,8 +99,8 @@ def test_conflicting_reports_pause_for_admin(lad):
 
 
 def test_same_pair_other_mode_is_not_duplicate(lad):
-    say(lad, "a1", "beat sam mma", T0)
-    say(lad, "a2", "beat jono sb", T0 + H)
+    say(lad, "a1", "beat sam 1-0 mma", T0)
+    say(lad, "a2", "beat jono 1-0 sb", T0 + H)
     assert len(lad.s["fights"]) == 2
 
 
@@ -112,14 +112,14 @@ def test_missing_mode_asks_then_answer(lad):
 
 
 def test_missing_mode_guessed_from_same_session(lad):
-    say(lad, "a1", "beat sam sb", T0)
+    say(lad, "a1", "beat sam 1-0 sb", T0)
     out = say(lad, "a2", "beat jono 2-1", T0 + 4 * H)  # different reporter, outside duplicate window
     assert out[0].startswith("✅ #2 Stand & Bang")
 
 
 def test_ambiguous_name_asks_and_number_answers(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items()] + [("a6", "Temp99071")])
-    out = say(lad, "a1", "beat temp mma", T0)
+    out = say(lad, "a1", "beat temp 1-0 mma", T0)
     assert "Which one" in out[0]
     out = say(lad, "a1", "2", T0 + 60_000)
     assert out[0].startswith("✅")
@@ -141,7 +141,7 @@ def test_unknown_name_flagged_then_cleared_by_repost(lad):
 
 
 def test_unanswered_question_expires_to_review(lad):
-    say(lad, "a1", "beat sam", T0)
+    say(lad, "a1", "beat sam 1-0", T0)
     lad.expire_questions(T0 + 25 * H)
     assert lad.s["pending"] == [] and lad.s["review"][-1]["kind"] == "unanswered"
 
@@ -161,9 +161,9 @@ def test_one_line_reply(lad):
 
 
 def test_duplicate_only_within_ten_minutes(lad):
-    say(lad, "a1", "beat sam mma", T0)
-    assert "Already got" in say(lad, "a2", "lost to jono mma", T0 + 9 * 60_000)[0]
-    say(lad, "a2", "lost to jono mma", T0 + 2 * H)          # a separate fight later on
+    say(lad, "a1", "beat sam 1-0 mma", T0)
+    assert "Already got" in say(lad, "a2", "lost to jono 0-1 mma", T0 + 9 * 60_000)[0]
+    say(lad, "a2", "lost to jono 0-1 mma", T0 + 2 * H)          # a separate fight later on
     assert len(lad.s["fights"]) == 2
 
 
@@ -176,15 +176,15 @@ def test_commands(lad):
 
 
 def test_bot_ignores_itself_and_repeats(lad):
-    assert lad.handle({"uid": "x", "sender_id": "bot", "sender_name": "Bot", "body": "beat sam mma", "ts": T0}) == []
-    say(lad, "a1", "beat sam mma", T0)
-    again = lad.handle({"uid": "m1", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "beat sam mma", "ts": T0})
+    assert lad.handle({"uid": "x", "sender_id": "bot", "sender_name": "Bot", "body": "beat sam 1-0 mma", "ts": T0}) == []
+    say(lad, "a1", "beat sam 1-0 mma", T0)
+    again = lad.handle({"uid": "m1", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "beat sam 1-0 mma", "ts": T0})
     assert again == [] and len(lad.s["fights"]) == 1
 
 
 def test_people_who_left_are_not_guessed(lad):
     lad.sync_members([(a, n) for a, n in PLAYERS.items() if a != "a4"] + [("bot", "Bot")])  # Samurai_77 left
-    out = say(lad, "a1", "beat samu mma", T0)
+    out = say(lad, "a1", "beat samu 1-0 mma", T0)
     assert lad.s["fights"] == [] or lad.s["fights"][0]["loser"] != "a4"
 
 
@@ -231,7 +231,7 @@ def test_nickname_default_picks_without_asking():
     l.sync_members([("w", "mrwhoopdatahh"), ("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
     out = l.handle({"uid": "1", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "vs maori 0-4 snb", "ts": T0})
     assert out[0].startswith("✅ #1 Stand & Bang · maoripunisher_ def. mrwhoopdatahh 4–0")
-    out = l.handle({"uid": "2", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "beat crazy mma", "ts": T0 + 1})
+    out = l.handle({"uid": "2", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "beat crazy 1-0 mma", "ts": T0 + 1})
     assert "Crazy_Maori6" in out[0]                           # the other Maori is still reachable
 
 
@@ -259,7 +259,7 @@ def test_set_posted_mid_way_then_finished_is_one_result(lad):
 
 
 def test_other_player_can_finish_the_set_and_mode_carries_over(lad):
-    say(lad, "a1", "beat sam mma", T0)                                # 1-0 after game one
+    say(lad, "a1", "beat sam 1-0 mma", T0)                                # 1-0 after game one
     out = say(lad, "a2", "lost to jono 2-0", T0 + 20 * 60_000)        # no mode: uses the set's
     assert "updated (was 1–0)" in out[0] and len(lad.s["fights"]) == 1
     assert lad.s["fights"][0]["score"] == [2, 0]
@@ -276,3 +276,33 @@ def test_update_window_closes_after_an_hour(lad):
     say(lad, "a1", "vs sam 1-1 mma", T0)
     say(lad, "a1", "beat sam 2-1 mma", T0 + 2 * H)
     assert len(lad.s["fights"]) == 2
+
+
+def test_no_score_means_no_result(lad):
+    for text in ["Wth im a easy snb win", "beat sam mma", "jono smashed it", "Last 1 wins", "see you at 5:30"]:
+        assert say(lad, "a2", text, T0) == []
+    assert lad.s["fights"] == [] and lad.s["pending"] == [] and lad.s["review"] == []
+
+
+def test_bare_score_asks_who_then_later_score_updates_the_set(lad):
+    out = say(lad, "a2", "1 -1", T0)                                   # sweatytrixter's mid-set post
+    assert out[0].startswith("🤔 Who was that 1-1 against?")
+    out = say(lad, "a2", "reaper", T0 + 60_000)
+    assert "MMA or Stand & Bang" in out[0]
+    out = say(lad, "a2", "snb", T0 + 90_000)
+    assert "split 1–1" in out[0]
+    out = say(lad, "a2", "Safe as bruv 2-1 ", T0 + 20 * 60_000)       # the decider, no name
+    assert out[0].startswith("🔄 #1 Stand & Bang updated (was 1–1) · Sam_K def. xX_Reaper_Xx 2–1")
+    assert len(lad.s["fights"]) == 1
+
+
+def test_bare_score_with_a_name_your_score_first(lad):
+    out = say(lad, "a1", "sam 1-2 snb", T0)
+    assert out[0].startswith("✅ #1 Stand & Bang · Sam_K def. JonoTheGoat 2–1")
+
+
+def test_lost_word_beats_score_order(lad):
+    say(lad, "a1", "lost 2-1", T0)                                     # asks who
+    out = say(lad, "a1", "sam", T0 + 1000)
+    out = say(lad, "a1", "mma", T0 + 2000)
+    assert out[0].startswith("✅ #1 MMA · Sam_K def. JonoTheGoat 2–1")

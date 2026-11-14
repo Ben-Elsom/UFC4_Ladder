@@ -35,6 +35,9 @@ FILLER = {
     "ranked", "round", "rd", "r", "it", "that", "this", "nice", "good", "great", "dude",
     "man", "all", "rounds", "up", "out", "off", "at", "for", "too", "so", "very", "really",
     "properly", "comfortably", "barely", "still", "yeah", "yep", "ok", "okay", "but", "then",
+    "safe", "as", "bruv", "cuz", "cuh", "fam", "nah", "lol", "shi", "fr", "tbh", "ngl", "aye", "my",
+    "final", "score", "result", "results", "updated", "update", "now", "ended", "end", "was", "is", "its", "it's",
+    "wins", "win", "won", "loss", "lost", "series", "today", "tonight",
 }
 HYPOTHETICAL = re.compile(
     r"\b(would|i'?d|wouldn'?t|gonna|going to|will|wanna|want to|if|could|should|can'?t|cant|"
@@ -51,7 +54,8 @@ METHOD_PATTERNS = [
     ("SUB", r"\bsub(?:bed|mission|mitted)?\b|\btap(?:ped)?\b|\bchoke(?:d)?\b"),
     ("DEC", r"\bdec(?:ision)?\b|\bpoints\b|\bsplit\b|\bunanimous\b|\bjudges\b"),
 ]
-SCORE_RE = re.compile(r"(?<![\d])([0-5])\s*(?:-|–|—|:|/|to)\s*([0-5])(?![\d])|(?<![\w])([0-5])\s+([0-5])(?![\w])")
+# A score like 2-1, 2 - 1, 2–1, 2:1 or 2/1. This is the key: no score, not a result.
+SCORE_RE = re.compile(r"(?<![\d])([0-9])\s*(?:-|–|—|:|/)\s*([0-9])(?![\d])")
 ROUND_RE = re.compile(r"\b(?:r|rd|round)\s*([1-5])\b")
 
 
@@ -101,7 +105,7 @@ def parse(text: str) -> Report | None:
     score = None
     m = SCORE_RE.search(t)
     if m:
-        a, b = (int(x) for x in (m.group(1, 2) if m.group(1) else m.group(3, 4)))
+        a, b = int(m.group(1)), int(m.group(2))
         if max(a, b) >= 1:   # 2-2 is a split: four fights, two each
             score = (max(a, b), min(a, b))
         t = t[: m.start()] + " " + t[m.end():]
@@ -207,3 +211,54 @@ def parse_vs_lines(text: str) -> list[VsLine]:
         out.append(VsLine(name=name, mine=int(m.group("a")), theirs=int(m.group("b")),
                           mode=detect_mode(line), text=line.strip()))
     return out
+
+
+# ---------------------------------------------------------------- the score is the key
+def has_score(text: str) -> bool:
+    t = ROUND_RE.sub(" ", text.lower())
+    m = SCORE_RE.search(t)
+    return bool(m) and max(int(m.group(1)), int(m.group(2))) >= 1
+
+
+@dataclass
+class Bare:
+    mine: int            # the poster's games
+    theirs: int
+    mode: str | None
+    name: str            # whatever is left that might be the opponent ("" if nothing)
+    text: str
+
+
+def parse_bare(text: str) -> Bare | None:
+    """A score without a clear 'X beat Y': '2-1', 'safe as bruv 2-1', 'jono 2-1 snb', 'lost 1-2'.
+
+    The poster's score goes first, unless they say won/lost, which decides it.
+    """
+    raw = text.strip()
+    if not raw or raw.startswith("!") or raw.endswith("?"):
+        return None
+    t = raw.lower().replace("’", "'")
+    if HYPOTHETICAL.search(t):
+        return None
+    t = ROUND_RE.sub(" ", t)
+    m = SCORE_RE.search(t)
+    if not m:
+        return None
+    a, b = int(m.group(1)), int(m.group(2))
+    if max(a, b) < 1:
+        return None
+    mode = detect_mode(t)
+    t = t[: m.start()] + " " + t[m.end():]
+    for _, pat in MODE_PATTERNS + METHOD_PATTERNS:
+        t = re.sub(pat, " ", t)
+    toks = [tok.strip("'.-") for tok in re.findall(r"[a-z0-9_'.\-]+", t)]
+    toks = [tok for tok in toks if tok and not tok.isdigit()]
+    won = any(tok in WIN_VERBS or tok in WON_VERBS for tok in toks)
+    lost = any(tok in LOSS_VERBS for tok in toks)
+    if lost and not won:
+        a, b = min(a, b), max(a, b)
+    elif won and not lost:
+        a, b = max(a, b), min(a, b)
+    name = [tok for tok in toks if tok not in FILLER and tok not in SELF_WORDS
+            and tok not in WIN_VERBS and tok not in WON_VERBS and tok not in LOSS_VERBS]
+    return Bare(mine=a, theirs=b, mode=mode, name=" ".join(name[:3]), text=raw)

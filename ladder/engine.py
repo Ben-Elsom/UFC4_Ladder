@@ -11,7 +11,7 @@ from typing import Any
 
 from . import glicko
 from .names import norm, resolve as _fuzzy_resolve
-from .parser import SELF, detect_mode, parse, parse_vs_lines
+from .parser import SELF, VsLine, detect_mode, has_score, parse, parse_bare, parse_vs_lines
 
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
@@ -163,21 +163,59 @@ class Ladder:
             if answer is not None:
                 return answer
 
+        # The score is the key: a message without one is just chat.
+        if not has_score(body):
+            return []
+
         vs = parse_vs_lines(body)
         if vs:
             return self._vs_batch(msg, body, vs)
 
         rep = parse(body)
-        if rep is None:
+        if rep is not None and rep.score is not None and not rep.implicit:
+            draft = {
+                "sender": msg["sender_id"], "uid": msg["uid"], "ts": msg["ts"], "text": body,
+                "winner": None, "loser": None, "score": rep.score, "mode": rep.mode, "method": None,
+            }
+            return self._fill_names(draft, rep.winner, rep.loser, True)
+        return self._bare_score(msg, body)
+
+    # ------------------------------------------------------------ a score with no clear opponent
+    def _bare_score(self, msg: dict, body: str) -> list[str]:
+        b = parse_bare(body)
+        if b is None:
             return []
-        draft = {
-            "sender": msg["sender_id"], "uid": msg["uid"], "ts": msg["ts"], "text": body,
-            "winner": None, "loser": None, "score": rep.score, "mode": rep.mode, "method": None,
-        }
-        strong = rep.score is not None or rep.mode is not None
-        if rep.implicit and not strong:
-            return []  # "jono smashed it" with no score or mode is just chat
-        return self._fill_names(draft, rep.winner, rep.loser, strong)
+        sender = msg["sender_id"]
+        if b.name:
+            status, ids = self._resolve(b.name, self._name_pool(), exclude={sender}, prefer=self._recent_opponents(sender))
+            if status != "none":
+                return self._vs_batch(msg, body, [VsLine(name=b.name, mine=b.mine, theirs=b.theirs, mode=b.mode, text=b.text)])
+        # No name: is it the set they posted earlier, carrying on? (1-1 earlier, now 2-1)
+        f = self._latest_set_of(sender, msg["ts"], b.mode)
+        if f:
+            opp = f["loser"] if f["winner"] == sender else f["winner"]
+            mine = self._games(f, sender)
+            theirs = self._games(f, opp)
+            if b.mine >= mine and b.theirs >= theirs and b.mine + b.theirs > mine + theirs:
+                d = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body, "mode": f["mode"], "method": None,
+                     "winner": sender if b.mine >= b.theirs else opp, "loser": opp if b.mine >= b.theirs else sender,
+                     "score": (max(b.mine, b.theirs), min(b.mine, b.theirs))}
+                return self._finalise(d)
+        q = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body,
+             "mine": b.mine, "theirs": b.theirs, "mode": b.mode}
+        self._set_pending(q, "who")
+        meaning = "you won" if b.mine > b.theirs else "you lost" if b.mine < b.theirs else "it was a split"
+        return [f"🤔 Who was that {b.mine}-{b.theirs} against? Reply with their name. "
+                f"(Your score goes first, so {meaning}. If not, post it again like: lost to bjkid {b.theirs}-{b.mine})"]
+
+    def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
+        for f in reversed(self.s["fights"]):
+            if f["status"] == "void" or acct not in (f["winner"], f["loser"]):
+                continue
+            if mode and f["mode"] != mode:
+                continue
+            return f if now - f.get("updated_ts", f["ts"]) <= SET_UPDATE_MINUTES * MIN else None
+        return None
 
     def _fill_names(self, d: dict, w_text: str, l_text: str, strong: bool) -> list[str]:
         sender = d["sender"]
@@ -234,6 +272,17 @@ class Ladder:
         words = body.lower().split()
         if q["kind"] == "batch":
             return self._answer_batch(q, body, words)
+        if q["kind"] == "who":
+            name = " ".join(w for w in words if w not in ("vs", "v", "against", "it", "was", "with"))
+            if not name or len(words) > 4 or has_score(body):
+                return None
+            status, ids = self._resolve(name, self._name_pool(), exclude={q["sender"]}, prefer=self._recent_opponents(q["sender"]))
+            if status == "none":
+                return [f"❓ Couldn't tell who \"{name}\" is. Reply with part of their PSN name."]
+            self.s["pending"].remove(q)
+            return self._vs_batch(msg | {"uid": q["uid"], "ts": q["ts"]}, q["text"],
+                                  [VsLine(name=self.name(ids[0]) if status == "ok" else name,
+                                          mine=q["mine"], theirs=q["theirs"], mode=q["mode"], text=q["text"])])
         if q["kind"] == "mode":
             mode = detect_mode(body)
             if mode and len(words) <= 4:
@@ -481,14 +530,14 @@ class Ladder:
         if cmd in ("help", "commands", "how"):
             lines = [
                 "🥊 POST A RESULT (after you play)",
+                "Always put the score in. No score = the bot ignores it.",
                 "👉 beat bjkid 2-1 mma",
-                "👉 lost to temp snb",
+                "👉 lost to temp 0-1 snb  (one fight = 1-0)",
                 "👉 vs bjkid 2-1 mma  (your score first)",
-                "• Best of 3? Add the score, e.g. 2-1",
+                "• Just a score? The bot asks who it was against",
                 "• Posted 1-1 mid-set? Post the final score after and it updates",
-                "• Say the mode: mma or snb",
-                "• Part of their name is fine",
-                "✅ The bot replies in the chat to confirm every result. No confirmation within a minute? It didn't go through, so check how you wrote it and post again.",
+                "• Add the mode: mma or snb",
+                "✅ The bot replies to confirm every result. No reply within a minute? It didn't go through, so post it again.",
                 "",
                 "📋 COMMANDS",
                 "!board – full rankings, both modes",

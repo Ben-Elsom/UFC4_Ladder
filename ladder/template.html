@@ -198,27 +198,28 @@ const views = {
     return `<div class="tut">
       <p>${bot} sits in the group chat and keeps two separate ladders: <b>MMA</b> and <b>Stand &amp; Bang</b>. It reads the chat every few seconds and replies straight away.</p>
       <h2>Posting a result</h2>
-      <p>After you play, either fighter posts the result in the group chat. Write it however you like. These all work:</p>
+      <p>After you play, either fighter posts the result in the group chat. <b>Always include the score.</b> That's how the bot knows a message is a result: anything without a score is treated as normal chat and ignored. Otherwise, write it however you like. These all work:</p>
       <div class="card examples">
         <div><code>beat bjkid 2-1 mma</code></div><div class="muted">You beat BJkid2000 two fights to one in MMA</div>
-        <div><code>lost to temp sb</code></div><div class="muted">Temp beat you in Stand &amp; Bang</div>
+        <div><code>lost to temp 0-1 snb</code></div><div class="muted">Temp beat you in a single Stand &amp; Bang fight</div>
         <div><code>jono beat bjkid 2-0 stand and bang</code></div><div class="muted">Posting for two other people</div>
-        <div><code>w vs reaper mma</code></div><div class="muted">Single fight (no score means one fight)</div>
+        <div><code>2-1</code></div><div class="muted">Just the score: the bot asks who it was against (your score first, so you won)</div>
         <div><code>gg bjkid, lost 1-2 mma</code></div><div class="muted">BJkid2000 won 2–1</div>
         <div><code>vs bjkid 2-1 mma</code></div><div class="muted">Your score first: you won 2–1</div>
         <div><code>my fights today<br>vs bjkid 0-4<br>vs jono 1-0</code></div><div class="muted">Several results in one message, one per line. The bot asks the mode once for all of them.</div>
       </div>
       <ul>
         <li><b>Names:</b> part of someone's PSN name is enough, and spelling doesn't need to be perfect. <code>bjkid</code> finds BJkid2000.</li>
-        <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. No score means a single fight.</li>
+        <li><b>Best of three:</b> post it <b>once</b> with the score, like <code>2-1</code>. Every fight in the set counts toward ratings, so a 2–0 is worth more than a 2–1. A single fight is <code>1-0</code>.</li>
+        <li><b>Your score first:</b> when you just write numbers (<code>2-1</code>, <code>vs bjkid 0-2</code>), the first number is yours. Words like <i>beat</i> or <i>lost to</i> override that.</li>
         <li><b>Posted part-way through a set?</b> If you post <code>1-1</code> and then play the decider, just post the final score (<code>2-1</code>) within an hour. The bot updates the same result instead of adding a new one.</li>
         <li><b>Mode:</b> add <code>mma</code> or <code>snb</code> (<code>sb</code>, <code>s&amp;b</code> and <code>stand and bang</code> also work). Leave it out and the bot uses whatever you two played last that session, or asks.</li>
         <li><b>Both posted it?</b> No problem. If you and your opponent both post the same result within ${D.settings.duplicate_minutes} minutes, it only counts once.</li>
       </ul>
       <p>Within a few seconds the bot replies with a result number and both players' new ratings, so you can check it understood you:</p>
       <span class="msg">✅ #14 MMA · JonoTheGoat def. BJkid2000 2–1 · JonoTheGoat 1612 (+14) · BJkid2000 1540 (−14)</span>
-      <p><b>No confirmation within a minute? Your result didn't go through.</b> Check how you wrote it (a win or loss word, their name, and mma or snb) and post it again.</p>
-      <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>sb</code>.</p>
+      <p><b>No confirmation within a minute? Your result didn't go through.</b> Check you included the score, and post it again.</p>
+      <p>If it can't tell which person you meant, it asks <i>"Which one did you mean? 1) … 2) …"</i>. Reply with the number. If it needs the mode, reply <code>mma</code> or <code>snb</code>. If you only posted a score, it asks who it was against: reply with their name.</p>
       <h2>Questions or problems</h2>
       <p>If the bot got a result wrong, or you have any questions or issues, <b>message ${esc(D.admin)}</b> on PlayStation and he'll sort it out.</p>
       <h2>Checking your stats in the chat</h2>
