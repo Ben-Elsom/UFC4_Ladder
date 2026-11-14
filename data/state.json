@@ -434,18 +434,25 @@
   "137#459428762190560",
   "137#459428762218119",
   "137#459428763391822",
-  "137#459428766670438"
+  "137#459428766670438",
+  "137#459428785197697"
  ],
  "fights": [],
  "pending": [],
  "review": [],
- "log": [],
+ "log": [
+  {
+   "ts": 1794643674287,
+   "text": "👋 I'm the ladder bot. I keep the MMA and Stand & Bang rankings for this chat.\nAfter a fight, post the result like:  beat sam 2-1 mma  (or  lost to temp sb)\nI'll reply with everyone's new rating. Type !help for commands.",
+   "sent": true
+  }
+ ],
  "next_fight_id": 1,
  "next_review_id": 1,
  "meta": {
   "status": "ok",
   "last_error": 1794639573099,
-  "dry_run": true,
+  "dry_run": false,
   "group": "UFC 4: Elites",
   "started": 1794640102107,
   "last_weekly": 1794640102107,
@@ -453,7 +460,8 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 60.0,
-  "last_run": 1794643650248,
-  "admin_psn": "BJkid2000"
+  "last_run": 1794643674287,
+  "admin_psn": "BJkid2000",
+  "intro_sent": 1794643674287
  }
 }
