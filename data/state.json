@@ -646,7 +646,14 @@
   "140#459430124172190",
   "140#459430132928695",
   "140#459430133179470",
-  "140#459430135646568"
+  "140#459430135646568",
+  "140#459430146089579",
+  "140#459430148019368",
+  "140#459430148877862",
+  "140#459430150799469",
+  "140#459430151715290",
+  "140#459430153624749",
+  "140#459430155630888"
  ],
  "fights": [
   {
@@ -714,17 +721,6 @@
    "kind": "batch"
   },
   {
-   "sender": "2069786748782752179",
-   "uid": "139#459430121326168",
-   "ts": 1794648911430,
-   "text": "1-0",
-   "mine": 1,
-   "theirs": 0,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1794648911430
-  },
-  {
    "sender": "5190974766751866546",
    "uid": "139#459430121619653",
    "ts": 1794648912576,
@@ -734,6 +730,36 @@
    "mode": null,
    "kind": "who",
    "asked_at": 1794648912576
+  },
+  {
+   "sender": "2069786748782752179",
+   "uid": "139#459430121326168",
+   "ts": 1794648911430,
+   "text": "1-0",
+   "drafts": [
+    {
+     "sender": "2069786748782752179",
+     "uid": "139#459430121326168#0",
+     "ts": 1794648911430,
+     "text": "1-0",
+     "won": true,
+     "score": [
+      1,
+      0
+     ],
+     "text_score": "1-0",
+     "mode": null,
+     "method": null,
+     "opp": "7835799679513912497",
+     "options": null,
+     "unknown": false,
+     "name_text": "mrwhoopdatahh"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794648911430,
+   "kind": "batch"
   }
  ],
  "review": [],
@@ -772,6 +798,11 @@
    "ts": 1794648964119,
    "text": "❓ Couldn't tell who \"u get boat\" is. Reply with part of their PSN name.",
    "sent": true
+  },
+  {
+   "ts": 1794649034335,
+   "text": "🥊 vs mrwhoopdatahh 1-0 (you won): MMA or Stand & Bang? Reply mma or snb.",
+   "sent": true
   }
  ],
  "next_fight_id": 3,
@@ -786,7 +817,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794648983916,
+  "last_run": 1794649045782,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
