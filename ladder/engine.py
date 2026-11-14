@@ -622,7 +622,7 @@ class Ladder:
         if cmd in ("help", "commands", "how"):
             lines = [
                 "🥊 POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT",
-                "- vs bjkid 2-1 mma  (your score first)",
+                "- Example: vs bjkid 2-1 mma  (your score first)",
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
             ]
