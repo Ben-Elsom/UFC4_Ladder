@@ -114,6 +114,8 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
         for m in unseen:
             for reply in ladder.handle(m):
                 say(reply)
+        for text in state.pop("outbox", []):      # e.g. a question the admin page asked to be re-asked
+            say(text)
 
     if not dry and not meta.get("intro_sent"):
         say(INTRO)  # first time the bot is allowed to talk

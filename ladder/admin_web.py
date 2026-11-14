@@ -26,7 +26,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
 from . import admin_ops as ops
-from .engine import MODES
+from .engine import MODES, Ladder
 
 ENV_FILE = Path("/home/ubuntu/ladder_admin.env")
 PORT = 8090
@@ -111,8 +111,16 @@ label { display:block; font-weight:600; font-size:13px; color:var(--muted); marg
 .banner { border-radius:10px; padding:10px 14px; margin:0 0 14px; font-weight:500; }
 .banner.ok { background:var(--green-soft); color:var(--green); } .banner.bad { background:var(--red-soft); color:var(--red); }
 .empty { color:var(--muted); padding:14px 0; }
+.flag { padding:14px 0; border-bottom:1px solid var(--line); } .flag:last-child { border-bottom:0; }
+.fix { display:grid; grid-template-columns:1fr 1fr 120px 1fr; gap:8px 10px; margin:6px 0 10px; }
+.fix label, .chk { margin:6px 0 3px; }
+.chk { display:block; font-size:13px; font-weight:600; color:var(--ink); margin-top:12px; }
+.chk input { width:auto; margin:0 4px 0 0; vertical-align:middle; }
+.sc { display:flex; align-items:center; gap:4px; } .sc input { text-align:center; padding:9px 4px; }
+select.need { border-color:var(--amber); background:var(--amber-soft); }
+.acts.left { justify-content:flex-start; }
 form.inline { display:inline; margin:0; }
-@media (max-width:560px) { .row { grid-template-columns:28px 1fr; } .acts { grid-column:2; justify-content:flex-start; } }
+@media (max-width:560px) { .fix { grid-template-columns:1fr 1fr; } .row { grid-template-columns:28px 1fr; } .acts { grid-column:2; justify-content:flex-start; } }
 """
 
 FONTS = ('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -142,9 +150,11 @@ def score_text(f: dict) -> str:
 
 # ---------------------------------------------------------------- the server
 class AdminApp:
-    def __init__(self, shared: Shared, pw_hash: str, secret: str, site_url: str = "", secure_cookie: bool = True):
+    def __init__(self, shared: Shared, pw_hash: str, secret: str, site_url: str = "", secure_cookie: bool = True,
+                 make_ladder=None):
         self.shared, self.pw_hash, self.secret = shared, pw_hash, secret.encode()
         self.site_url, self.secure_cookie = site_url, secure_cookie
+        self.make_ladder = make_ladder or (lambda st: Ladder(st))
         self.fails: list[float] = []
         self.fail_lock = threading.Lock()
 
@@ -193,6 +203,54 @@ class AdminApp:
             return f"<b>{w}</b> and <b>{lo}</b> split {sc[0]}–{sc[1]}"
         return f"<b>{w}</b> def. <b>{lo}</b>{score_text(f)}"
 
+    def flag_card(self, st: dict, r: dict, n: dict[str, str], btn, tok: str) -> str:
+        """One flagged message: what the bot knew, a form to finish the result off, re-ask and dismiss."""
+        rid = r["id"]
+        who = esc(n.get(r.get("sender"), "")) if r.get("sender") else ""
+        head = (f'<div class="what"><b>{esc(r["reason"])}</b> <span class="muted small">R{rid} · {esc(when(r.get("ts")))}</span></div>'
+                f'<span class="msg">{who}{": " if who else ""}{esc(r.get("text", ""))}</span>')
+        dismiss = btn(f"/admin/review/{rid}/dismiss", "Dismiss")
+        if r.get("fight_id"):
+            return (f'<div class="flag">{head}<p class="small muted">This is about result {r["fight_id"]}. '
+                    f'Edit it to set what really happened, then dismiss this.</p>'
+                    f'<div class="acts left"><a class="btn" href="/admin/fight/{r["fight_id"]}">Edit result {r["fight_id"]}</a>{dismiss}</div></div>')
+        choices = self.player_choices(st)
+        rows = ops.guess_rows(st, r, self.make_ladder)
+
+        def people(sel: str | None, suggested: list[str]) -> str:
+            out = '<option value="">Pick a player</option>' if not sel else ""
+            sug = [a for a in suggested if a in n]
+            if sug:
+                out += '<optgroup label="Did they mean">' + "".join(
+                    f'<option value="{esc(a)}"{" selected" if a == sel else ""}>{esc(n[a])}</option>' for a in sug) + "</optgroup>"
+                out += '<optgroup label="Everyone">'
+            out += "".join(f'<option value="{esc(a)}"{" selected" if a == sel and a not in sug else ""}>{esc(nm)}</option>'
+                           for a, nm in choices)
+            return out + ("</optgroup>" if sug else "")
+
+        fields = []
+        for i, row in enumerate(rows):
+            sc = row.get("score") or ["", ""]
+            need = lambda v: ' class="need"' if not v else ""          # noqa: E731
+            modes = ('<option value="">Pick mode</option>' if not row.get("mode") else "") + "".join(
+                f'<option value="{k}"{" selected" if k == row.get("mode") else ""}>{v}</option>' for k, v in MODES.items())
+            tick = (f'<label class="chk"><input type="checkbox" name="inc{i}" value="1" checked> '
+                    f'Result {i + 1}: <span class="muted">{esc(row.get("text", ""))}</span></label>') if len(rows) > 1 else ""
+            fields.append(
+                f'{tick}<div class="fix">'
+                f'<div><label>Winner</label><select name="w{i}"{need(row.get("winner"))}>{people(row.get("winner"), row.get("options", []))}</select></div>'
+                f'<div><label>Loser</label><select name="l{i}"{need(row.get("loser"))}>{people(row.get("loser"), row.get("options", []))}</select></div>'
+                f'<div><label>Score</label><div class="sc"><input name="ws{i}" type="number" min="0" max="20" inputmode="numeric" value="{esc(sc[0])}">'
+                f'<span>–</span><input name="ls{i}" type="number" min="0" max="20" inputmode="numeric" value="{esc(sc[1])}"></div></div>'
+                f'<div><label>Mode</label><select name="m{i}"{need(row.get("mode"))}>{modes}</select></div></div>')
+        can_reask = bool(r.get("sender") and r.get("text"))
+        reask = btn(f"/admin/review/{rid}/reask", "Re-ask in chat", "",
+                    f"Post the question in the group chat again for {n.get(r.get('sender'), 'them')}?") if can_reask else ""
+        return (f'<div class="flag">{head}'
+                f'<form id="fix{rid}" method="post" action="/admin/review/{rid}/add"><input type="hidden" name="csrf" value="{tok}">'
+                f'<input type="hidden" name="rows" value="{len(rows)}">{"".join(fields)}</form>'
+                f'<div class="acts left"><button class="primary" form="fix{rid}">Add result</button>{reask}{dismiss}</div></div>')
+
     def dashboard(self, session: str, note: str = "", bad: bool = False) -> str:
         tok = esc(self.csrf(session))
         with self.shared.lock:
@@ -222,14 +280,7 @@ class AdminApp:
                             f'<div class="muted small">{esc(MODES.get(f["mode"], f["mode"]))} · {esc(when(f["ts"]))}</div>{text}</div>'
                             f'<div class="acts">{acts}</div></div>')
 
-            rev = []
-            for r in reviews:
-                who = esc(n.get(r.get("sender"), "")) if r.get("sender") else ""
-                dismiss = btn(f"/admin/review/{r['id']}/dismiss", "Dismiss")
-                rev.append(f'<div class="row"><div class="fid">R{r["id"]}</div>'
-                           f'<div><div class="what"><b>{esc(r["reason"])}</b></div><div class="muted small">{esc(when(r.get("ts")))}</div>'
-                           f'<span class="msg">{who}{": " if who else ""}{esc(r.get("text", ""))}</span></div>'
-                           f'<div class="acts">{dismiss}</div></div>')
+            rev = [self.flag_card(st, r, n, btn, tok) for r in reviews]
 
         live = sum(1 for f in fights if f["status"] != "void")
         site = f' · <a href="{esc(self.site_url)}">Public site</a>' if self.site_url else ""
@@ -239,7 +290,8 @@ class AdminApp:
                 f'<form class="inline" method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{tok}"><button>Log out</button></form></header>'
                 f'{banner}')
         if rev:
-            body += f'<h2>Flagged messages ({len(rev)})</h2><div class="card">{"".join(rev)}</div>'
+            body += (f'<h2>Flagged messages ({len(rev)})</h2><p class="muted small" style="margin-top:-6px">Fill in what\'s missing '
+                     f'(highlighted) and add it, ask the player again in the chat, or dismiss it.</p><div class="card">{"".join(rev)}</div>')
         body += (f'<h2>Results</h2><input id="q" type="search" placeholder="Search by name, mode or message" autocomplete="off">'
                  f'<div style="height:10px"></div><div class="card" id="list">'
                  f'{"".join(rows) or "<div class=empty>No results yet</div>"}</div>'
@@ -400,6 +452,10 @@ class AdminApp:
                     ok, msg = app.act(lambda st: (ops.void(st, parts[3]), f"Removed result {parts[3]}")[1])
                 elif len(parts) == 5 and parts[2] == "fight" and parts[4] == "restore":
                     ok, msg = app.act(lambda st: (ops.restore(st, parts[3]), f"Result {parts[3]} counts again")[1])
+                elif len(parts) == 5 and parts[2] == "review" and parts[4] == "reask":
+                    ok, msg = app.act(lambda st: ops.reask(st, parts[3], app.make_ladder))
+                elif len(parts) == 5 and parts[2] == "review" and parts[4] == "add":
+                    ok, msg = app.act(lambda st: add_from_form(st, parts[3], form))
                 elif len(parts) == 5 and parts[2] == "review" and parts[4] == "dismiss":
                     ok, msg = app.act(lambda st: (ops.resolve_review(st, parts[3], "dismissed on admin page"), "Dismissed")[1])
                 elif len(parts) == 4 and parts[2] == "fight":
@@ -425,12 +481,47 @@ class AdminApp:
         return H
 
 
-def start(shared: Shared, site_url: str = "", port: int = PORT, log=print) -> ThreadingHTTPServer | None:
+def add_from_form(st: dict, rid: str, form: dict) -> str:
+    r = ops.find_review(st, rid)
+    if r["resolved"]:
+        raise ops.AdminError("That one's already sorted")
+    try:
+        count = max(1, min(10, int(form.get("rows", "1"))))
+    except ValueError:
+        count = 1
+    todo = []
+    for i in range(count):
+        if count > 1 and not form.get(f"inc{i}"):
+            continue
+        which = f" for result {i + 1}" if count > 1 else ""
+        w, lo, mode = form.get(f"w{i}") or None, form.get(f"l{i}") or None, form.get(f"m{i}") or None
+        ws, ls = form.get(f"ws{i}", "").strip(), form.get(f"ls{i}", "").strip()
+        if not w or not lo:
+            raise ops.AdminError(f"Pick both players{which}")
+        if not mode:
+            raise ops.AdminError(f"Pick the mode{which}")
+        if bool(ws) != bool(ls):
+            raise ops.AdminError(f"Fill in both scores{which}, or leave both blank")
+        try:
+            score = [int(ws), int(ls)] if ws else None
+        except ValueError:
+            raise ops.AdminError(f"Scores must be whole numbers{which}") from None
+        ops._check(st, w, lo, score, mode)
+        todo.append((i, w, lo, score, mode))
+    if not todo:
+        raise ops.AdminError("Tick at least one result to add")
+    ids = [str(ops.add_result(st, winner=w, loser=lo, score=score, mode=mode, ts=r.get("ts"), text=r.get("text", ""),
+                              reported_by=r.get("sender"), uid=f"admin-r{r['id']}-{i}")["id"]) for i, w, lo, score, mode in todo]
+    r["resolved"], r["resolution"] = True, f"added as result {', '.join(ids)}"
+    return f"Added result {' and '.join(ids)}"
+
+
+def start(shared: Shared, site_url: str = "", port: int = PORT, log=print, make_ladder=None) -> ThreadingHTTPServer | None:
     pw_hash, secret = os.environ.get("ADMIN_PASSWORD_HASH", ""), os.environ.get("ADMIN_SECRET", "")
     if not pw_hash or not secret:
         log("admin page off: no password set (run deploy/set_admin_password.sh)")
         return None
-    srv = ThreadingHTTPServer(("127.0.0.1", port), AdminApp(shared, pw_hash, secret, site_url).handler())
+    srv = ThreadingHTTPServer(("127.0.0.1", port), AdminApp(shared, pw_hash, secret, site_url, make_ladder=make_ladder).handler())
     srv.daemon_threads = True
     threading.Thread(target=srv.serve_forever, name="admin-web", daemon=True).start()
     log(f"admin page listening on 127.0.0.1:{port}")

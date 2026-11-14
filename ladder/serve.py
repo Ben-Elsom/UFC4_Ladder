@@ -64,7 +64,12 @@ def main() -> None:
     cfg = load_config()
     shared = admin_web.Shared(load_state(STATE))
     state = shared.state
-    admin_web.start(shared, cfg.get("site_url", ""), log=log)
+    def make_ladder(st: dict) -> Ladder:
+        c = load_config()
+        return Ladder(st, admin_name=c.get("admin_name") or c.get("admin_psn") or "the admin",
+                      site_url=c.get("site_url", ""), nicknames=c.get("nicknames"))
+
+    admin_web.start(shared, cfg.get("site_url", ""), log=log, make_ladder=make_ladder)
     mtime = STATE.stat().st_mtime if STATE.exists() else 0
     chat = None
     last_fp, last_push, last_members, cfg_at = fingerprint(state), 0.0, 0.0, time.time()

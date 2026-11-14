@@ -152,3 +152,87 @@ def test_password_hash_round_trip():
     h = admin_web.hash_password("abc def ghi")
     assert admin_web.check_password("abc def ghi", h) and not admin_web.check_password("abc def gh", h)
     assert not admin_web.check_password("x", "garbage")
+
+
+# ---------------------------------------------------------------- flagged messages
+def flag(s, sender, text, ts):
+    lad = Ladder(s, admin_name="BJkid2000")
+    out = lad.handle({"uid": f"f{ts}", "sender_id": sender, "sender_name": PLAYERS[sender], "body": text, "ts": ts})
+    lad.expire_questions(ts + 10 * 60_000)
+    return out, s["review"][-1]
+
+
+def test_flag_keeps_what_the_bot_knew_and_admin_can_finish_it():
+    s = make_state()
+    _, r = flag(s, "a2", "beat bjkid 2-1", T0 + 9_000_000)
+    assert r["reason"] == "No mode" and r["question"]["winner"] == "a2"
+    rows = ops.guess_rows(s, r, Ladder)
+    assert rows == [dict(winner="a2", loser="a1", score=[2, 1], mode=None, text="beat bjkid 2-1", options=[])]
+    msg = admin_web.add_from_form(s, r["id"], {"rows": "1", "w0": "a2", "l0": "a1", "ws0": "2", "ls0": "1", "m0": "mma"})
+    f = s["fights"][-1]
+    assert msg == f"Added result {f['id']}" and (f["winner"], f["loser"], f["mode"], f["score"]) == ("a2", "a1", "mma", [2, 1])
+    assert f["ts"] == T0 + 9_000_000 and r["resolved"]
+    with pytest.raises(ops.AdminError):
+        admin_web.add_from_form(s, r["id"], {"rows": "1", "w0": "a2", "l0": "a1", "m0": "mma"})   # already sorted
+
+
+def test_missing_opponent_row_and_validation():
+    s = make_state()
+    _, r = flag(s, "a3", "2-0", T0 + 9_000_000)
+    assert r["reason"] == "No opponent"
+    assert ops.guess_rows(s, r, Ladder)[0] == dict(winner="a3", loser=None, score=[2, 0], mode=None, text="2-0", options=[])
+    with pytest.raises(ops.AdminError, match="both players"):
+        admin_web.add_from_form(s, r["id"], {"rows": "1", "w0": "a3", "l0": "", "ws0": "2", "ls0": "0", "m0": "sb"})
+    with pytest.raises(ops.AdminError, match="mode"):
+        admin_web.add_from_form(s, r["id"], {"rows": "1", "w0": "a3", "l0": "a1", "ws0": "2", "ls0": "0", "m0": ""})
+    assert not r["resolved"]
+
+
+def test_old_flags_without_a_saved_question_are_guessed_from_the_message():
+    s = make_state()
+    s["review"].append({"id": 99, "kind": "unanswered", "reason": "No mode", "text": "2-1 to me against mika",
+                        "sender": "a1", "ts": T0 + 9_000_000, "fight_id": None, "resolved": False})
+    rows = ops.guess_rows(s, s["review"][-1], Ladder)
+    assert (rows[0]["winner"], rows[0]["loser"], rows[0]["score"], rows[0]["mode"]) == ("a1", "a3", [2, 1], None)
+    assert len(s["fights"]) == 2 and not s["pending"]          # the guess didn't touch the real state
+
+
+def test_reask_posts_the_question_again_with_fresh_time():
+    s = make_state()
+    _, r = flag(s, "a3", "2-0", T0 + 9_000_000)
+    now = T0 + 99_000_000
+    msg = ops.reask(s, r["id"], Ladder, now)
+    assert "Asked mika_09876 again" in msg and r["resolved"]
+    assert s["outbox"][0].startswith("🔁 Asking again\n- mika_09876, who was that 2-0 against?")
+    q = s["pending"][0]
+    assert q["sender"] == "a3" and q["asked_at"] == now
+    with pytest.raises(ops.AdminError, match="already"):
+        ops.reask(s, r["id"], Ladder, now + 2)          # already re-asked
+    s["review"].append(dict(r, id=50, resolved=False))
+    with pytest.raises(ops.AdminError, match="question waiting"):
+        ops.reask(s, 50, Ladder, now + 2)               # mika still has the re-asked question open
+
+
+def test_bot_posts_the_outbox():
+    from ladder.run import run
+
+    class Chat:
+        sent = []
+        def identity(self): return "bot", "UFC_Rankings_Bot"
+        def group_label(self): return "g", "UFC 4: Elites"
+        def members(self): return list(PLAYERS.items())
+        def messages(self, limit=100): return []
+        def send(self, text): self.sent.append(text)
+
+    s = make_state()
+    s["meta"]["started"] = s["meta"]["intro_sent"] = s["meta"]["last_weekly"] = T0
+    s["outbox"] = ["hello again"]
+    run(Chat(), s, {"dry_run": False}, T0 + 1000)
+    assert Chat.sent == ["hello again"] and "outbox" not in s
+
+
+def test_flag_page_renders_forms(web):
+    port, s, _ = web
+    flag(s, "a2", "beat bjkid 2-1", T0 + 9_000_000)
+    body = req(port, "GET", "/admin", cookie=login(port))[2]
+    assert "Add result" in body and "Re-ask in chat" in body and 'class="need"' in body

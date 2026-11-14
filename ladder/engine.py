@@ -6,6 +6,7 @@ fight is just changing that one entry.
 
 from __future__ import annotations
 
+import copy
 import random
 import re
 from typing import Any
@@ -582,6 +583,7 @@ class Ladder:
         self.s["review"].append({
             "id": rid, "kind": kind, "reason": reason, "text": d.get("text", ""), "sender": d.get("sender"),
             "ts": d.get("ts"), "fight_id": fight_id, "resolved": False,
+            "question": copy.deepcopy(d),     # what the bot knew, so the admin page can finish it off
         })
 
     def _resolve_unreadable(self, d: dict) -> None:
