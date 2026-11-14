@@ -1102,7 +1102,17 @@
   "144#459434047366276",
   "144#459434049929994",
   "144#459434057783766",
-  "144#459434058032792"
+  "144#459434058032792",
+  "144#459434059492479",
+  "144#459434059791163",
+  "144#459434060414144",
+  "144#459434061962504",
+  "144#459434064794976",
+  "144#459434069413408",
+  "144#459434069571229",
+  "144#459434071581245",
+  "144#459434073636996",
+  "144#459434074492253"
  ],
  "fights": [
   {
@@ -1442,7 +1452,7 @@
    "ts": 1794662623815,
    "msg_uid": "143#459433631696820#0",
    "text": "Vs van 1-0 SnB",
-   "status": "void",
+   "status": "ok",
    "admin_edits": [
     {
      "ts": 1794663938042,
@@ -1457,9 +1467,22 @@
       "mode": "sb",
       "status": "ok"
      }
+    },
+    {
+     "ts": 1794664330446,
+     "action": "restored",
+     "was": {
+      "winner": "5879038572944845531",
+      "loser": "6028910841825523632",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "sb",
+      "status": "void"
+     }
     }
-   ],
-   "note": "test vs vanz_nz after leaving the chat"
+   ]
   },
   {
    "id": 19,
@@ -1475,7 +1498,7 @@
    "ts": 1794663052164,
    "msg_uid": "144#459433741354036#0",
    "text": "Vs van 1-0 SnB",
-   "status": "void",
+   "status": "ok",
    "admin_edits": [
     {
      "ts": 1794663938243,
@@ -1490,9 +1513,22 @@
       "mode": "sb",
       "status": "ok"
      }
+    },
+    {
+     "ts": 1794664330650,
+     "action": "restored",
+     "was": {
+      "winner": "5879038572944845531",
+      "loser": "6028910841825523632",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "sb",
+      "status": "void"
+     }
     }
-   ],
-   "note": "test vs vanz_nz after leaving the chat"
+   ]
   },
   {
    "id": 20,
@@ -1541,6 +1577,22 @@
    "ts": 1794663831897,
    "msg_uid": "144#459433940965698#0",
    "text": "Me and granite 2-2 record",
+   "status": "ok"
+  },
+  {
+   "id": 22,
+   "mode": "sb",
+   "winner": "4444062021544416430",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1794664304541,
+   "msg_uid": "144#459434061962504#0",
+   "text": "1-0 to granite",
    "status": "ok"
   }
  ],
@@ -1884,9 +1936,19 @@
    "ts": 1794663966147,
    "text": "🚪 vanz_nz has left the chat\n- Results against them can't be added",
    "sent": true
+  },
+  {
+   "ts": 1794664312424,
+   "text": "- mrwhoopdatahh, was that MMA or Stand & Bang?\n- mrwhoopdatahh lost to Granite_chin23 0-1\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794664331024,
+   "text": "✅ Stand & Bang result\n- Granite_chin23 def. mrwhoopdatahh 1–0\n- Granite_chin23 1459 (+30)\n- mrwhoopdatahh 1399 (−101) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 22,
+ "next_fight_id": 23,
  "next_review_id": 8,
  "meta": {
   "status": "ok",
@@ -1898,7 +1960,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794664287318,
+  "last_run": 1794664331024,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
