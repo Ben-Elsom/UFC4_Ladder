@@ -27,7 +27,13 @@ logs results, replies with new ratings, and rebuilds the website in `docs/`.
     .venv/bin/python -m pytest -q
     .venv/bin/python -m ladder.run --fake chat.json --state /tmp/state.json --site /tmp/site
 
-## Admin fixes (until the admin page exists)
-On the server (`ssh ladder`, in `~/UFC4_Ladder`): `.venv/bin/python -m ladder.admin list | void N | restore N | edit N --winner x --loser y --score 2-1 --mode snb | swap N | resolve N`.
-The running bot picks the change up straight away. A private admin web page is planned but parked; see `ADMIN_PAGE_PLAN.md`.
+## Admin page
+https://161-33-93-95.sslip.io/admin (admin only, password login, 30-day sessions). Lists every result; edit, remove,
+undo a removal, dismiss flagged messages. It runs inside the bot (`ladder/admin_web.py`, port 8090 on localhost),
+with Caddy in front for HTTPS (`deploy/Caddyfile`). Ports 80/443 are open in the Oracle security list and iptables.
+Change the password: `ssh -t ladder 'bash ~/UFC4_Ladder/deploy/set_admin_password.sh'`.
+
+## Admin fixes from the command line
+On the server (`ssh ladder`, in `~/UFC4_Ladder`), with the bot stopped (`sudo systemctl stop ladder`, then start it again):
+`.venv/bin/python -m ladder.admin list | void N | restore N | edit N --winner x --loser y --score 2-1 --mode snb | swap N | resolve N`.
 

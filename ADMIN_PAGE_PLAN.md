@@ -1,8 +1,7 @@
 # Admin page: parked plan
 
-Status: **parked** (2026-11-14). The admin (BJkid2000) asked for it, then asked to hold off.
-Nothing below has been built yet. Until it is, fixes are made by asking Claude, who runs
-`python -m ladder.admin ...` on the server (see README).
+Status: **live** (2026-11-14) at https://161-33-93-95.sslip.io/admin. Built: login, results list with search,
+edit, remove/undo, dismiss flagged messages. Not built yet: pause/resume bot (section 5 below).
 
 ## What the admin asked for
 
