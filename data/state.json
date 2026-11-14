@@ -481,7 +481,9 @@
   "138#459429082982274",
   "138#459429106584517",
   "138#459429107122158",
-  "138#459429109477580"
+  "138#459429109477580",
+  "138#459429112635386",
+  "138#459429116841108"
  ],
  "fights": [],
  "pending": [],
@@ -500,12 +502,14 @@
   {
    "ts": 1794643946022,
    "text": "🥊 UFC 4 LADDER: HOW IT WORKS\n\nPOST A RESULT (after you play)\n👉 beat bjkid 2-1 mma\n👉 lost to temp sb\n• Best of 3? Add the score, e.g. 2-1\n• Say the mode: mma or sb\n• Part of their name is fine\n\nCOMMANDS\n!board – top 5 in both modes\n!board mma – top 10 in MMA\n!rank – your rank and record\n!rank bjkid – someone else's\n!h2h bjkid – your record vs BJkid2000\n!recent – last 5 results\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
-   "sent": true
+   "sent": false,
+   "error": "PSNAWPBadRequestError: message too long"
   },
   {
    "ts": 1794644859780,
    "text": "🥊 UFC 4 LADDER: HOW IT WORKS\n\nPOST A RESULT (after you play)\n👉 beat bjkid 2-1 mma\n👉 lost to temp snb\n👉 vs bjkid 2-1 mma  (your score first)\n• Best of 3? Add the score, e.g. 2-1\n• Say the mode: mma or snb\n• Part of their name is fine\n✅ The bot replies in the chat to confirm every result. No confirmation within a minute? It didn't go through, so check how you wrote it and post again.\n\nCOMMANDS\n!board – full rankings, both modes\n!board mma – just MMA\n!rank – your rank and record\n!rank bjkid – someone else's\n!record bjkid – your record vs BJkid2000\n!recent – last 5 results\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
-   "sent": true
+   "sent": false,
+   "error": "PSNAWPBadRequestError: message too long"
   }
  ],
  "next_fight_id": 1,
@@ -521,7 +525,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794644959667,
+  "last_run": 1794645001450,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
