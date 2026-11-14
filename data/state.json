@@ -883,7 +883,12 @@
   "142#459431997711058",
   "142#459432003643102",
   "142#459432003982704",
-  "142#459432012877060"
+  "142#459432012877060",
+  "142#459432018273573",
+  "142#459432023222470",
+  "142#459432024187296",
+  "142#459432027371254",
+  "142#459432028189459"
  ],
  "fights": [
   {
@@ -1076,6 +1081,22 @@
    "ts": 1794656154279,
    "msg_uid": "142#459431975495452#0",
    "text": "ggs mma vs blumzy 2-1 to me",
+   "status": "ok"
+  },
+  {
+   "id": 13,
+   "mode": "sb",
+   "winner": "5190974766751866546",
+   "loser": "5879038572944845531",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794656356918,
+   "msg_uid": "142#459432027371254#0",
+   "text": "2-0 to me against bjkid snb",
    "status": "ok"
   }
  ],
@@ -1286,9 +1307,14 @@
    "ts": 1794656161708,
    "text": "✅ MMA result\n- mrwhoopdatahh def. blumzylol 2–1\n- mrwhoopdatahh 1679 (+65)\n- blumzylol 1618 (−55)",
    "sent": true
+  },
+  {
+   "ts": 1794656356904,
+   "text": "✅ Stand & Bang result\n- dad_scopez def. BJkid2000 2–0\n- dad_scopez 1643 (+50)\n- BJkid2000 1395 (−105) (2/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 13,
+ "next_fight_id": 14,
  "next_review_id": 7,
  "meta": {
   "status": "ok",
@@ -1300,7 +1326,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794656306792,
+  "last_run": 1794656368300,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
