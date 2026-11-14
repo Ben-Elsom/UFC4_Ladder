@@ -102,7 +102,7 @@ def parse(text: str) -> Report | None:
     m = SCORE_RE.search(t)
     if m:
         a, b = (int(x) for x in (m.group(1, 2) if m.group(1) else m.group(3, 4)))
-        if a != b and max(a, b) >= 1:
+        if max(a, b) >= 1:   # 2-2 is a split: four fights, two each
             score = (max(a, b), min(a, b))
         t = t[: m.start()] + " " + t[m.end():]
 

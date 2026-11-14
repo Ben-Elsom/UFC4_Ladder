@@ -208,9 +208,20 @@ def test_vs_line_single_with_mode(lad):
     assert "Already got" in out[0]
 
 
-def test_vs_line_draw_not_counted(lad):
-    out = say(lad, "a1", "vs sam 2-2 mma", T0)
-    assert "draw" in out[0] and lad.s["fights"] == []
+def test_split_counts_and_moves_ratings_toward_each_other(lad):
+    t = T0
+    for _ in range(2):                                        # jono gets ahead first
+        say(lad, "a1", "beat sam 2-0 mma", t); t += 4 * H
+    before = lad.replay("mma")["stats"]
+    out = say(lad, "a2", "vs jono 2-2 mma", t)
+    assert "split 2–2" in out[0]
+    after = lad.replay("mma")["stats"]
+    assert after["a2"]["rating"] > before["a2"]["rating"]   # lower-rated player gains
+    assert after["a1"]["rating"] < before["a1"]["rating"]
+    assert after["a1"]["wins"] == 6 and after["a1"]["losses"] == 2
+    assert after["a1"]["streak"] == 2                        # a split doesn't break a streak
+    out = say(lad, "a1", "vs sam 2-2 mma", t + 60_000)       # other player posts it too
+    assert "Already got" in out[0]
 
 
 def test_nickname_default_picks_without_asking():

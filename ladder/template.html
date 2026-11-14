@@ -134,7 +134,7 @@ function fightRow(f) {
   const deltas = ch && f.status === 'ok' ? `<span class="hide-sm">${signed(ch[0])} / ${signed(ch[1])}</span>` : '';
   return `<div class="fight"><span class="fid">#${f.id}</span>
     <div><span class="pill ${f.mode === 'mma' ? 'red' : 'gold'}">${f.mode === 'mma' ? 'MMA' : 'S&amp;B'}</span>
-      ${nameLink(f.winner, f.winner_name)} <span class="muted">def.</span> ${nameLink(f.loser, f.loser_name)}${esc(score)}${how}${status}</div>
+      ${nameLink(f.winner, f.winner_name)} <span class="muted">${f.score && f.score[0] === f.score[1] ? 'split with' : 'def.'}</span> ${nameLink(f.loser, f.loser_name)}${esc(score)}${how}${status}</div>
     <div class="num muted" style="font-size:13px">${deltas}<br>${ago(f.ts)}</div></div>`;
 }
 

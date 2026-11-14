@@ -123,9 +123,10 @@ class Ladder:
             l["fights"] += gw + gl
             w["wins"] += gw; w["losses"] += gl
             l["wins"] += gl; l["losses"] += gw
-            w["sets_won"] += 1; l["sets_lost"] += 1
-            w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
-            l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
+            if gw != gl:   # a split (2-2) counts every fight but isn't a set win or loss
+                w["sets_won"] += 1; l["sets_lost"] += 1
+                w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
+                l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
             w["last"] = l["last"] = f["ts"]
             w["best_rating"] = max(w["best_rating"], w["rating"])
 
@@ -269,8 +270,7 @@ class Ladder:
         whole_mode = detect_mode(body)
         drafts, notes = [], []
         for i, ln in enumerate(lines):
-            if ln.mine == ln.theirs:
-                notes.append(f"❓ \"{ln.text}\" is a draw, so it wasn't counted.")
+            if ln.mine == ln.theirs == 0:
                 continue
             status, ids = self._resolve(ln.name, pool, exclude={sender}, prefer=prefer)
             if status == "none":
@@ -348,7 +348,8 @@ class Ladder:
                 continue
             if abs(d["ts"] - f["ts"]) > DUPLICATE_MINUTES * MIN or f["reported_by"] == d["sender"]:
                 continue
-            same_winner = f["winner"] == d["winner"]
+            split = d["score"] is not None and d["score"][0] == d["score"][1]
+            same_winner = f["winner"] == d["winner"] or split
             same_score = f.get("score") is None or d["score"] is None or tuple(f["score"]) == tuple(d["score"])
             if same_winner and same_score:
                 f.setdefault("confirmed_by", []).append(d["sender"])
@@ -386,6 +387,9 @@ class Ladder:
                 f"{fmt(d['winner'], ch['winner'])} · {fmt(d['loser'], ch['loser'])}"]
 
     def _describe(self, f: dict) -> str:
+        sc = f.get("score")
+        if sc and sc[0] == sc[1]:
+            return f"{self.name(f['winner'])} and {self.name(f['loser'])} split {sc[0]}–{sc[1]}"
         s = f"{self.name(f['winner'])} def. {self.name(f['loser'])}"
         if f.get("score"):
             s += f" {f['score'][0]}–{f['score'][1]}"
