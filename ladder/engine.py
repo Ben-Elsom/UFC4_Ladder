@@ -205,8 +205,9 @@ class Ladder:
              "mine": b.mine, "theirs": b.theirs, "mode": b.mode}
         self._set_pending(q, "who")
         meaning = "you won" if b.mine > b.theirs else "you lost" if b.mine < b.theirs else "it was a split"
+        hint = "" if b.mine == b.theirs else f" If not, post it again like: lost to bjkid {min(b.mine, b.theirs)}-{max(b.mine, b.theirs)}"
         return [f"🤔 Who was that {b.mine}-{b.theirs} against? Reply with their name. "
-                f"(Your score goes first, so {meaning}. If not, post it again like: lost to bjkid {b.theirs}-{b.mine})"]
+                f"(Your score goes first, so {meaning}.{hint})"]
 
     def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
         for f in reversed(self.s["fights"]):
