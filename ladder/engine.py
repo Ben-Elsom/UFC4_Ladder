@@ -340,17 +340,18 @@ class Ladder:
                 "",
                 "POST A RESULT (after you play)",
                 "👉 beat bjkid 2-1 mma",
-                "👉 lost to temp sb",
+                "👉 lost to temp snb",
                 "• Best of 3? Add the score, e.g. 2-1",
                 "• Say the mode: mma or snb",
                 "• Part of their name is fine",
+                "✅ The bot replies in the chat to confirm every result. No confirmation within a minute? It didn't go through, so check how you wrote it and post again.",
                 "",
                 "COMMANDS",
                 "!board – full rankings, both modes",
                 "!board mma – just MMA",
                 "!rank – your rank and record",
                 "!rank bjkid – someone else's",
-                "!h2h bjkid – your record vs BJkid2000",
+                "!record bjkid – your record vs BJkid2000",
                 "!recent – last 5 results",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
@@ -390,9 +391,9 @@ class Ladder:
                 streak = f" · {'W' if x['streak'] > 0 else 'L'}{abs(x['streak'])} streak" if x["streak"] else ""
                 lines.append(f"{MODES[md]}: {where} · {round(x['rating'])} · {x['wins']}-{x['losses']}{streak}")
             return ["\n".join(lines) + site]
-        if cmd in ("h2h", "vs", "record"):
+        if cmd in ("record", "h2h", "vs", "versus"):
             if not rest:
-                return ["Usage: !h2h bjkid"]
+                return ["Type !record and their name, e.g. !record bjkid"]
             pool = self._name_pool()
             people = []
             for word in rest[:2]:

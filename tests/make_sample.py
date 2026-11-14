@@ -40,7 +40,7 @@ msgs += [
   {"from":"a2","body":"beat zzqx 2-1 mma","ts":t+2*H},          # unknown name -> flagged
   {"from":"a5","body":"!board","ts":t+3*H},
   {"from":"a2","body":"!rank","ts":t+3*H+1000},
-  {"from":"a3","body":"!h2h jono mma","ts":t+3*H+2000},
+  {"from":"a3","body":"!record jono mma","ts":t+3*H+2000},
   {"from":"a4","body":"!belt","ts":t+3*H+3000},
 ]
 json.dump({"bot":{"account_id":"bot","online_id":"LadderBot_UFC"},"group_name":"UFC 4 Killers","members":[{"account_id":a,"online_id":n} for a,n in members],"messages":msgs}, open(sys.argv[1],"w"), indent=1)

@@ -170,7 +170,7 @@ def test_duplicate_only_within_ten_minutes(lad):
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
-    assert "MMA: 1-2" in say(lad, "a2", "!h2h jono", T0 + 2)[0]
+    assert "MMA: 1-2" in say(lad, "a2", "!record jono", T0 + 2)[0]
     assert "MMA" in say(lad, "a2", "!board", T0 + 3)[0]
     assert "#1" in say(lad, "a2", "!recent", T0 + 5)[0]
 
