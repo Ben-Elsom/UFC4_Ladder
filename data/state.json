@@ -1043,7 +1043,10 @@
   "144#459433656478521",
   "144#459433657716153",
   "144#459433714506965",
-  "144#459433715343493"
+  "144#459433715343493",
+  "144#459433741354036",
+  "144#459433743762872",
+  "144#459433747052224"
  ],
  "fights": [
   {
@@ -1384,6 +1387,22 @@
    "msg_uid": "143#459433631696820#0",
    "text": "Vs van 1-0 SnB",
    "status": "ok"
+  },
+  {
+   "id": 19,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "6028910841825523632",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794663052164,
+   "msg_uid": "144#459433741354036#0",
+   "text": "Vs van 1-0 SnB",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -1696,9 +1715,14 @@
    "ts": 1794662626127,
    "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1579 (+79) (1/5 fights)\n- vanz_nz 1421 (−79) (1/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794663058390,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1622 (+43) (2/5 fights)\n- vanz_nz 1378 (−43) (2/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 19,
+ "next_fight_id": 20,
  "next_review_id": 8,
  "meta": {
   "status": "ok",
@@ -1710,7 +1734,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794663016728,
+  "last_run": 1794663078016,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
