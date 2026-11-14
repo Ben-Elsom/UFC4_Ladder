@@ -537,7 +537,11 @@
   "138#459429385071745",
   "138#459429385502476",
   "138#459429387720295",
-  "138#459429394573095"
+  "138#459429394573095",
+  "138#459429397689423",
+  "138#459429402324666",
+  "138#459429404774232",
+  "138#459429407139220"
  ],
  "fights": [
   {
@@ -568,6 +572,22 @@
    "ts": 1794645707871,
    "msg_uid": "138#459429301215145#0",
    "text": "4-2",
+   "status": "ok"
+  },
+  {
+   "id": 3,
+   "mode": "sb",
+   "winner": "6459805198974452339",
+   "loser": "5190974766751866546",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "6459805198974452339",
+   "ts": 1794646112399,
+   "msg_uid": "138#459429404774232#0",
+   "text": "2-1 to scopes",
    "status": "ok"
   }
  ],
@@ -685,9 +705,14 @@
    "ts": 1794646032273,
    "text": "🥊 Got 1 result: MMA or Stand & Bang? Reply mma or snb.",
    "sent": true
+  },
+  {
+   "ts": 1794646119490,
+   "text": "✅ #3 Stand & Bang · grubby_flea257 def. dad_scopez 2–1 · grubby_flea257 1573 (−8) · dad_scopez 1427 (+8)",
+   "sent": true
   }
  ],
- "next_fight_id": 3,
+ "next_fight_id": 4,
  "next_review_id": 3,
  "meta": {
   "status": "ok",
@@ -700,7 +725,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794646052911,
+  "last_run": 1794646119490,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
