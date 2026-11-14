@@ -1,0 +1,15 @@
+[Unit]
+Description=UFC 4 ladder bot (always on)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/UFC4_Ladder
+EnvironmentFile=/home/ubuntu/ladder.env
+ExecStart=/home/ubuntu/UFC4_Ladder/.venv/bin/python -m ladder.serve
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
