@@ -23,7 +23,7 @@ from .site import build_site
 POLL_SECONDS = 8
 PUSH_MIN_GAP = 60
 HEARTBEAT_PUSH = 30 * 60
-MEMBER_REFRESH = 10 * 60
+MEMBER_REFRESH = 60          # re-read the member list every minute so new people can be guessed straight away
 STATE = ROOT / "data" / "state.json"
 SITE = ROOT / "docs"
 
