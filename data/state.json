@@ -809,7 +809,15 @@
   "141#459431368959617",
   "141#459431370765128",
   "141#459431371173467",
-  "141#459431374075277"
+  "141#459431374075277",
+  "141#459431380157922",
+  "141#459431382770060",
+  "141#459431383347191",
+  "141#459431384885816",
+  "141#459431385460174",
+  "141#459431388912108",
+  "141#459431388918263",
+  "141#459431389125562"
  ],
  "fights": [
   {
@@ -938,6 +946,38 @@
    "ts": 1794652904100,
    "msg_uid": "141#459431143449609#0",
    "text": "2-1 to me against bunky",
+   "status": "ok"
+  },
+  {
+   "id": 9,
+   "mode": "sb",
+   "winner": "8890823238041145135",
+   "loser": "5190974766751866546",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794653838945,
+   "msg_uid": "141#459431382770060#0",
+   "text": "2-0 to maori",
+   "status": "ok"
+  },
+  {
+   "id": 10,
+   "mode": "mma",
+   "winner": "7835799679513912497",
+   "loser": "2622241265805770209",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1794653862961,
+   "msg_uid": "141#459431388918263#0",
+   "text": "mma vs echo 2-0 to me",
    "status": "ok"
   }
  ],
@@ -1113,9 +1153,24 @@
    "ts": 1794652924627,
    "text": "✅ #8 MMA · echo_goescrazy def. bunky_skudz 2–1 · echo_goescrazy 1433 (+68) · bunky_skudz 1377 (−123) (3/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794653844025,
+   "text": "dad_scopez lost to maoripunisher_ 0-2\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794653863670,
+   "text": "✅ #9 Stand & Bang · maoripunisher_ def. dad_scopez 2–0 · maoripunisher_ 1690 (+111) (3/5 fights) · dad_scopez 1471 (−86)",
+   "sent": true
+  },
+  {
+   "ts": 1794653863670,
+   "text": "✅ #10 MMA · mrwhoopdatahh def. echo_goescrazy 2–0 · mrwhoopdatahh 1614 (+114) (2/5 fights) · echo_goescrazy 1383 (−50)",
+   "sent": true
   }
  ],
- "next_fight_id": 9,
+ "next_fight_id": 11,
  "next_review_id": 7,
  "meta": {
   "status": "ok",
@@ -1127,7 +1182,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794653802361,
+  "last_run": 1794653863670,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
