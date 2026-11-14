@@ -10,8 +10,8 @@
  "next_fight_id": 1,
  "next_review_id": 1,
  "meta": {
-  "status": "login_failed",
-  "error": "RuntimeError: PSN_NPSSO is not set",
-  "last_error": 1794639402037
+  "status": "error",
+  "error": "PSNAWPForbiddenError: Not permitted by parental control",
+  "last_error": 1794639573099
  }
 }
