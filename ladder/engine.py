@@ -480,19 +480,17 @@ class Ladder:
         site = f"\nFull stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
             lines = [
-                "🥊 UFC 4 LADDER: HOW IT WORKS",
-                "",
-                "POST A RESULT (after you play)",
+                "🥊 POST A RESULT (after you play)",
                 "👉 beat bjkid 2-1 mma",
                 "👉 lost to temp snb",
                 "👉 vs bjkid 2-1 mma  (your score first)",
                 "• Best of 3? Add the score, e.g. 2-1",
-                "• Posted 1-1 before the decider? Just post the final score after, it updates the same result",
+                "• Posted 1-1 mid-set? Post the final score after and it updates",
                 "• Say the mode: mma or snb",
                 "• Part of their name is fine",
                 "✅ The bot replies in the chat to confirm every result. No confirmation within a minute? It didn't go through, so check how you wrote it and post again.",
                 "",
-                "COMMANDS",
+                "📋 COMMANDS",
                 "!board – full rankings, both modes",
                 "!board mma – just MMA",
                 "!rank – your rank and record",
