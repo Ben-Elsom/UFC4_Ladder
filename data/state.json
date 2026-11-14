@@ -972,7 +972,19 @@
   "143#459432565235935",
   "143#459432568246693",
   "143#459432570759435",
-  "143#459432574048800"
+  "143#459432574048800",
+  "143#459432640295928",
+  "143#459432641574233",
+  "143#459432643792349",
+  "143#459432646499762",
+  "143#459432649028948",
+  "143#459432649367779",
+  "143#459432651894649",
+  "143#459432652833346",
+  "143#459432652835270",
+  "143#459432654987368",
+  "143#459432656538105",
+  "143#459432658115405"
  ],
  "fights": [
   {
@@ -1265,6 +1277,22 @@
     }
    ],
    "note": "removed by admin"
+  },
+  {
+   "id": 16,
+   "mode": "sb",
+   "winner": "5190974766751866546",
+   "loser": "4444062021544416430",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794658796463,
+   "msg_uid": "143#459432651894649#0",
+   "text": "2-1 to me against granite",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -1552,9 +1580,19 @@
    "ts": 1794656870506,
    "text": "🏆 STAND & BANG\n- 1. dad_scopez 1688\n- 2. maoripunisher_ 1541\n- 3. BJkid2000 1319\n- +4 still getting their first 5 fights\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1794658796946,
+   "text": "- dad_scopez, was that MMA or Stand & Bang?\n- dad_scopez def. Granite_chin23 2-1\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794658808324,
+   "text": "✅ Stand & Bang result\n- dad_scopez def. Granite_chin23 2–1\n- dad_scopez 1603 (+10)\n- Granite_chin23 1484 (−16) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 16,
+ "next_fight_id": 17,
  "next_review_id": 8,
  "meta": {
   "status": "ok",
@@ -1566,7 +1604,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.8,
-  "last_run": 1794658749952,
+  "last_run": 1794658822767,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
