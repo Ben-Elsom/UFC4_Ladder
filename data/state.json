@@ -513,7 +513,8 @@
   "138#459429268469584",
   "138#459429273021163",
   "138#459429274551186",
-  "138#459429275862555"
+  "138#459429275862555",
+  "138#459429287263265"
  ],
  "fights": [
   {
@@ -540,7 +541,8 @@
    "sender": "1622088612165582170",
    "ts": 1794645178994,
    "fight_id": null,
-   "resolved": false
+   "resolved": true,
+   "resolution": "not a result (bunky chatting), bot no longer reads messages without a score"
   }
  ],
  "log": [
@@ -595,7 +597,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794645625149,
+  "last_run": 1794645634574,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
