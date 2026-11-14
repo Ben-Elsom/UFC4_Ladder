@@ -530,7 +530,10 @@
   "138#459429314745388",
   "138#459429315471024",
   "138#459429324283078",
-  "138#459429326500873"
+  "138#459429326500873",
+  "138#459429380503433",
+  "138#459429382027178",
+  "138#459429383489669"
  ],
  "fights": [
   {
@@ -564,7 +567,35 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "7835799679513912497",
+   "uid": "138#459429383489669",
+   "ts": 1794646029256,
+   "text": "vs sweaty 3-2",
+   "drafts": [
+    {
+     "sender": "7835799679513912497",
+     "uid": "138#459429383489669#0",
+     "ts": 1794646029256,
+     "text": "vs sweaty 3-2",
+     "won": true,
+     "score": [
+      3,
+      2
+     ],
+     "mode": null,
+     "method": null,
+     "opp": "6758403479034326755",
+     "options": null,
+     "name_text": "sweaty"
+    }
+   ],
+   "waiting": "mode",
+   "kind": "batch",
+   "asked_at": 1794646029256
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -645,6 +676,11 @@
    "ts": 1794645757367,
    "text": "✅ #2 Stand & Bang · grubby_flea257 def. dad_scopez 4–2 · grubby_flea257 1581 (+81) · dad_scopez 1419 (−81)",
    "sent": true
+  },
+  {
+   "ts": 1794646032273,
+   "text": "🥊 Got 1 result: MMA or Stand & Bang? Reply mma or snb.",
+   "sent": true
   }
  ],
  "next_fight_id": 3,
@@ -660,7 +696,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794645965809,
+  "last_run": 1794646032273,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287
  }
