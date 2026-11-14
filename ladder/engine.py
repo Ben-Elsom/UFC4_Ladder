@@ -248,7 +248,7 @@ class Ladder:
                     mine, theirs = (hi, lo) if d["winner"] == sender else (lo, hi)
                     return self._vs_batch({"sender_id": sender, "uid": d["uid"], "ts": d["ts"]}, d["text"],
                                           [VsLine(name=text, mine=mine, theirs=theirs, mode=d["mode"], text=d["text"])])
-                self._add_review("unreadable", f"Couldn't work out who \"{text}\" is", d)
+                self._add_review("unreadable", f"Unknown player: \"{text}\"", d)
                 return [f"❓ I couldn't find anyone in this chat called \"{text}\". Post it again using part of their PSN name, "
                         f"e.g. beat bjkid 2-1 mma."]
         if d["winner"] == d["loser"]:
@@ -266,7 +266,7 @@ class Ladder:
     def _set_pending(self, d: dict, kind: str) -> None:
         for old in [q for q in self.s["pending"] if q["sender"] == d["sender"]]:
             self.s["pending"].remove(old)
-            self._add_review("unanswered", "Question never answered (they posted another result)", old)
+            self._add_review("unanswered", "No answer: posted another result instead", old)
         d["kind"] = kind
         d["asked_at"] = d.get("asked_at") or d["ts"]
         self.s["pending"].append(d)
@@ -381,7 +381,7 @@ class Ladder:
         choice = words[0].strip(").") if words else ""
         if choice == "3" or (words and words[0] == "other"):
             self.s["pending"].remove(q)
-            self._add_review("conflict", "Two different results posted; players chose 'other' for the admin to sort",
+            self._add_review("conflict", "Results don't match: players asked for admin",
                              q, fight_id=f["id"])
             return [f"👍 Sent to {self.admin} to check. Result #{f['id']} won't count until it's sorted."]
         if choice not in ("1", "2"):
@@ -555,11 +555,10 @@ class Ladder:
         for q in list(self.s["pending"]):
             if now - (q.get("asked_at") or q["ts"]) > QUESTION_EXPIRES_MINUTES * MIN:
                 self.s["pending"].remove(q)
-                what = {"mode": "which mode", "who": "who it was against", "name": "which player they meant",
-                        "conflict": "which of two different results was right"}.get(q["kind"], "a question")
-                if q["kind"] == "batch":
-                    what = "which mode" if q.get("waiting") == "mode" else "which player they meant"
-                self._add_review("unanswered", f"No answer within {QUESTION_EXPIRES_MINUTES} minutes when asked {what}", q,
+                k = (q.get("waiting") or "name") if q["kind"] == "batch" else q["kind"]
+                issue = {"mode": "No mode", "who": "No opponent", "name": "Unclear opponent",
+                         "conflict": "Results don't match"}.get(k, "No answer")
+                self._add_review("unanswered", issue, q,
                                  fight_id=q.get("fight_id"))
 
     # ------------------------------------------------------------ commands

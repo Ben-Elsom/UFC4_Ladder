@@ -256,14 +256,21 @@ const views = {
     h += `<h2>Needs review</h2>`;
     if (!open.length && !disputed.length) h += `<div class="card empty">Nothing to check. 👌</div>`;
     if (disputed.length) h += `<h3>Paused results</h3><div class="card">${disputed.map(fightRow).join('')}</div>`;
+    const issue = r => { const s = r.reason || '';
+      if (/which mode/.test(s)) return 'No mode';
+      if (/who it was against/.test(s)) return 'No opponent';
+      if (/which player/.test(s)) return 'Unclear opponent';
+      if (/two different/i.test(s)) return "Results don't match";
+      const m = s.match(/Couldn't work out who "(.*)" is/); if (m) return `Unknown player: "${m[1]}"`;
+      return s; };
     if (open.length) h += `<h3>Flagged messages</h3>` + open.map(r => `<div class="card">
-      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>R${r.id} · ${esc(r.reason)}</b><span class="muted" style="font-size:13px">${esc(r.sender_name)} · ${when(r.ts)}</span></div>
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(issue(r))}</b><span class="muted" style="font-size:13px">${esc(r.sender_name)} · ${when(r.ts)}</span></div>
       ${r.text ? `<span class="msg">${esc(r.text)}</span>` : ''}${r.fight_id ? `<span class="muted">About result #${r.fight_id}</span>` : ''}</div>`).join('');
     const asked = q => { const k = q.kind === 'batch' ? q.waiting : q.kind; return k === 'mode' ? 'which mode' : k === 'who' ? 'who it was against' : 'which player they meant'; };
     const leftMin = q => Math.max(0, Math.ceil(((q.asked_at || q.ts) + D.settings.question_minutes * 60000 - D.generated) / 60000));
     if (D.pending.length) h += `<h3>Waiting for an answer</h3><p class="muted" style="margin-top:0">If they don't answer within ${D.settings.question_minutes} minutes, it moves to Flagged messages above.</p><div class="card">` + D.pending.map(q => `<div class="fight" style="grid-template-columns:1fr auto"><div><b>${esc(q.sender_name)}</b> <span class="muted">was asked ${asked(q)}</span><span class="msg">${esc(q.text)}</span></div><div class="muted num" style="font-size:13px">${leftMin(q) ? `moves in ${leftMin(q)} min` : 'moving now'}</div></div>`).join('') + `</div>`;
     const done = D.review.filter(r => r.resolved);
-    if (done.length) h += `<details><summary>Sorted (${done.length})</summary><div class="card">` + done.slice(0, 50).map(r => `<div class="fight" style="grid-template-columns:1fr auto"><div>R${r.id} · ${esc(r.reason)} <span class="muted">→ ${esc(r.resolution || 'done')}</span></div><div class="muted num" style="font-size:13px">${ago(r.ts)}</div></div>`).join('') + `</div></details>`;
+    if (done.length) h += `<details><summary>Sorted (${done.length})</summary><div class="card">` + done.slice(0, 50).map(r => `<div class="fight" style="grid-template-columns:1fr auto"><div>${esc(issue(r))} <span class="muted">→ ${esc(r.resolution || 'done')}</span></div><div class="muted num" style="font-size:13px">${ago(r.ts)}</div></div>`).join('') + `</div></details>`;
     if (D.log.length) h += `<details><summary>What the bot said (${D.log.length})</summary><div class="card">` + D.log.map(l => `<div style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="muted" style="font-size:12px">${when(l.ts)}${l.sent ? '' : l.error ? ' · failed to send' : ' · not sent (test mode)'}</span><span class="msg">${esc(l.text)}</span></div>`).join('') + `</div></details>`;
     h += `<p class="muted">Fixes are made by ${esc(D.admin)}. Players with a problem should message him.</p>`;
     return h;
