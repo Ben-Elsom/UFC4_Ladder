@@ -108,6 +108,7 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
                                            "Ask Claude to walk you through refreshing it (takes 2 minutes).")
             meta["login_warned"] = True
     meta["status"] = "ok"
+    meta.pop("error", None)
     meta["last_run"] = now
     return state
 
