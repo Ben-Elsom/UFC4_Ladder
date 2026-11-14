@@ -1091,7 +1091,9 @@
   "144#459433952264392",
   "144#459433954690386",
   "144#459433955163080",
-  "144#459433961120892"
+  "144#459433961120892",
+  "144#459433962304024",
+  "144#459433964466572"
  ],
  "fights": [
   {
@@ -1431,7 +1433,24 @@
    "ts": 1794662623815,
    "msg_uid": "143#459433631696820#0",
    "text": "Vs van 1-0 SnB",
-   "status": "ok"
+   "status": "void",
+   "admin_edits": [
+    {
+     "ts": 1794663938042,
+     "action": "removed",
+     "was": {
+      "winner": "5879038572944845531",
+      "loser": "6028910841825523632",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "sb",
+      "status": "ok"
+     }
+    }
+   ],
+   "note": "test vs vanz_nz after leaving the chat"
   },
   {
    "id": 19,
@@ -1447,7 +1466,24 @@
    "ts": 1794663052164,
    "msg_uid": "144#459433741354036#0",
    "text": "Vs van 1-0 SnB",
-   "status": "ok"
+   "status": "void",
+   "admin_edits": [
+    {
+     "ts": 1794663938243,
+     "action": "removed",
+     "was": {
+      "winner": "5879038572944845531",
+      "loser": "6028910841825523632",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "sb",
+      "status": "ok"
+     }
+    }
+   ],
+   "note": "test vs vanz_nz after leaving the chat"
   },
   {
    "id": 20,
@@ -1463,7 +1499,24 @@
    "ts": 1794663694749,
    "msg_uid": "144#459433905855974#0",
    "text": "Vs van 1-0 SnB",
-   "status": "ok"
+   "status": "void",
+   "admin_edits": [
+    {
+     "ts": 1794663938445,
+     "action": "removed",
+     "was": {
+      "winner": "5879038572944845531",
+      "loser": "6028910841825523632",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "sb",
+      "status": "ok"
+     }
+    }
+   ],
+   "note": "test vs vanz_nz after leaving the chat"
   },
   {
    "id": 21,
@@ -1482,19 +1535,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "7835799679513912497",
-   "uid": "144#459433961120892",
-   "ts": 1794663910628,
-   "text": "shit i forgot mines stand and bang vs vanz 1-0 to me",
-   "mine": 1,
-   "theirs": 0,
-   "mode": "sb",
-   "kind": "who",
-   "asked_at": 1794663910628
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -1829,6 +1870,11 @@
    "ts": 1794663912068,
    "text": "- mrwhoopdatahh, who was that 1-0 against?\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794663966147,
+   "text": "🚪 vanz_nz has left the chat\n- Results against them can't be added",
+   "sent": true
   }
  ],
  "next_fight_id": 22,
@@ -1843,7 +1889,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.7,
-  "last_run": 1794663912068,
+  "last_run": 1794663966147,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
