@@ -233,3 +233,17 @@ def test_nickname_default_picks_without_asking():
     assert out[0].startswith("✅ #1 Stand & Bang · maoripunisher_ def. mrwhoopdatahh 4–0")
     out = l.handle({"uid": "2", "sender_id": "w", "sender_name": "mrwhoopdatahh", "body": "beat crazy mma", "ts": T0 + 1})
     assert "Crazy_Maori6" in out[0]                           # the other Maori is still reachable
+
+
+def test_long_replies_are_split_under_the_limit():
+    from ladder.run import MAX_MESSAGE, split_message
+    s = new_state(); s["bot"] = {"account_id": "bot"}
+    l = Ladder(s, admin_name="BJkid2000", site_url="https://ben-elsom.github.io/UFC4_Ladder/")
+    l.sync_members(list(PLAYERS.items()))
+    help_text = l.handle({"uid": "h", "sender_id": "a1", "sender_name": "x", "body": "!help", "ts": T0})[0]
+    parts = split_message(help_text)
+    assert len(parts) >= 2 and all(len(p) <= MAX_MESSAGE for p in parts)
+    assert "".join(parts).replace("\n", "") == help_text.replace("\n", "")   # nothing lost
+    board = "\n".join(f"{i}. player_number_{i} 1500" for i in range(1, 80))
+    assert all(len(p) <= MAX_MESSAGE for p in split_message(board))
+    assert split_message("short") == ["short"]

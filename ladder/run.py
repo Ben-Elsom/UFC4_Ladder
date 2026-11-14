@@ -30,6 +30,28 @@ INTRO = (
 )
 
 
+MAX_MESSAGE = 450   # PlayStation rejects long messages (a 674-character one failed; 477 went through)
+
+
+def split_message(text: str, limit: int = MAX_MESSAGE) -> list[str]:
+    """Break a long reply into several messages, at blank lines first, then at line ends."""
+    if len(text) <= limit:
+        return [text]
+    parts, cur = [], ""
+    for block in text.split("\n\n"):
+        for piece in ([block] if len(block) <= limit else block.split("\n")):
+            while len(piece) > limit:            # a single huge line: hard cut
+                parts.append(piece[:limit]); piece = piece[limit:]
+            sep = "\n\n" if piece is block else "\n"
+            if cur and len(cur) + len(sep) + len(piece) > limit:
+                parts.append(cur); cur = piece
+            else:
+                cur = f"{cur}{sep}{piece}" if cur else piece
+    if cur:
+        parts.append(cur)
+    return parts
+
+
 def load_config() -> dict:
     cfg = json.loads((ROOT / "config.json").read_text())
     for key in ("group_id", "group_name", "site_url", "admin_psn"):
@@ -58,10 +80,18 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
     ladder = Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames"))
 
     def say(text: str) -> None:
-        state["log"].append({"ts": now, "text": text, "sent": not dry})
+        entry = {"ts": now, "text": text, "sent": False}
+        state["log"].append(entry)
         state["log"] = state["log"][-200:]
-        if not dry:
-            chat.send(text)
+        if dry:
+            return
+        try:
+            for part in split_message(text):
+                chat.send(part)
+            entry["sent"] = True
+        except Exception as exc:  # one failed reply shouldn't stop the rest of the chat being read
+            entry["error"] = f"{type(exc).__name__}: {exc}"[:200]
+            print(f"send failed: {entry['error']}", flush=True)
 
     acct, online = chat.identity()
     state["bot"] = {"account_id": acct, "online_id": online}
