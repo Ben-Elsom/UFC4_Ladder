@@ -417,7 +417,6 @@
  "next_review_id": 1,
  "meta": {
   "status": "ok",
-  "error": "PSNAWPForbiddenError: Not permitted by parental control",
   "last_error": 1794639573099,
   "dry_run": true,
   "group": "UFC 4: Elites",
@@ -427,6 +426,6 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 60.0,
-  "last_run": 1794640102107
+  "last_run": 1794640173666
  }
 }
