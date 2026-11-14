@@ -655,7 +655,8 @@
   "140#459430153624749",
   "140#459430155630888",
   "140#459430159365439",
-  "140#459430164011358"
+  "140#459430164011358",
+  "140#459430183012839"
  ],
  "fights": [
   {
@@ -692,36 +693,6 @@
   }
  ],
  "pending": [
-  {
-   "sender": "5098608185326150737",
-   "uid": "139#459430097770563",
-   "ts": 1794648819416,
-   "text": "2-1 punisher",
-   "drafts": [
-    {
-     "sender": "5098608185326150737",
-     "uid": "139#459430097770563#0",
-     "ts": 1794648819416,
-     "text": "2-1 punisher",
-     "won": true,
-     "score": [
-      2,
-      1
-     ],
-     "text_score": "2-1",
-     "mode": null,
-     "method": null,
-     "opp": "8890823238041145135",
-     "options": null,
-     "unknown": false,
-     "name_text": "punisher"
-    }
-   ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794648819416,
-   "kind": "batch"
-  },
   {
    "sender": "5190974766751866546",
    "uid": "139#459430121619653",
@@ -764,7 +735,18 @@
    "kind": "batch"
   }
  ],
- "review": [],
+ "review": [
+  {
+   "id": 1,
+   "kind": "unanswered",
+   "reason": "No answer within 5 minutes when asked which mode",
+   "text": "2-1 punisher",
+   "sender": "5098608185326150737",
+   "ts": 1794648819416,
+   "fight_id": null,
+   "resolved": false
+  }
+ ],
  "log": [
   {
    "ts": 1794647451470,
@@ -808,7 +790,7 @@
   }
  ],
  "next_fight_id": 3,
- "next_review_id": 1,
+ "next_review_id": 2,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -819,7 +801,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 59.9,
-  "last_run": 1794649112355,
+  "last_run": 1794649178842,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079
