@@ -1425,7 +1425,10 @@
   "147#459452770170058",
   "147#459453020752226",
   "147#459453025712197",
-  "147#459453177973582"
+  "147#459453177973582",
+  "147#459453182741655",
+  "147#459453189004253",
+  "147#459453191522330"
  ],
  "fights": [
   {
@@ -2004,6 +2007,22 @@
    "msg_uid": "147#459452576169405#0",
    "text": "Vs vboatt snb 1-0 to me",
    "status": "ok"
+  },
+  {
+   "id": 28,
+   "mode": "sb",
+   "winner": "4444062021544416430",
+   "loser": "2622241265805770209",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "4444062021544416430",
+   "ts": 1794739019547,
+   "msg_uid": "147#459453189004253#0",
+   "text": "3-0 against echo snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -2442,9 +2461,14 @@
    "ts": 1794736639077,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Vboatt08 1–0\n- sweatytrixter 1662 (+75) (2/5 fights)\n- Vboatt08 1567 (−65) (3/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794739026078,
+   "text": "✅ Stand & Bang result\n- Granite_chin23 def. echo_goescrazy 3–0\n- Granite_chin23 1531 (+72)\n- echo_goescrazy 1306 (−194) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 28,
+ "next_fight_id": 29,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -2456,7 +2480,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.9,
-  "last_run": 1794738975925,
+  "last_run": 1794739037597,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
