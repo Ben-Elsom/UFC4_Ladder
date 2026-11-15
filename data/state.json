@@ -1486,7 +1486,13 @@
   "148#459456962275873",
   "148#459456962758555",
   "148#459456963891540",
-  "148#459456965048470"
+  "148#459456965048470",
+  "148#459456969683455",
+  "148#459456971538448",
+  "148#459456974559450",
+  "148#459456976092672",
+  "148#459456976569672",
+  "148#459456981097697"
  ],
  "fights": [
   {
@@ -2565,6 +2571,16 @@
    "ts": 1794753763483,
    "text": "BJkid2000 vs Granite_chin23\n- MMA: 0-0\n- Stand & Bang: 0-1",
    "sent": true
+  },
+  {
+   "ts": 1794753791887,
+   "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 lost to grubby_flea257 0-1\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794753811532,
+   "text": "👍 No worries, ignored that one.",
+   "sent": true
   }
  ],
  "next_fight_id": 30,
@@ -2579,7 +2595,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.7,
-  "last_run": 1794753777875,
+  "last_run": 1794753842530,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
