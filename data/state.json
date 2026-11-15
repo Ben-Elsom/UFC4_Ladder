@@ -1539,7 +1539,13 @@
   "149#459464957255017",
   "149#459464959560705",
   "149#459464962371085",
-  "149#459465038340380"
+  "149#459465038340380",
+  "149#459465040397254",
+  "149#459465043843142",
+  "149#459465047509026",
+  "149#459465050494801",
+  "149#459465052610510",
+  "149#459465053400609"
  ],
  "fights": [
   {
@@ -2157,7 +2163,7 @@
    "winner": "6579191292114061295",
    "loser": "2622241265805770209",
    "score": [
-    1,
+    2,
     1
    ],
    "method": null,
@@ -2179,9 +2185,22 @@
        0
       ]
      }
+    },
+    {
+     "ts": 1794785327512,
+     "by": "6579191292114061295",
+     "text": "2-1 echo",
+     "was": {
+      "winner": "6579191292114061295",
+      "loser": "2622241265805770209",
+      "score": [
+       1,
+       1
+      ]
+     }
     }
    ],
-   "updated_ts": 1794784984633
+   "updated_ts": 1794785327512
   }
  ],
  "pending": [],
@@ -2705,6 +2724,16 @@
    "ts": 1794785005949,
    "text": "🔄 Stand & Bang result updated (was 1–0)\n- Rat_on_Roidz and echo_goescrazy split 1–1\n- Rat_on_Roidz 1431 (−69) (2/5 fights)\n- echo_goescrazy 1344 (+38)",
    "sent": true
+  },
+  {
+   "ts": 1794785335545,
+   "text": "- Rat_on_Roidz, was that MMA or Stand & Bang?\n- Rat_on_Roidz def. echo_goescrazy 2-1\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794785358367,
+   "text": "🔄 Stand & Bang result updated (was 1–1)\n- Rat_on_Roidz def. echo_goescrazy 2–1\n- Rat_on_Roidz 1474 (−26) (3/5 fights)\n- echo_goescrazy 1319 (+13)",
+   "sent": true
   }
  ],
  "next_fight_id": 31,
@@ -2719,7 +2748,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.3,
-  "last_run": 1794785313298,
+  "last_run": 1794785378264,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
