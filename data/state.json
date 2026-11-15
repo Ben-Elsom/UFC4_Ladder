@@ -1439,7 +1439,11 @@
   "148#459454674117867",
   "148#459455402315650",
   "148#459455475745666",
-  "148#459455523477809"
+  "148#459455523477809",
+  "148#459455524745323",
+  "148#459455525435823",
+  "148#459455529093143",
+  "148#459455530552870"
  ],
  "fights": [
   {
@@ -2034,40 +2038,25 @@
    "msg_uid": "147#459453189004253#0",
    "text": "3-0 against echo snb",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "5879038572944845531",
-   "uid": "148#459455523477809",
-   "ts": 1794748138585,
-   "text": "Granite got me 0-1",
-   "drafts": [
-    {
-     "sender": "5879038572944845531",
-     "uid": "148#459455523477809#0",
-     "ts": 1794748138585,
-     "text": "Granite got me 0-1",
-     "won": false,
-     "score": [
-      1,
-      0
-     ],
-     "text_score": "0-1",
-     "mode": null,
-     "method": null,
-     "opp": "4444062021544416430",
-     "options": null,
-     "unknown": false,
-     "name_text": "granite"
-    }
+   "id": 29,
+   "mode": "sb",
+   "winner": "4444062021544416430",
+   "loser": "5879038572944845531",
+   "score": [
+    1,
+    0
    ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794748138585,
-   "kind": "batch"
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794748138585,
+   "msg_uid": "148#459455523477809#0",
+   "text": "Granite got me 0-1",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -2513,9 +2502,14 @@
    "ts": 1794748137275,
    "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 lost to Granite_chin23 0-1\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794748157326,
+   "text": "✅ Stand & Bang result\n- Granite_chin23 def. BJkid2000 1–0\n- Granite_chin23 1558 (+27)\n- BJkid2000 1542 (−80) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 29,
+ "next_fight_id": 30,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -2527,7 +2521,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.7,
-  "last_run": 1794748137275,
+  "last_run": 1794748201813,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
