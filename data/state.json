@@ -2326,7 +2326,14 @@
   "157#459476492836925",
   "157#459476506584960",
   "157#459476507659962",
-  "157#459476638850477"
+  "157#459476638850477",
+  "157#459476641507014",
+  "157#459476641775278",
+  "157#459476644423684",
+  "157#459476648438164",
+  "157#459476651470159",
+  "157#459476651836698",
+  "157#459476655172704"
  ],
  "fights": [
   {
@@ -3517,40 +3524,25 @@
    "msg_uid": "156#459476400837234#0",
    "text": "Vs Granite 0-1 to him snb",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "26499158721105144",
-   "uid": "157#459476638850477",
-   "ts": 1794830620509,
-   "text": "gg hustler 3-2",
-   "drafts": [
-    {
-     "sender": "26499158721105144",
-     "uid": "157#459476638850477#0",
-     "ts": 1794830620509,
-     "text": "gg hustler 3-2",
-     "won": true,
-     "score": [
-      3,
-      2
-     ],
-     "text_score": "3-2",
-     "mode": null,
-     "method": null,
-     "opp": "597918633581885196",
-     "options": null,
-     "unknown": false,
-     "name_text": "hustler"
-    }
+   "id": 57,
+   "mode": "sb",
+   "winner": "26499158721105144",
+   "loser": "597918633581885196",
+   "score": [
+    3,
+    2
    ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1794830620509,
-   "kind": "batch"
+   "method": null,
+   "reported_by": "26499158721105144",
+   "ts": 1794830620509,
+   "msg_uid": "157#459476638850477#0",
+   "text": "gg hustler 3-2",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -4371,9 +4363,14 @@
    "ts": 1794830627704,
    "text": "- TonganLion35, was that MMA or Stand & Bang?\n- TonganLion35 def. Hustler_money 3-2\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794830677907,
+   "text": "✅ Stand & Bang result\n- TonganLion35 def. Hustler_money 3–2\n- TonganLion35 1572 (−41)\n- Hustler_money 1482 (+22)",
+   "sent": true
   }
  ],
- "next_fight_id": 57,
+ "next_fight_id": 58,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -4385,7 +4382,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.8,
-  "last_run": 1794830627704,
+  "last_run": 1794830692494,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
