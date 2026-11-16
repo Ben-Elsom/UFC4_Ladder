@@ -1578,7 +1578,10 @@
   "149#459465562622553",
   "149#459465567578555",
   "149#459465647023660",
-  "149#459465659871264"
+  "149#459465659871264",
+  "149#459465667863953",
+  "149#459465670287157",
+  "149#459465672125470"
  ],
  "fights": [
   {
@@ -2254,7 +2257,7 @@
    "winner": "6579191292114061295",
    "loser": "2622241265805770209",
    "score": [
-    2,
+    3,
     1
    ],
    "method": null,
@@ -2289,9 +2292,22 @@
        1
       ]
      }
+    },
+    {
+     "ts": 1794787774559,
+     "by": "6579191292114061295",
+     "text": "3-1 echo mma",
+     "was": {
+      "winner": "6579191292114061295",
+      "loser": "2622241265805770209",
+      "score": [
+       2,
+       1
+      ]
+     }
     }
    ],
-   "updated_ts": 1794787288145
+   "updated_ts": 1794787774559
   }
  ],
  "pending": [],
@@ -2850,6 +2866,11 @@
    "ts": 1794787285338,
    "text": "🔄 MMA result updated (was 1–1)\n- Rat_on_Roidz def. echo_goescrazy 2–1\n- Rat_on_Roidz 1505 (+5) (3/5 fights)\n- echo_goescrazy 1379 (−4)",
    "sent": true
+  },
+  {
+   "ts": 1794787778473,
+   "text": "🔄 MMA result updated (was 2–1)\n- Rat_on_Roidz def. echo_goescrazy 3–1\n- Rat_on_Roidz 1540 (+40) (4/5 fights)\n- echo_goescrazy 1361 (−22)",
+   "sent": true
   }
  ],
  "next_fight_id": 32,
@@ -2864,7 +2885,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.3,
-  "last_run": 1794787756169,
+  "last_run": 1794787817891,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
