@@ -2502,7 +2502,10 @@
   "158#459478340887494",
   "158#459478346374106",
   "158#459478349691816",
-  "158#459478350464702"
+  "158#459478350464702",
+  "158#459478372038023",
+  "158#459478376021899",
+  "158#459478377870498"
  ],
  "fights": [
   {
@@ -3885,6 +3888,22 @@
    "msg_uid": "158#459478346374106#0",
    "text": "Vs roidz 1-0 to me snb",
    "status": "ok"
+  },
+  {
+   "id": 67,
+   "mode": "sb",
+   "winner": "4444062021544416430",
+   "loser": "6579191292114061295",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "4444062021544416430",
+   "ts": 1794837413556,
+   "msg_uid": "158#459478377870498#0",
+   "text": "1-0 against roidz snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -4813,9 +4832,14 @@
    "ts": 1794837303317,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Rat_on_Roidz 1–0\n- sweatytrixter 1668 (+16)\n- Rat_on_Roidz 1563 (−31)",
    "sent": true
+  },
+  {
+   "ts": 1794837417359,
+   "text": "✅ Stand & Bang result\n- Granite_chin23 def. Rat_on_Roidz 1–0\n- Granite_chin23 1620 (+14)\n- Rat_on_Roidz 1532 (−31)",
+   "sent": true
   }
  ],
- "next_fight_id": 67,
+ "next_fight_id": 68,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -4827,7 +4851,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.7,
-  "last_run": 1794837350790,
+  "last_run": 1794837417359,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
