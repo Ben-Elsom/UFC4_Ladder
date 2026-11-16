@@ -1943,7 +1943,12 @@
   "153#459473783986124",
   "153#459473802424141",
   "153#459473803949125",
-  "153#459473806819283"
+  "153#459473806819283",
+  "153#459473814946214",
+  "153#459473816693802",
+  "153#459473816775253",
+  "153#459473819747654",
+  "153#459473823145861"
  ],
  "fights": [
   {
@@ -2846,6 +2851,22 @@
    "msg_uid": "152#459473495202783#0",
    "text": "Vs 1-0 mr in mma",
    "status": "ok"
+  },
+  {
+   "id": 40,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "8890823238041145135",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794819596460,
+   "msg_uid": "153#459473816693802#0",
+   "text": "1-0 vs Maori mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -3539,9 +3560,19 @@
    "ts": 1794818961744,
    "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Accelerated\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Middleweight",
    "sent": true
+  },
+  {
+   "ts": 1794819593497,
+   "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Women's Flyweight",
+   "sent": true
+  },
+  {
+   "ts": 1794819605004,
+   "text": "✅ MMA result\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1751 (+26) (4/5 fights)\n- maoripunisher_ 1459 (−41) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 40,
+ "next_fight_id": 41,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3553,7 +3584,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794819576371,
+  "last_run": 1794819642066,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
