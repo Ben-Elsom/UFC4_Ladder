@@ -2458,7 +2458,8 @@
   "158#459477433292983",
   "158#459477436473647",
   "158#459477437484466",
-  "158#459477589395357"
+  "158#459477589395357",
+  "158#459477830675803"
  ],
  "fights": [
   {
@@ -3779,7 +3780,38 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "6579191292114061295",
+   "uid": "158#459477830675803",
+   "ts": 1794835276077,
+   "text": "Gg granite 1-0 granite",
+   "drafts": [
+    {
+     "sender": "6579191292114061295",
+     "uid": "158#459477830675803#0",
+     "ts": 1794835276077,
+     "text": "Gg granite 1-0 granite",
+     "won": true,
+     "score": [
+      1,
+      0
+     ],
+     "text_score": "1-0",
+     "mode": null,
+     "method": null,
+     "opp": "4444062021544416430",
+     "options": null,
+     "unknown": false,
+     "name_text": "granite granite"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1794835276077,
+   "kind": "batch"
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -4665,6 +4697,11 @@
    "ts": 1794833736956,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. blumzylol 1–0\n- sweatytrixter 1631 (+16)\n- blumzylol 1492 (−42) (4/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794835283388,
+   "text": "- Rat_on_Roidz, was that MMA or Stand & Bang?\n- Rat_on_Roidz def. Granite_chin23 1-0\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 64,
@@ -4678,8 +4715,8 @@
   "login_hash": "a398dea4b056e1ec",
   "login_since": 1794640102107,
   "login_warned": false,
-  "login_days_left": 57.8,
-  "last_run": 1794834337833,
+  "login_days_left": 57.7,
+  "last_run": 1794835283388,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
