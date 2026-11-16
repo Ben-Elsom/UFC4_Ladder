@@ -680,6 +680,7 @@ class Ladder:
                 "- !rank – your rank and record, plus combined",
                 "- !rank bjkid – someone else's",
                 "- !record bjkid – your record vs BJkid2000",
+                "- !record jono vs bjkid – record between any two players",
                 "- !recent – last 5 results",
                 "- !pick – random mode, time, rounds, HUD and weight class",
                 "",
@@ -733,14 +734,12 @@ class Ladder:
         if cmd in ("record", "h2h", "vs", "versus"):
             if not rest:
                 return ["Type !record and their name, e.g. !record bjkid"]
-            pool = self._name_pool()
-            people = []
-            for word in rest[:2]:
-                status, ids = self._resolve(word, pool, exclude=set(people))
-                if status != "ok":
-                    return [f"Couldn't tell who \"{word}\" is."]
-                people.append(ids[0])
+            people = self._record_people(rest)
+            if isinstance(people, str):
+                return [people]
             a, b = (people if len(people) == 2 else [msg["sender_id"], people[0]])
+            if a == b:
+                return ["Type two different players, e.g. !record jono vs bjkid"]
             lines = [f"{self.name(a)} vs {self.name(b)}"]
             for md in [mode] if mode else list(MODES):
                 aw = bw = 0
@@ -760,6 +759,35 @@ class Ladder:
                 return ["No fights yet."]
             return ["🕒 Last results\n" + "\n".join(f"- {MODES[f['mode']]}: {self._describe(f)}" for f in reversed(fights))]
         return []
+
+    def _record_people(self, words: list[str]) -> list[str] | str:
+        """Who a !record is about: one name (vs the poster) or two. Names can be nicknames,
+        including ones with spaces ("crazy maori")."""
+        pool = self._name_pool()
+
+        def one(text: str, exclude: set[str] = frozenset()) -> str | None:
+            status, ids = self._resolve(text, pool, exclude=exclude)
+            return ids[0] if status == "ok" else None
+
+        parts = [p.strip() for p in re.split(r"\s+(?:vs?|versus|and|&)\s+|\s*,\s*", " ".join(words)) if p.strip()]
+        if len(parts) == 2:
+            a = one(parts[0])
+            b = one(parts[1], {a} if a else set())
+            for text, who in zip(parts, (a, b)):
+                if not who:
+                    return f"Couldn't tell who \"{text}\" is."
+            return [a, b]
+        text = " ".join(words)
+        if norm(text) in self.nicknames or len(words) == 1:
+            who = one(text)
+            return [who] if who else f"Couldn't tell who \"{text}\" is."
+        for i in range(1, len(words)):
+            a = one(" ".join(words[:i]))
+            b = one(" ".join(words[i:]), {a} if a else set())
+            if a and b:
+                return [a, b]
+        who = one(text)
+        return [who] if who else f"Couldn't tell who \"{text}\" is."
 
     # ------------------------------------------------------------ snapshot for the website
     def snapshot(self, now: int) -> dict[str, Any]:

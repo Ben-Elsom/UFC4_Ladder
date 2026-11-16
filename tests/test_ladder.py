@@ -172,6 +172,22 @@ def test_duplicate_only_within_ten_minutes(lad):
     assert len(lad.s["fights"]) == 2
 
 
+def test_record_between_any_two_players_with_nicknames():
+    s = new_state(); s["bot"] = {"account_id": "bot"}
+    l = Ladder(s, admin_name="BJkid2000", nicknames={"crazy maori": "Crazy_Maori6", "maori": "maoripunisher_", "goat": "JonoTheGoat"})
+    l.sync_members(list(PLAYERS.items()) + [("m1", "Crazy_Maori6"), ("m2", "maoripunisher_")])
+    l._n = 0
+    say(l, "a1", "beat sam 2-1 mma", T0)
+    say(l, "m1", "beat maori 2-0 snb", T0 + H)
+    for text in ["!record jono vs sam", "!record goat v sam_k", "!record jono and sam", "!record jono, sam", "!record goat sam"]:
+        out = say(l, "a3", text, T0 + 2 * H)[0]                  # Temp asks about two other people
+        assert out.startswith("JonoTheGoat vs Sam_K\n") and "- MMA: 2-1" in out, (text, out)
+    out = say(l, "a3", "!record crazy maori vs maori", T0 + 2 * H)[0]
+    assert out.startswith("Crazy_Maori6 vs maoripunisher_") and "Stand & Bang: 2-0" in out
+    assert say(l, "m2", "!record crazy maori", T0 + 2 * H)[0].startswith("maoripunisher_ vs Crazy_Maori6")
+    assert "Couldn't tell who \"zzqx\"" in say(l, "a3", "!record jono vs zzqx", T0 + 2 * H)[0]
+
+
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
