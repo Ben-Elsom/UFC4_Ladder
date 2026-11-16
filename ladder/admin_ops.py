@@ -118,6 +118,24 @@ def edit(state: dict, fid: int | str, *, winner: str | None = None, loser: str |
     return f
 
 
+def correction(state: dict, fid: int | str, was: str | None, make_ladder) -> str:
+    """Queue a result message for the group chat (state["outbox"]; the bot posts it on its next check).
+    With `was`, it's a correction after an edit; without, the result is just posted again."""
+    f = find_fight(state, fid)
+    if f["status"] == "void":
+        raise AdminError("This result is removed, so there's nothing to resend")
+    lad = make_ladder(state)
+    head = (f"🔧 Correction: {MODES[f['mode']]} result (was {was})" if was else
+            f"🔁 {MODES[f['mode']]} result (resent)")
+    text = lad._confirm(f, head)
+    state.setdefault("outbox", []).append(text)
+    return text
+
+
+def describe(state: dict, f: dict, make_ladder) -> str:
+    return make_ladder(state)._describe(f)
+
+
 def resolve_review(state: dict, rid: int | str, note: str = "") -> dict:
     r = find_review(state, rid)
     r["resolved"], r["resolution"] = True, note or "sorted by admin"

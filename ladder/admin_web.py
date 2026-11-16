@@ -271,6 +271,8 @@ class AdminApp:
                 text = f'<span class="msg">{by}: {esc(f.get("text", ""))}</span>' if f.get("text") else ""
                 acts = (btn(f"/admin/fight/{f['id']}/restore", "Undo remove") if f["status"] == "void" else
                         f'<a class="btn" href="/admin/fight/{f["id"]}">Edit</a>'
+                        + btn(f"/admin/fight/{f['id']}/resend", "Resend", "",
+                              f"Post result {f['id']} in the group chat again, with its points?")
                         + btn(f"/admin/fight/{f['id']}/remove", "Remove", "danger",
                               f"Remove result {f['id']}? You can undo this."))
                 search = esc(f"{n.get(f['winner'], '')} {n.get(f['loser'], '')} {MODES.get(f['mode'], '')} {f.get('text', '')}".lower())
@@ -334,7 +336,9 @@ class AdminApp:
                 f'<div><label for="ls">Loser\'s score</label><input id="ls" name="ls" type="number" min="0" max="20" inputmode="numeric" value="{esc(cur["ls"])}"></div></div>'
                 f'<p class="muted small">Same number on both sides = a split. Leave both blank for no score.</p>'
                 f'<label for="m">Mode</label><select id="m" name="mode">{modes}</select>'
-                f'<div style="margin-top:20px;display:flex;gap:8px"><button class="primary">Save</button><a class="btn" href="/admin">Cancel</a></div></form>')
+                f'<div style="margin-top:20px;display:flex;gap:8px"><button class="primary">Save</button>'
+                f'{"" if f["status"] == "void" else "<button name=resend value=1 title=\"Save, then post a correction with the updated points in the group chat\">Edit and Resend</button>"}'
+                f'<a class="btn" href="/admin">Cancel</a></div></form>')
         return page(f"Edit result {f['id']}", body)
 
     def login_page(self, err: str = "") -> str:
@@ -450,6 +454,9 @@ class AdminApp:
                 ok, msg = False, "Unknown action"
                 if len(parts) == 5 and parts[2] == "fight" and parts[4] == "remove":
                     ok, msg = app.act(lambda st: (ops.void(st, parts[3]), f"Removed result {parts[3]}")[1])
+                elif len(parts) == 5 and parts[2] == "fight" and parts[4] == "resend":
+                    ok, msg = app.act(lambda st: (ops.correction(st, parts[3], None, app.make_ladder),
+                                                  f"Result {parts[3]} will post in the chat within a minute or two")[1])
                 elif len(parts) == 5 and parts[2] == "fight" and parts[4] == "restore":
                     ok, msg = app.act(lambda st: (ops.restore(st, parts[3]), f"Result {parts[3]} counts again")[1])
                 elif len(parts) == 5 and parts[2] == "review" and parts[4] == "reask":
@@ -460,6 +467,7 @@ class AdminApp:
                     ok, msg = app.act(lambda st: (ops.resolve_review(st, parts[3], "dismissed on admin page"), "Dismissed")[1])
                 elif len(parts) == 4 and parts[2] == "fight":
                     ws, ls = form.get("ws", "").strip(), form.get("ls", "").strip()
+                    resend = form.get("resend") == "1"
 
                     def save(st):
                         if bool(ws) != bool(ls):
@@ -468,8 +476,14 @@ class AdminApp:
                             score = [int(ws), int(ls)] if ws else None
                         except ValueError:
                             raise ops.AdminError("Scores must be whole numbers") from None
+                        was = ops.describe(st, ops.find_fight(st, parts[3]), app.make_ladder)
+                        if resend and ops.find_fight(st, parts[3])["status"] == "void":
+                            raise ops.AdminError("This result is removed, so there's nothing to resend")
                         ops.edit(st, parts[3], winner=form.get("winner"), loser=form.get("loser"),
                                  score=score, mode=form.get("mode"))
+                        if resend:
+                            ops.correction(st, parts[3], was, app.make_ladder)
+                            return f"Saved result {parts[3]}. The correction will post in the chat within a minute or two"
                         return f"Saved result {parts[3]}"
 
                     ok, msg = app.act(save)

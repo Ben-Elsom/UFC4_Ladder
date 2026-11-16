@@ -139,6 +139,20 @@ def test_list_remove_undo_and_edit(web):
     code, _, _ = req(port, "POST", "/admin/fight/1", {"csrf": tok, "winner": "a2", "loser": "a1", "ws": "2", "ls": "0", "mode": "sb"}, ck)
     f = s["fights"][0]
     assert code == 303 and (f["winner"], f["loser"], f["score"], f["mode"]) == ("a2", "a1", [2, 0], "sb")
+    assert "outbox" not in s                                    # plain Save posts nothing
+    assert "Edit and Resend" in req(port, "GET", "/admin/fight/1", cookie=ck)[2]
+    code, _, _ = req(port, "POST", "/admin/fight/1", {"csrf": tok, "winner": "a2", "loser": "a1", "ws": "2", "ls": "1",
+                                                     "mode": "sb", "resend": "1"}, ck)
+    assert code == 303 and f["score"] == [2, 1]
+    msg = s["outbox"].pop()
+    assert msg.startswith(f"🔧 Correction: Stand & Bang result (was {PLAYERS['a2']} def. {PLAYERS['a1']} 2–0)\n"
+                          f"- {PLAYERS['a2']} def. {PLAYERS['a1']} 2–1\n- {PLAYERS['a2']} ")
+    assert msg.count("\n") == 3
+    code, _, _ = req(port, "POST", "/admin/fight/2/resend", {"csrf": tok}, ck)
+    assert code == 303 and s["outbox"].pop().startswith("🔁 Stand & Bang result (resent)\n- ")
+    ops.void(s, 2)
+    code, h, _ = req(port, "POST", "/admin/fight/2/resend", {"csrf": tok}, ck)
+    assert code == 303 and "err=" in h["Location"] and not s["outbox"]
 
 
 def test_html_in_names_is_escaped(web):
