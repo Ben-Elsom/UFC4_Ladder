@@ -1841,7 +1841,8 @@
   "152#459473380451197",
   "152#459473383848471",
   "152#459473385098154",
-  "152#459473386591616"
+  "152#459473386591616",
+  "152#459473495202783"
  ],
  "fights": [
   {
@@ -2714,7 +2715,19 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "5879038572944845531",
+   "uid": "152#459473495202783",
+   "ts": 1794818340635,
+   "text": "Vs 1-0 mr in mma",
+   "mine": 1,
+   "theirs": 0,
+   "mode": "mma",
+   "kind": "who",
+   "asked_at": 1794818340635
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -3370,6 +3383,11 @@
    "ts": 1794817554553,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. BJkid2000 1–0\n- mrwhoopdatahh 1526 (+53)\n- BJkid2000 1480 (−62) (4/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794818341450,
+   "text": "- BJkid2000, who was that 1-0 against?\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 39,
@@ -3384,7 +3402,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794817960655,
+  "last_run": 1794818341450,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
