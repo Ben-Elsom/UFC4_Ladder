@@ -1722,7 +1722,10 @@
   "150#459469065389075",
   "150#459469122816720",
   "150#459469126749141",
-  "151#459469192893248"
+  "151#459469192893248",
+  "151#459469194519353",
+  "151#459469199414079",
+  "151#459469200803766"
  ],
  "fights": [
   {
@@ -2529,6 +2532,22 @@
    "confirmed_by": [
     "8890823238041145135"
    ]
+  },
+  {
+   "id": 36,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "6028910841825523632",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794801560211,
+   "msg_uid": "151#459469199414079",
+   "text": "i beat vanz 2-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -3127,9 +3146,14 @@
    "ts": 1794797574381,
    "text": "👍 Already got that one\n- maoripunisher_ def. dad_scopez 2–0\n- Thanks for confirming",
    "sent": true
+  },
+  {
+   "ts": 1794801562447,
+   "text": "✅ Stand & Bang result\n- blumzylol def. vanz_nz 2–0\n- blumzylol 1597 (+97) (2/5 fights)\n- vanz_nz 1304 (−74) (4/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 36,
+ "next_fight_id": 37,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3141,7 +3165,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.1,
-  "last_run": 1794801537067,
+  "last_run": 1794801598768,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
