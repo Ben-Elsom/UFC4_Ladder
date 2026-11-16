@@ -1758,7 +1758,14 @@
   "151#459472472527564",
   "151#459472488189873",
   "151#459472503961004",
-  "151#459472526634041"
+  "151#459472526634041",
+  "151#459472690525020",
+  "151#459472694657663",
+  "151#459472696155032",
+  "151#459472698766832",
+  "151#459472699537527",
+  "151#459472699937050",
+  "151#459472700325275"
  ],
  "fights": [
   {
@@ -3189,6 +3196,11 @@
    "ts": 1794813872032,
    "text": "🎲 Random fight settings\n- Weight class: Women's Flyweight\n- Rounds: 3\n- Time: Real time\n- HUD: Shown",
    "sent": true
+  },
+  {
+   "ts": 1794815226324,
+   "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !recent – last 5 results\n- !pick – random mode, weight class, rounds, time and HUD\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 37,
@@ -3203,7 +3215,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.0,
-  "last_run": 1794815183718,
+  "last_run": 1794815243881,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
