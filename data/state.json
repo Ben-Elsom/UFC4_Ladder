@@ -2391,7 +2391,12 @@
   "157#459476989688560",
   "157#459476994839067",
   "157#459476998531951",
-  "157#459477002283367"
+  "157#459477002283367",
+  "157#459477018013698",
+  "157#459477019897359",
+  "157#459477020921795",
+  "157#459477022380751",
+  "157#459477022965857"
  ],
  "fights": [
   {
@@ -4531,6 +4536,11 @@
    "ts": 1794831965971,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. TonganLion35 1–0\n- sweatytrixter 1595 (+18)\n- TonganLion35 1468 (−26)",
    "sent": true
+  },
+  {
+   "ts": 1794832127327,
+   "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !record jono vs bjkid – record between any two players\n- !recent – last 5 results\n- !pick – random mode, time, rounds, HUD and weight class\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 62,
@@ -4545,7 +4555,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.8,
-  "last_run": 1794832060728,
+  "last_run": 1794832127327,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
