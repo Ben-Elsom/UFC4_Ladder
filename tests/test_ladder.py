@@ -401,10 +401,10 @@ def test_pick_gives_random_fight_settings():
         assert len(out) == 1
         lines = out[0].split("\n")
         assert lines[1] in ("- Mode: MMA", "- Mode: Stand & Bang")
-        assert lines[2].removeprefix("- Weight class: ") in WEIGHT_CLASSES
+        assert lines[2] in ("- Time: Accelerated", "- Time: Real time")
         assert lines[3] in ("- Rounds: 3", "- Rounds: 5")
-        assert lines[4] in ("- Time: Accelerated", "- Time: Real time")
-        assert lines[5] in ("- HUD: Shown", "- HUD: Hidden")
+        assert lines[4] in ("- HUD: Shown", "- HUD: Hidden")
+        assert lines[5].removeprefix("- Weight class: ") in WEIGHT_CLASSES
         seen.add(out[0])
     assert len(seen) > 1                       # actually random
     assert not s["fights"] and not s["pending"]   # no side effects

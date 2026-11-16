@@ -40,10 +40,10 @@ def pick_settings(rng=random) -> str:
     return "\n".join([
         "🎲 Random fight settings",
         f"- Mode: {rng.choice(['MMA', 'Stand & Bang'])}",
-        f"- Weight class: {rng.choice(WEIGHT_CLASSES)}",
-        f"- Rounds: {rng.choice([3, 5])}",
         f"- Time: {rng.choice(['Accelerated', 'Real time'])}",
+        f"- Rounds: {rng.choice([3, 5])}",
         f"- HUD: {rng.choice(['Shown', 'Hidden'])}",
+        f"- Weight class: {rng.choice(WEIGHT_CLASSES)}",
     ])
 NVM_RE = re.compile(r"^\W*(nvm|nvmd|nm|never\s*mind|nevermind|ignore( (it|that|me))?|forget (it|that)|cancel|not a result|wasn'?t a result|just (joking|kidding)|jk)\b", re.I)
 
@@ -681,7 +681,7 @@ class Ladder:
                 "- !rank bjkid – someone else's",
                 "- !record bjkid – your record vs BJkid2000",
                 "- !recent – last 5 results",
-                "- !pick – random mode, weight class, rounds, time and HUD",
+                "- !pick – random mode, time, rounds, HUD and weight class",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
             ]
