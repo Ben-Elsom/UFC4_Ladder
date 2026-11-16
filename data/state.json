@@ -2284,7 +2284,14 @@
   "156#459476176821094",
   "156#459476178291805",
   "156#459476185531931",
-  "156#459476261434555"
+  "156#459476261434555",
+  "156#459476263437200",
+  "156#459476263482640",
+  "156#459476266523060",
+  "156#459476268342280",
+  "156#459476270489149",
+  "156#459476271327539",
+  "156#459476278173963"
  ],
  "fights": [
   {
@@ -3443,6 +3450,22 @@
    "msg_uid": "156#459476175743017#0",
    "text": "Vs Granite 1-0 to me snb",
    "status": "ok"
+  },
+  {
+   "id": 55,
+   "mode": "sb",
+   "winner": "5190974766751866546",
+   "loser": "7835799679513912497",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794829181598,
+   "msg_uid": "156#459476270489149#0",
+   "text": "2-1 to me against mrwhoodatahh snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -4251,9 +4274,14 @@
    "ts": 1794828812521,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Granite_chin23 1–0\n- sweatytrixter 1583 (+37)\n- Granite_chin23 1574 (−23)",
    "sent": true
+  },
+  {
+   "ts": 1794829181675,
+   "text": "✅ Stand & Bang result\n- dad_scopez def. mrwhoopdatahh 2–1\n- dad_scopez 1581 (+11)\n- mrwhoopdatahh 1526 (−23)",
+   "sent": true
   }
  ],
- "next_fight_id": 55,
+ "next_fight_id": 56,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -4265,7 +4293,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.8,
-  "last_run": 1794829150963,
+  "last_run": 1794829212676,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
