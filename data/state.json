@@ -1974,7 +1974,9 @@
   "153#459474039932632",
   "153#459474041209567",
   "153#459474043972893",
-  "153#459474044560903"
+  "153#459474044560903",
+  "153#459474055726240",
+  "153#459474064450712"
  ],
  "fights": [
   {
@@ -2913,8 +2915,8 @@
   {
    "id": 42,
    "mode": "mma",
-   "winner": "8890823238041145135",
-   "loser": "5879038572944845531",
+   "winner": "5879038572944845531",
+   "loser": "8890823238041145135",
    "score": [
     1,
     0
@@ -2924,7 +2926,23 @@
    "ts": 1794820473474,
    "msg_uid": "153#459474041209567#0",
    "text": "0-1 Maori mma",
-   "status": "ok"
+   "status": "ok",
+   "admin_edits": [
+    {
+     "ts": 1794820520579,
+     "action": "edited",
+     "was": {
+      "winner": "8890823238041145135",
+      "loser": "5879038572944845531",
+      "score": [
+       1,
+       0
+      ],
+      "mode": "mma",
+      "status": "ok"
+     }
+    }
+   ]
   }
  ],
  "pending": [],
@@ -3643,6 +3661,11 @@
    "ts": 1794820480955,
    "text": "✅ MMA result\n- maoripunisher_ def. BJkid2000 1–0\n- maoripunisher_ 1553 (+122) (3/5 fights)\n- BJkid2000 1691 (−78)",
    "sent": true
+  },
+  {
+   "ts": 1794820526237,
+   "text": "🔧 Correction: MMA result (was maoripunisher_ def. BJkid2000 1–0)\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1783 (+14)\n- maoripunisher_ 1411 (−20) (3/5 fights)",
+   "sent": true
   }
  ],
  "next_fight_id": 43,
@@ -3657,7 +3680,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794820503904,
+  "last_run": 1794820566211,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
