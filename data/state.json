@@ -2489,7 +2489,10 @@
   "158#459478214114307",
   "158#459478217554580",
   "158#459478228581143",
-  "158#459478229947500"
+  "158#459478229947500",
+  "158#459478246972060",
+  "158#459478247785600",
+  "158#459478252095879"
  ],
  "fights": [
   {
@@ -4769,6 +4772,16 @@
    "ts": 1794836832551,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Rat_on_Roidz 1–0\n- sweatytrixter 1652 (+21)\n- Rat_on_Roidz 1594 (−42)",
    "sent": true
+  },
+  {
+   "ts": 1794836902226,
+   "text": "- sweatytrixter, was that MMA or Stand & Bang?\n- sweatytrixter def. Rat_on_Roidz 1-0\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794836930141,
+   "text": "👍 No worries, ignored that one.",
+   "sent": true
   }
  ],
  "next_fight_id": 66,
@@ -4783,7 +4796,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.7,
-  "last_run": 1794836868681,
+  "last_run": 1794836930141,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
