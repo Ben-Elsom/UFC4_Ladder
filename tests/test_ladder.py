@@ -400,10 +400,11 @@ def test_pick_gives_random_fight_settings():
         out = l.handle({"uid": f"p{i}", "sender_id": "a1", "sender_name": "JonoTheGoat", "body": "!pick", "ts": T0 + i})
         assert len(out) == 1
         lines = out[0].split("\n")
-        assert lines[1].removeprefix("- Weight class: ") in WEIGHT_CLASSES
-        assert lines[2] in ("- Rounds: 3", "- Rounds: 5")
-        assert lines[3] in ("- Time: Accelerated", "- Time: Real time")
-        assert lines[4] in ("- HUD: Shown", "- HUD: Hidden")
+        assert lines[1] in ("- Mode: MMA", "- Mode: Stand & Bang")
+        assert lines[2].removeprefix("- Weight class: ") in WEIGHT_CLASSES
+        assert lines[3] in ("- Rounds: 3", "- Rounds: 5")
+        assert lines[4] in ("- Time: Accelerated", "- Time: Real time")
+        assert lines[5] in ("- HUD: Shown", "- HUD: Hidden")
         seen.add(out[0])
     assert len(seen) > 1                       # actually random
     assert not s["fights"] and not s["pending"]   # no side effects

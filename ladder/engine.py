@@ -39,6 +39,7 @@ WEIGHT_CLASSES = [
 def pick_settings(rng=random) -> str:
     return "\n".join([
         "🎲 Random fight settings",
+        f"- Mode: {rng.choice(['MMA', 'Stand & Bang'])}",
         f"- Weight class: {rng.choice(WEIGHT_CLASSES)}",
         f"- Rounds: {rng.choice([3, 5])}",
         f"- Time: {rng.choice(['Accelerated', 'Real time'])}",
@@ -680,7 +681,7 @@ class Ladder:
                 "- !rank bjkid – someone else's",
                 "- !record bjkid – your record vs BJkid2000",
                 "- !recent – last 5 results",
-                "- !pick – random weight class, rounds, time and HUD",
+                "- !pick – random mode, weight class, rounds, time and HUD",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
             ]
