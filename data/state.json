@@ -1681,7 +1681,18 @@
   "150#459468148150694",
   "150#459468153647524",
   "150#459468154431848",
-  "150#459468155544350"
+  "150#459468155544350",
+  "150#459468166135710",
+  "150#459468168894193",
+  "150#459468170114848",
+  "150#459468170533856",
+  "150#459468171830693",
+  "150#459468174360022",
+  "150#459468174959241",
+  "150#459468176944654",
+  "150#459468178086941",
+  "150#459468178389599",
+  "150#459468178632563"
  ],
  "fights": [
   {
@@ -2453,6 +2464,41 @@
    "msg_uid": "150#459468045376499#0",
    "text": "1-0 against Blumzy mma",
    "status": "ok"
+  },
+  {
+   "id": 34,
+   "mode": "sb",
+   "winner": "5190974766751866546",
+   "loser": "8890823238041145135",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794797523967,
+   "msg_uid": "150#459468166135710#0",
+   "text": "2-1 to me against maori snb",
+   "status": "ok"
+  },
+  {
+   "id": 35,
+   "mode": "sb",
+   "winner": "8890823238041145135",
+   "loser": "5190974766751866546",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794797539511,
+   "msg_uid": "150#459468170114848#0",
+   "text": "2-0 to maori snb",
+   "status": "ok",
+   "confirmed_by": [
+    "8890823238041145135"
+   ]
   }
  ],
  "pending": [],
@@ -3031,9 +3077,29 @@
    "ts": 1794797052137,
    "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- BJkid2000 1681 (+102) (2/5 fights)\n- blumzylol 1691 (−37)",
    "sent": true
+  },
+  {
+   "ts": 1794797528346,
+   "text": "✅ Stand & Bang result\n- dad_scopez def. maoripunisher_ 2–1\n- dad_scopez 1616 (+13)\n- maoripunisher_ 1523 (−18)",
+   "sent": true
+  },
+  {
+   "ts": 1794797543004,
+   "text": "✅ Stand & Bang result\n- maoripunisher_ def. dad_scopez 2–0\n- maoripunisher_ 1600 (+77)\n- dad_scopez 1557 (−59)",
+   "sent": true
+  },
+  {
+   "ts": 1794797562865,
+   "text": "- maoripunisher_, was that MMA or Stand & Bang?\n- maoripunisher_ def. dad_scopez 2-0\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794797574381,
+   "text": "👍 Already got that one\n- maoripunisher_ def. dad_scopez 2–0\n- Thanks for confirming",
+   "sent": true
   }
  ],
- "next_fight_id": 34,
+ "next_fight_id": 36,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3045,7 +3111,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.2,
-  "last_run": 1794797514362,
+  "last_run": 1794797574381,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
