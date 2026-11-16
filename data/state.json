@@ -1645,7 +1645,10 @@
   "150#459467627942300",
   "150#459467639550506",
   "150#459467754345708",
-  "150#459467755432459"
+  "150#459467755432459",
+  "150#459467759114925",
+  "150#459467764034193",
+  "150#459467765402951"
  ],
  "fights": [
   {
@@ -2385,6 +2388,22 @@
     }
    ],
    "updated_ts": 1794787916226
+  },
+  {
+   "id": 32,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "7835799679513912497",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794795953258,
+   "msg_uid": "150#459467764034193",
+   "text": "i beat mrwhoop 3-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -2953,9 +2972,14 @@
    "ts": 1794787923645,
    "text": "🔄 MMA result updated (was 3–1)\n- Rat_on_Roidz def. echo_goescrazy 4–1\n- Rat_on_Roidz 1568 (+68)\n- echo_goescrazy 1346 (−37)",
    "sent": true
+  },
+  {
+   "ts": 1794795955397,
+   "text": "✅ MMA result\n- blumzylol def. mrwhoopdatahh 3–0\n- blumzylol 1728 (+110)\n- mrwhoopdatahh 1575 (−117)",
+   "sent": true
   }
  ],
- "next_fight_id": 32,
+ "next_fight_id": 33,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -2967,7 +2991,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.2,
-  "last_run": 1794795921685,
+  "last_run": 1794795983476,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
