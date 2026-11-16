@@ -1828,7 +1828,14 @@
   "152#459473270215424",
   "152#459473273890181",
   "152#459473276443480",
-  "152#459473279119329"
+  "152#459473279119329",
+  "152#459473281034070",
+  "152#459473283976472",
+  "152#459473287366541",
+  "152#459473289757017",
+  "152#459473292728507",
+  "152#459473292748570",
+  "152#459473294815426"
  ],
  "fights": [
   {
@@ -2683,6 +2690,22 @@
      }
     }
    ]
+  },
+  {
+   "id": 38,
+   "mode": "sb",
+   "winner": "7835799679513912497",
+   "loser": "5879038572944845531",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1794817528775,
+   "msg_uid": "152#459473287366541#0",
+   "text": "vs bj 1-0 stand and bang",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -3331,9 +3354,19 @@
    "ts": 1794817469866,
    "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Flyweight",
    "sent": true
+  },
+  {
+   "ts": 1794817531824,
+   "text": "- mrwhoopdatahh, I couldn't find anyone called \"bj\" in this chat\n  - You posted: vs bj 1-0 stand and bang\n- Who did you play?\n  - Reply with part of their PSN name, e.g. bjkid for BJkid2000\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1794817554553,
+   "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. BJkid2000 1–0\n- mrwhoopdatahh 1526 (+53)\n- BJkid2000 1480 (−62) (4/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 38,
+ "next_fight_id": 39,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3345,7 +3378,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794817500967,
+  "last_run": 1794817566064,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
