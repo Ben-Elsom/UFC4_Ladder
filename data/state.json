@@ -2020,7 +2020,17 @@
   "153#459474311055517",
   "153#459474316538054",
   "153#459474317197087",
-  "153#459474317797027"
+  "153#459474317797027",
+  "153#459474321578208",
+  "153#459474324209644",
+  "154#459474324371336",
+  "154#459474325305859",
+  "154#459474326867773",
+  "154#459474327254783",
+  "154#459474327735070",
+  "154#459474328739462",
+  "154#459474329795680",
+  "154#459474334393718"
  ],
  "fights": [
   {
@@ -3019,6 +3029,22 @@
    "msg_uid": "153#459474302596885#0",
    "text": "0-1 to scopes",
    "status": "ok"
+  },
+  {
+   "id": 45,
+   "mode": "sb",
+   "winner": "5190974766751866546",
+   "loser": "8890823238041145135",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794821596638,
+   "msg_uid": "154#459474328739462#0",
+   "text": "2-1 to me against maori snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -3767,9 +3793,19 @@
    "ts": 1794821524367,
    "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1612\n- 2. mrwhoopdatahh 1551\n- 3. echo_goescrazy 1322\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1794821586069,
+   "text": "🏆 MMA\n- 1. BJkid2000 1783\n- 2. blumzylol 1691\n- 3. Rat_on_Roidz 1568\n- 4. mrwhoopdatahh 1553\n- 5. echo_goescrazy 1346\n- +4 still getting their first 5 fights\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
+  },
+  {
+   "ts": 1794821597575,
+   "text": "✅ Stand & Bang result\n- dad_scopez def. maoripunisher_ 2–1\n- dad_scopez 1599 (+25)\n- maoripunisher_ 1579 (−28)",
+   "sent": true
   }
  ],
- "next_fight_id": 45,
+ "next_fight_id": 46,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3781,7 +3817,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794821552370,
+  "last_run": 1794821617241,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
