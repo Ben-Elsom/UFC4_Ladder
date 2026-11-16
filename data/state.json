@@ -1654,7 +1654,11 @@
   "150#459467804119304",
   "150#459467810107380",
   "150#459467863656897",
-  "150#459468026894252"
+  "150#459468026894252",
+  "150#459468029846162",
+  "150#459468041077350",
+  "150#459468044486466",
+  "150#459468045376499"
  ],
  "fights": [
   {
@@ -2410,6 +2414,22 @@
    "msg_uid": "150#459467764034193",
    "text": "i beat mrwhoop 3-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 33,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "8133734209062276856",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794797052251,
+   "msg_uid": "150#459468045376499#0",
+   "text": "1-0 against Blumzy mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -2983,9 +3003,14 @@
    "ts": 1794795955397,
    "text": "✅ MMA result\n- blumzylol def. mrwhoopdatahh 3–0\n- blumzylol 1728 (+110)\n- mrwhoopdatahh 1575 (−117)",
    "sent": true
+  },
+  {
+   "ts": 1794797052137,
+   "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- BJkid2000 1681 (+102) (2/5 fights)\n- blumzylol 1691 (−37)",
+   "sent": true
   }
  ],
- "next_fight_id": 33,
+ "next_fight_id": 34,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -2997,7 +3022,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 58.2,
-  "last_run": 1794796984968,
+  "last_run": 1794797052137,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
