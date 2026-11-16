@@ -2541,7 +2541,11 @@
   "159#459478628951370",
   "159#459478631628343",
   "159#459478632628224",
-  "159#459478635408318"
+  "159#459478635408318",
+  "159#459478638644884",
+  "159#459478639322128",
+  "159#459478639910908",
+  "159#459478642373136"
  ],
  "fights": [
   {
@@ -4953,6 +4957,11 @@
    "ts": 1794838315122,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. sweatytrixter 1–0\n- mrwhoopdatahh 1619 (+25)\n- sweatytrixter 1599 (−19)",
    "sent": true
+  },
+  {
+   "ts": 1794838443591,
+   "text": "- sweatytrixter, I couldn't find \"yk what i mean\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 70,
@@ -4967,7 +4976,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.7,
-  "last_run": 1794838429377,
+  "last_run": 1794838490993,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
