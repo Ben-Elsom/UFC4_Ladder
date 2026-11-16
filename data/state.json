@@ -1842,7 +1842,18 @@
   "152#459473383848471",
   "152#459473385098154",
   "152#459473386591616",
-  "152#459473495202783"
+  "152#459473495202783",
+  "152#459473496228143",
+  "152#459473498382967",
+  "152#459473498881429",
+  "152#459473500628248",
+  "152#459473507198361",
+  "152#459473513614659",
+  "152#459473513959675",
+  "152#459473515813764",
+  "152#459473516374766",
+  "152#459473516943412",
+  "152#459473517169078"
  ],
  "fights": [
   {
@@ -2713,21 +2724,25 @@
    "msg_uid": "152#459473287366541#0",
    "text": "vs bj 1-0 stand and bang",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "5879038572944845531",
-   "uid": "152#459473495202783",
-   "ts": 1794818340635,
-   "text": "Vs 1-0 mr in mma",
-   "mine": 1,
-   "theirs": 0,
+   "id": 39,
    "mode": "mma",
-   "kind": "who",
-   "asked_at": 1794818340635
+   "winner": "5879038572944845531",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1794818340635,
+   "msg_uid": "152#459473495202783#0",
+   "text": "Vs 1-0 mr in mma",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -3388,9 +3403,19 @@
    "ts": 1794818341450,
    "text": "- BJkid2000, who was that 1-0 against?\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794818358619,
+   "text": "✅ MMA result\n- BJkid2000 def. mrwhoopdatahh 1–0\n- BJkid2000 1725 (+44) (3/5 fights)\n- mrwhoopdatahh 1553 (−22)",
+   "sent": true
+  },
+  {
+   "ts": 1794818404421,
+   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Lightweight",
+   "sent": true
   }
  ],
- "next_fight_id": 39,
+ "next_fight_id": 40,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3402,7 +3427,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794818341450,
+  "last_run": 1794818404421,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
