@@ -1977,7 +1977,11 @@
   "153#459474044560903",
   "153#459474055726240",
   "153#459474064450712",
-  "153#459474070049133"
+  "153#459474070049133",
+  "153#459474078682094",
+  "153#459474082517332",
+  "153#459474083982530",
+  "153#459474085082409"
  ],
  "fights": [
   {
@@ -2944,6 +2948,22 @@
      }
     }
    ]
+  },
+  {
+   "id": 43,
+   "mode": "sb",
+   "winner": "7835799679513912497",
+   "loser": "597918633581885196",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1794820634833,
+   "msg_uid": "153#459474082517332#0",
+   "text": "vs hustler 2-1 stand and bang to me",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -3667,9 +3687,14 @@
    "ts": 1794820526237,
    "text": "🔧 Correction: MMA result (was maoripunisher_ def. BJkid2000 1–0)\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1783 (+14)\n- maoripunisher_ 1411 (−20) (3/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794820641651,
+   "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. Hustler_money 2–1\n- mrwhoopdatahh 1549 (+23)\n- Hustler_money 1460 (−28)",
+   "sent": true
   }
  ],
- "next_fight_id": 43,
+ "next_fight_id": 44,
  "next_review_id": 9,
  "meta": {
   "status": "ok",
@@ -3681,7 +3706,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794820591254,
+  "last_run": 1794820653076,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
