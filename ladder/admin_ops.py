@@ -125,7 +125,7 @@ def correction(state: dict, fid: int | str, was: str | None, make_ladder) -> str
     if f["status"] == "void":
         raise AdminError("This result is removed, so there's nothing to resend")
     lad = make_ladder(state)
-    head = (f"🔧 Correction: {MODES[f['mode']]} result (was {was})" if was else
+    head = (f"🎙️ WE HAVE A CORRECTION\n- {MODES[f['mode']]} result, was: {was}" if was else
             f"🔁 {MODES[f['mode']]} result (resent)")
     text = lad._confirm(f, head)
     state.setdefault("outbox", []).append(text)

@@ -145,9 +145,9 @@ def test_list_remove_undo_and_edit(web):
                                                      "mode": "sb", "resend": "1"}, ck)
     assert code == 303 and f["score"] == [2, 1]
     msg = s["outbox"].pop()
-    assert msg.startswith(f"🔧 Correction: Stand & Bang result (was {PLAYERS['a2']} def. {PLAYERS['a1']} 2–0)\n"
+    assert msg.startswith(f"🎙️ WE HAVE A CORRECTION\n- Stand & Bang result, was: {PLAYERS['a2']} def. {PLAYERS['a1']} 2–0\n"
                           f"- {PLAYERS['a2']} def. {PLAYERS['a1']} 2–1\n- {PLAYERS['a2']} ")
-    assert msg.count("\n") == 3
+    assert msg.count("\n") == 4
     code, _, _ = req(port, "POST", "/admin/fight/2/resend", {"csrf": tok}, ck)
     assert code == 303 and s["outbox"].pop().startswith("🔁 Stand & Bang result (resent)\n- ")
     ops.void(s, 2)
