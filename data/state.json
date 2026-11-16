@@ -1824,7 +1824,11 @@
   "151#459473194303749",
   "151#459473195389112",
   "151#459473210205470",
-  "151#459473264244176"
+  "151#459473264244176",
+  "152#459473270215424",
+  "152#459473273890181",
+  "152#459473276443480",
+  "152#459473279119329"
  ],
  "fights": [
   {
@@ -3322,6 +3326,11 @@
    "ts": 1794817007223,
    "text": "🔁 Stand & Bang result (resent)\n- maoripunisher_ def. Hustler_money 1–0\n- maoripunisher_ 1620 (+20)\n- Hustler_money 1437 (−63) (1/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794817469866,
+   "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Flyweight",
+   "sent": true
   }
  ],
  "next_fight_id": 38,
@@ -3336,7 +3345,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.9,
-  "last_run": 1794817439532,
+  "last_run": 1794817500967,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
