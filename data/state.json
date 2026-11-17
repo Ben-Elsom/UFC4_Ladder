@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "137#459425851871921",
-  "137#459426105199312",
-  "137#459426473676996",
-  "137#459426659770500",
-  "137#459426685724268",
-  "137#459426767811914",
   "137#459426853853032",
   "137#459426958071131",
   "137#459427007814720",
@@ -3314,7 +3308,13 @@
   "168#459497475835753",
   "168#459497547521739",
   "168#459497558252399",
-  "168#459497559368416"
+  "168#459497559368416",
+  "168#459497568908613",
+  "168#459497570230838",
+  "168#459497572022366",
+  "168#459497574727763",
+  "168#459497577434688",
+  "168#459497579837795"
  ],
  "fights": [
   {
@@ -5242,6 +5242,22 @@
    "msg_uid": "167#459496883540213#0",
    "text": "Vs scopes 1-0 snb",
    "status": "ok"
+  },
+  {
+   "id": 99,
+   "mode": "mma",
+   "winner": "8890823238041145135",
+   "loser": "1622088612165582170",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8890823238041145135",
+   "ts": 1794912378549,
+   "msg_uid": "168#459497568908613#0",
+   "text": "1-0 vs bunky mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5509,11 +5525,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794656382622,
-   "text": "✅ Stand & Bang result\n- dad_scopez def. BJkid2000 2–0\n- dad_scopez 1688 (+18)\n- BJkid2000 1319 (−29)",
-   "sent": true
-  },
   {
    "ts": 1794656472366,
    "text": "- Granite_chin23, was that MMA or Stand & Bang?\n- Granite_chin23 def. maoripunisher_ 3-0\n- Not a result? Reply nvm",
@@ -6508,9 +6519,14 @@
    "ts": 1794909704265,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. dad_scopez 1–0\n- sweatytrixter 1616 (+12)\n- dad_scopez 1537 (−9)",
    "sent": true
+  },
+  {
+   "ts": 1794912380523,
+   "text": "✅ MMA result\n- maoripunisher_ def. bunky_skudz 1–0\n- maoripunisher_ 1488 (+77) (4/5 fights)\n- bunky_skudz 1470 (−32)",
+   "sent": true
   }
  ],
- "next_fight_id": 99,
+ "next_fight_id": 100,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6522,7 +6538,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.8,
-  "last_run": 1794912366382,
+  "last_run": 1794912428183,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
