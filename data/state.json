@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "139#459430098112498",
-  "139#459430099125969",
-  "139#459430099487914",
   "139#459430100766033",
   "139#459430102082671",
   "139#459430103082239",
@@ -3314,7 +3311,10 @@
   "170#459509091674548",
   "170#459509205854861",
   "170#459509235910574",
-  "170#459509261829619"
+  "170#459509261829619",
+  "170#459509265926842",
+  "170#459509266723097",
+  "170#459509267200366"
  ],
  "fights": [
   {
@@ -5322,6 +5322,22 @@
     }
    ],
    "updated_ts": 1794921533803
+  },
+  {
+   "id": 103,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "1622088612165582170",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794958070026,
+   "msg_uid": "170#459509265926842",
+   "text": "i beat bunky 3-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5594,11 +5610,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794663058390,
-   "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1622 (+43) (2/5 fights)\n- vanz_nz 1378 (−43) (2/5 fights)",
-   "sent": true
-  },
   {
    "ts": 1794663694848,
    "text": "✅ Stand & Bang result\n- BJkid2000 def. vanz_nz 1–0\n- BJkid2000 1650 (+28) (3/5 fights)\n- vanz_nz 1350 (−28) (3/5 fights)",
@@ -6593,9 +6604,14 @@
    "ts": 1794924386651,
    "text": "📢 LADDER UPDATE\n\nPOINTS DROP DAILY\n- Everyone loses 10 points every day at 12pm\n- No sitting on your rank, fight to keep your spot\n- At 12pm I'll post the day's biggest gains and drops, and who fought the most\n\n!board\n- Now shows the top 10 in each mode\n- Full rankings are on the site\n\n!fights\n- See who's had the most fights\n\n!dispute\n- Wrong result? Type !dispute\n- It removes your most recent result, the whole set (a 2-1 takes all 3 games off)\n- Then post the correct one\n- Older than your last result? Message BJkid2000\n\n!pick\n- Add mens, womens, bigs or littles to narrow the weight class\n  - e.g. !pick men\n\nNOT TALKING TO ME?\n- Put a / in front so I don't count it as a result\n  - e.g. I'm going to /3-0 you\n\n- Type !help for everything",
    "sent": true
+  },
+  {
+   "ts": 1794958071767,
+   "text": "✅ MMA result\n- blumzylol def. bunky_skudz 3–0\n- blumzylol 1700 (+30)\n- bunky_skudz 1433 (−37)",
+   "sent": true
   }
  ],
- "next_fight_id": 103,
+ "next_fight_id": 104,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6607,7 +6623,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.3,
-  "last_run": 1794958057597,
+  "last_run": 1794958119601,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
