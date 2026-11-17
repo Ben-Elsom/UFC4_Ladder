@@ -5064,7 +5064,7 @@
  "next_fight_id": 72,
  "next_review_id": 10,
  "meta": {
-  "status": "ok",
+  "status": "login_failed",
   "dry_run": false,
   "group": "UFC 4: Elites",
   "started": 1794640102107,
@@ -5073,10 +5073,11 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.3,
-  "last_run": 1794873793688,
+  "last_run": 1794874639649,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
-  "last_error": 1794728701854
+  "last_error": 1794874647927,
+  "error": "PSNAWPUnauthorizedError: Expired token"
  }
 }
