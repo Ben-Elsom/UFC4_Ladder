@@ -2901,7 +2901,12 @@
   "162#459492469376504",
   "162#459492470448015",
   "162#459492470759248",
-  "163#459492472707237"
+  "163#459492472707237",
+  "163#459492481898358",
+  "163#459492486437449",
+  "163#459492489017346",
+  "163#459492489027591",
+  "163#459492490853168"
  ],
  "fights": [
   {
@@ -4542,7 +4547,19 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "8133734209062276856",
+   "uid": "163#459492489017346",
+   "ts": 1794892535224,
+   "text": "\"1-0 forever up\"",
+   "mine": 1,
+   "theirs": 0,
+   "mode": null,
+   "kind": "who",
+   "asked_at": 1794892535224
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -5669,6 +5686,11 @@
    "ts": 1794892457612,
    "text": "✅ Stand & Bang result\n- dad_scopez def. Rat_on_Roidz 2–1\n- dad_scopez 1576 (+12)\n- Rat_on_Roidz 1547 (−23)",
    "sent": true
+  },
+  {
+   "ts": 1794892539191,
+   "text": "- blumzylol, who was that 1-0 against?\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 82,
@@ -5683,7 +5705,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.1,
-  "last_run": 1794892480380,
+  "last_run": 1794892550620,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
