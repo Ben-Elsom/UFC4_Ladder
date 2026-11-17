@@ -2602,7 +2602,12 @@
   "159#459488233077311",
   "159#459488249026668",
   "159#459488256904205",
-  "159#459488372784423"
+  "159#459488372784423",
+  "159#459488374161875",
+  "159#459488376540611",
+  "159#459488377572960",
+  "159#459488377806100",
+  "159#459488386034511"
  ],
  "fights": [
   {
@@ -4113,6 +4118,22 @@
    "msg_uid": "159#459488231993344",
    "text": "i beat grubby 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 74,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "6459805198974452339",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794876470861,
+   "msg_uid": "159#459488376540611",
+   "text": "i beat grubby 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5112,9 +5133,14 @@
    "ts": 1794875907227,
    "text": "✅ MMA result\n- blumzylol def. grubby_flea257 1–0\n- blumzylol 1717 (+5)\n- grubby_flea257 1289 (−9)",
    "sent": true
+  },
+  {
+   "ts": 1794876472607,
+   "text": "✅ MMA result\n- blumzylol def. grubby_flea257 1–0\n- blumzylol 1722 (+5)\n- grubby_flea257 1281 (−8)",
+   "sent": true
   }
  ],
- "next_fight_id": 74,
+ "next_fight_id": 75,
  "next_review_id": 10,
  "meta": {
   "status": "ok",
@@ -5126,7 +5152,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.3,
-  "last_run": 1794876458197,
+  "last_run": 1794876520666,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
