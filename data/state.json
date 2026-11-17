@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "137#459427867530790",
-  "137#459427941728616",
-  "137#459428095622896",
-  "137#459428101657635",
-  "137#459428108007457",
-  "137#459428111960237",
   "137#459428404785175",
   "137#459428408751939",
   "137#459428414116760",
@@ -3314,7 +3308,13 @@
   "168#459497588824420",
   "168#459497589623577",
   "168#459497592798577",
-  "168#459497594503571"
+  "168#459497594503571",
+  "168#459497605477035",
+  "168#459497609337752",
+  "168#459497611639932",
+  "168#459497612494612",
+  "168#459497613264745",
+  "168#459497614048884"
  ],
  "fights": [
   {
@@ -5526,21 +5526,6 @@
  ],
  "log": [
   {
-   "ts": 1794656472366,
-   "text": "- Granite_chin23, was that MMA or Stand & Bang?\n- Granite_chin23 def. maoripunisher_ 3-0\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
-   "ts": 1794656594327,
-   "text": "- dad_scopez, was that MMA or Stand & Bang?\n- dad_scopez def. Granite_chin23 3-0\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
-   "ts": 1794656639381,
-   "text": "- Granite_chin23, who was that 3-0 against?\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
    "ts": 1794656700919,
    "text": "- Granite_chin23, I couldn't find \"😂😂😂\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
    "sent": true
@@ -6524,6 +6509,21 @@
    "ts": 1794912380523,
    "text": "✅ MMA result\n- maoripunisher_ def. bunky_skudz 1–0\n- maoripunisher_ 1488 (+77) (4/5 fights)\n- bunky_skudz 1470 (−32)",
    "sent": true
+  },
+  {
+   "ts": 1794912545567,
+   "text": "🏆 MMA\n- 1. BJkid2000 1783\n- 2. blumzylol 1670\n- 3. mrwhoopdatahh 1613\n- 4. Rat_on_Roidz 1568\n- 5. bunky_skudz 1470\n- 6. sweatytrixter 1443\n- 7. echo_goescrazy 1346\n- 8. grubby_flea257 1204\n- +2 still getting their first 5 fights",
+   "sent": true
+  },
+  {
+   "ts": 1794912545567,
+   "text": "🏆 STAND & BANG\n- 1. maoripunisher_ 1624\n- 2. Granite_chin23 1620\n- 3. sweatytrixter 1616\n- 4. mrwhoopdatahh 1598\n- 5. blumzylol 1548\n- 6. Rat_on_Roidz 1547\n- 7. dad_scopez 1537\n- 8. FenioFtw_ 1498\n- 9. Hustler_money 1482\n- 10. TonganLion35 1468\n- 11. bunky_skudz 1452\n- 12. BJkid2000 1441\n- 13. grubby_flea257 1352\n- 14. echo_goescrazy 1332\n- 15. vanz_nz 1265\n- +2 still getting their first 5 fights",
+   "sent": true
+  },
+  {
+   "ts": 1794912545567,
+   "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1612\n- 2. blumzylol 1609\n- 3. mrwhoopdatahh 1606\n- 4. Rat_on_Roidz 1557\n- 5. sweatytrixter 1529\n- 6. bunky_skudz 1461\n- 7. echo_goescrazy 1339\n- 8. grubby_flea257 1278\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 100,
@@ -6538,7 +6538,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.8,
-  "last_run": 1794912495182,
+  "last_run": 1794912563111,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
