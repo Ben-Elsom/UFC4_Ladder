@@ -2999,7 +2999,14 @@
   "163#459492983585482",
   "163#459493033671977",
   "163#459493034396797",
-  "163#459493034873573"
+  "163#459493034873573",
+  "163#459493038476433",
+  "164#459493039713851",
+  "164#459493040411891",
+  "164#459493043952024",
+  "164#459493048925057",
+  "164#459493050620469",
+  "164#459493051052971"
  ],
  "fights": [
   {
@@ -4687,6 +4694,22 @@
    "msg_uid": "163#459492840635874#0",
    "text": "1-0 vs whoop snb",
    "status": "ok"
+  },
+  {
+   "id": 84,
+   "mode": "sb",
+   "winner": "8890823238041145135",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8890823238041145135",
+   "ts": 1794894681548,
+   "msg_uid": "163#459493038476433#0",
+   "text": "1-0 vs whoop snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -4893,11 +4916,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794648581360,
-   "text": "🥊 vs echo_goescrazy 2-1 (you won): MMA or Stand & Bang? Reply mma or snb.",
-   "sent": true
-  },
   {
    "ts": 1794648606882,
    "text": "✅ #2 MMA · mika_09876 def. echo_goescrazy 2–1 · mika_09876 1557 (+57) (3/5 fights) · echo_goescrazy 1443 (−57) (3/5 fights)",
@@ -5892,9 +5910,14 @@
    "ts": 1794894457753,
    "text": "🏆 COMBINED (average of both)\n- 1. mrwhoopdatahh 1624\n- 2. BJkid2000 1612\n- 3. blumzylol 1609\n- 4. Rat_on_Roidz 1557\n- 5. echo_goescrazy 1322\n- 6. grubby_flea257 1316\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1794894683174,
+   "text": "✅ Stand & Bang result\n- maoripunisher_ def. mrwhoopdatahh 1–0\n- maoripunisher_ 1624 (+16)\n- mrwhoopdatahh 1613 (−21)",
+   "sent": true
   }
  ],
- "next_fight_id": 84,
+ "next_fight_id": 85,
  "next_review_id": 12,
  "meta": {
   "status": "ok",
@@ -5906,7 +5929,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.1,
-  "last_run": 1794894665908,
+  "last_run": 1794894727869,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
