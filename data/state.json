@@ -2635,7 +2635,14 @@
   "160#459488940152418",
   "160#459488954161053",
   "160#459488956399079",
-  "160#459489062477768"
+  "160#459489062477768",
+  "160#459489063444474",
+  "160#459489065276830",
+  "160#459489067767172",
+  "160#459489069722374",
+  "160#459489074429957",
+  "160#459489076874167",
+  "160#459489077753748"
  ],
  "fights": [
   {
@@ -4178,6 +4185,22 @@
    "msg_uid": "159#459488819764153#0",
    "text": "Vs blumzy 1-0 to me snb",
    "status": "ok"
+  },
+  {
+   "id": 76,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "6758403479034326755",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "6758403479034326755",
+   "ts": 1794879196992,
+   "msg_uid": "160#459489074429957#0",
+   "text": "Vs blumzy 0-1 to him snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5197,9 +5220,14 @@
    "ts": 1794878656807,
    "text": "✅ Stand & Bang result sorted\n- blumzylol def. sweatytrixter 1–0\n- blumzylol 1550 (+58)\n- sweatytrixter 1549 (−19)",
    "sent": true
+  },
+  {
+   "ts": 1794879200251,
+   "text": "✅ Stand & Bang result\n- blumzylol def. sweatytrixter 1–0\n- blumzylol 1592 (+42)\n- sweatytrixter 1534 (−15)",
+   "sent": true
   }
  ],
- "next_fight_id": 76,
+ "next_fight_id": 77,
  "next_review_id": 10,
  "meta": {
   "status": "ok",
@@ -5211,7 +5239,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.2,
-  "last_run": 1794879152639,
+  "last_run": 1794879214774,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
