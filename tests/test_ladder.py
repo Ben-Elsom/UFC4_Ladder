@@ -325,6 +325,7 @@ def test_noon_post_once_with_biggest_movers(lad, monkeypatch):
     assert len(Chat.sent) >= 1 and text.count("DAILY UPDATE") == 1
     assert text.startswith("🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - JonoTheGoat +")
     assert "- Biggest drops\n  - Sam_K −" in text and "STAND & BANG\n- Biggest gains\n  - Temp48213 +" in text
+    assert "MOST FIGHTS TODAY\n- 1. JonoTheGoat 3\n- 2. Sam_K 2\n- 3. Temp48213 1" in text
     # gains are the fights only: the 10-point drop isn't taken off them
     jono_gain = int(text.split("  - JonoTheGoat +")[1].split("\n")[0])
     ch = lad.replay("mma")["changes"][1]["winner"]
@@ -359,6 +360,14 @@ def test_pick_groups(lad):
         assert seen <= set(PICK_GROUPS[group]) and len(seen) > 1
     assert set(PICK_GROUPS["Bigs"]) | set(PICK_GROUPS["Littles"]) == set(PICK_GROUPS["Men's"])
     assert say(lad, "a1", "!pick", T0 + 99)[0].startswith("🎲 Random fight settings\n")
+
+
+def test_fights_command(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a3", "beat jono 1-0 snb", T0 + H)
+    out = say(lad, "a2", "!fights", T0 + 2 * H)[0]
+    assert out.startswith("🥊 MOST FIGHTS\n- 1. JonoTheGoat 4\n- 2. Sam_K 3\n- 3. Temp48213 1")
+    assert say(lad, "a2", "!fights snb", T0 + 2 * H)[0].startswith("🥊 MOST FIGHTS · STAND & BANG\n- 1. JonoTheGoat 1\n- 2. Temp48213 1")
 
 
 def test_commands(lad):

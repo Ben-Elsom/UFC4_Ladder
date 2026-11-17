@@ -822,11 +822,24 @@ class Ladder:
             if down:
                 lines += ["- Biggest drops"] + [f"{SUB}{self.name(a)} −{-d}" for d, a in down]
             parts.append("\n".join(lines))
+        busy = self.fight_counts(lambda f: prev < f["ts"] < tick)
+        if busy:
+            parts.append("MOST FIGHTS TODAY\n" + "\n".join(f"- {i}. {self.name(a)} {n}" for i, (a, n) in enumerate(busy[:BOARD_SIZE], 1)))
         if len(parts) == 1:
             parts[0] += "\n- No fights in the last day"
         if self.site:
             parts[-1] += f"\n\n📊 {self.site}"
         return "\n\n".join(parts)
+
+    def fight_counts(self, keep=lambda f: True) -> list[tuple[str, int]]:
+        """Fights (every game in a set counts, both modes) per player, most first."""
+        n: dict[str, int] = {}
+        for f in self.s["fights"]:
+            if f["status"] == "ok" and keep(f):
+                games = sum(f.get("score") or (1, 0))
+                for a in (f["winner"], f["loser"]):
+                    n[a] = n.get(a, 0) + games
+        return sorted(n.items(), key=lambda x: (-x[1], self.name(x[0]).lower()))
 
     def combined(self, now: int | None = None) -> list[dict]:
         """Players ranked (5+ fights) in both modes, best average rating first."""
@@ -870,6 +883,7 @@ class Ladder:
                 "- !record bjkid – your record vs BJkid2000",
                 "- !record jono vs bjkid – record between any two players",
                 "- !recent – last 5 results",
+                "- !fights – who's had the most fights",
                 "- !pick – random mode, time, rounds, HUD and weight class",
                 "- !pick mens – men's divisions only",
                 f"- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message {self.admin}",
@@ -879,6 +893,13 @@ class Ladder:
             if self.site:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]
+        if cmd in ("fights", "active", "mostfights"):
+            rows = self.fight_counts(lambda f: not mode or f["mode"] == mode)
+            if not rows:
+                return ["No fights yet."]
+            title = f"🥊 MOST FIGHTS{' · ' + MODES[mode].upper() if mode else ''}"
+            return [title + "\n" + "\n".join(f"- {i}. {self.name(a)} {n}" for i, (a, n) in enumerate(rows[:BOARD_SIZE], 1))
+                    + (f"\n- +{len(rows) - BOARD_SIZE} more" if len(rows) > BOARD_SIZE else "") + site]
         if cmd == "dispute":
             return self.dispute(msg)
         if cmd in ("pick", "random", "roll"):
