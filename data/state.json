@@ -3222,7 +3222,10 @@
   "166#459495345742942",
   "166#459495350386027",
   "166#459495350635109",
-  "166#459495351564189"
+  "166#459495351564189",
+  "166#459495365099707",
+  "166#459495367421976",
+  "166#459495370775012"
  ],
  "fights": [
   {
@@ -4974,6 +4977,38 @@
    "msg_uid": "166#459495350635109#0",
    "text": "Vs whoop 0-1 to him snb",
    "status": "ok"
+  },
+  {
+   "id": 88,
+   "mode": "mma",
+   "winner": "1622088612165582170",
+   "loser": "6459805198974452339",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "1622088612165582170",
+   "ts": 1794903769920,
+   "msg_uid": "166#459495365099707#0",
+   "text": "Vs grubby 3-0 mma",
+   "status": "ok"
+  },
+  {
+   "id": 89,
+   "mode": "sb",
+   "winner": "1622088612165582170",
+   "loser": "6459805198974452339",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "1622088612165582170",
+   "ts": 1794903792089,
+   "msg_uid": "166#459495370775012#0",
+   "text": "Vs grubby 2-1 snb",
+   "status": "ok"
   }
  ],
  "pending": [
@@ -5232,16 +5267,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794650270327,
-   "text": "✅ #5 MMA · blumzylol def. echo_goescrazy 2–0 · blumzylol 1616 (+116) (2/5 fights) · echo_goescrazy 1365 (−78)",
-   "sent": true
-  },
-  {
-   "ts": 1794650400047,
-   "text": "🤔 Who was that 2-0 against? Reply with their name. (Your score goes first, so you won. If not, post it again like: lost to bjkid 0-2)",
-   "sent": true
-  },
   {
    "ts": 1794650902572,
    "text": "🥊 vs mika_09876 2-0 (you won): MMA or Stand & Bang? Reply mma or snb. (Not a result? Reply nvm)",
@@ -6231,9 +6256,19 @@
    "ts": 1794903713840,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. sweatytrixter 1–0\n- mrwhoopdatahh 1636 (+13)\n- sweatytrixter 1539 (−13)",
    "sent": true
+  },
+  {
+   "ts": 1794903775792,
+   "text": "✅ MMA result\n- bunky_skudz def. grubby_flea257 3–0\n- bunky_skudz 1472 (+95)\n- grubby_flea257 1204 (−77)",
+   "sent": true
+  },
+  {
+   "ts": 1794903795739,
+   "text": "✅ Stand & Bang result\n- bunky_skudz def. grubby_flea257 2–1\n- bunky_skudz 1491 (−9) (3/5 fights)\n- grubby_flea257 1352 (+1)",
+   "sent": true
   }
  ],
- "next_fight_id": 88,
+ "next_fight_id": 90,
  "next_review_id": 13,
  "meta": {
   "status": "ok",
@@ -6245,7 +6280,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.9,
-  "last_run": 1794903733595,
+  "last_run": 1794903795739,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
