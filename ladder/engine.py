@@ -275,10 +275,8 @@ class Ladder:
         low = body.lower()
         if low.startswith("!"):
             return self._command(msg, low[1:].split())
-        if re.fullmatch(r"dispute\W*", low):
-            return self.dispute(msg)
-        if "\\" in body:
-            return []  # backslash = "just talking, not a result", e.g. "I'm going to \\3-0 you"
+        if "/" in body:
+            return []  # a forward slash = "just talking, not a result", e.g. "I'm going to /3-0 you"
 
         pending = next((q for q in self.s["pending"]
                         if q["sender"] == msg["sender_id"] or msg["sender_id"] in q.get("players", ())), None)
@@ -803,16 +801,17 @@ class Ladder:
         return mode, rest
 
     def daily_update(self, tick: int, top: int = 3) -> str:
-        """The noon post: everyone's drop, then the biggest gains and drops since the last noon."""
+        """The noon post: everyone's drop, then the biggest gains and drops from fights since the last noon.
+        Gains are measured after yesterday's drop and before today's, so the 10 points don't count against them."""
         prev = (noons(tick - 2 * DAY, tick - 1) or [tick - DAY])[-1]
         parts = [f"🕛 DAILY UPDATE\n- Everyone lost {DECAY_POINTS} points at 12pm\n{SUB}Fight to keep your spot"]
         for md, label in MODES.items():
-            fought = {x for f in self.s["fights"] if f["status"] == "ok" and f["mode"] == md and prev < f["ts"] <= tick
+            fought = {x for f in self.s["fights"] if f["status"] == "ok" and f["mode"] == md and prev < f["ts"] < tick
                       for x in (f["winner"], f["loser"])}
             if not fought:
                 continue
             before = self.replay(md, cutoff=prev)["stats"]
-            after = self.replay(md, cutoff=tick)["stats"]
+            after = self.replay(md, cutoff=tick - 1)["stats"]      # just before today's drop
             moved = sorted(((round(after[a]["rating"]) - round(before[a]["rating"] if a in before else glicko.START_RATING), a)
                             for a in fought if a in after), key=lambda m: (-m[0], self.name(m[1]).lower()))
             up = [m for m in moved if m[0] > 0][:top]
@@ -855,7 +854,7 @@ class Ladder:
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
                 f"- Everyone loses {DECAY_POINTS} points every day at 12pm, so keep fighting to hold your spot",
-                "- Talking about a score, not posting one? Put a \\ in front, e.g. I'll \\3-0 you",
+                "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
             ]
             if self.site:
                 lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")
@@ -880,7 +879,7 @@ class Ladder:
             if self.site:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]
-        if cmd in ("dispute", "undo"):
+        if cmd == "dispute":
             return self.dispute(msg)
         if cmd in ("pick", "random", "roll"):
             return [pick_settings(group=pick_group(parts[1:]))]

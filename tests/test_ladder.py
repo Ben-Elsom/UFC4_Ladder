@@ -222,10 +222,11 @@ def test_tally_update_and_other_player_confirm_still_work(lad):
     assert _games(lad) == (2, 0) and len(lad.s["fights"]) == 1
 
 
-def test_backslash_means_not_a_result(lad):
-    for text in [r"I'm going to \0 and 1 you", r"gonna \3-0 you sam", r"\beat sam 2-1 mma"]:
+def test_forward_slash_means_not_a_result(lad):
+    for text in ["I'm going to /0 and 1 you", "gonna /3-0 you sam", "/beat sam 2-1 mma"]:
         assert say(lad, "a1", text, T0) == []
     assert not lad.s["fights"] and not lad.s["pending"]
+    assert say(lad, "a1", r"beat sam 2-1 mma \o/", T0) == []
     assert say(lad, "a1", "!rank", T0)                            # commands still work
 
 
@@ -239,11 +240,12 @@ def test_dispute_removes_your_most_recent_whole_set(lad):
     assert [f["status"] for f in lad.s["fights"]] == ["ok", "void"]
     assert "a1" not in lad.replay("mma")["stats"]
     say(lad, "a2", "lost to jono 2-0 mma", T0 + 3 * H)           # reposted
-    assert "Both games are off" in say(lad, "a1", "Dispute!", T0 + 4 * H)[0]   # Jono disputes that: fine
-    assert "That game is off" in say(lad, "a1", "dispute", T0 + 5 * H)[0]      # then the 1-0 is his newest
+    assert say(lad, "a1", "dispute", T0 + 4 * H) == []                        # only the command counts
+    assert "Both games are off" in say(lad, "a1", "!dispute", T0 + 4 * H)[0]  # Jono disputes that: fine
+    assert "That game is off" in say(lad, "a1", "!Dispute", T0 + 5 * H)[0]    # then the 1-0 is his newest
     assert lad.dispute_counts() == {"a2": 1, "a1": 2}
     assert "don't have a result" in say(lad, "a1", "!dispute", T0 + 6 * H)[0]
-    assert say(lad, "a3", "we should dispute that", T0 + 6 * H) == []          # only the word on its own
+    assert say(lad, "a3", "!undo", T0 + 6 * H) == []
 
 
 def test_dispute_a_split_and_your_own_post(lad):
@@ -275,6 +277,10 @@ def test_daily_drop_at_melbourne_noon(lad, monkeypatch):
     say(lad, "a2", "beat jono 1-0 mma", mel(2026, 11, 19, 9))
     r = lad.replay("mma", now=mel(2026, 11, 19, 10))
     assert r["changes"][2]["winner"][0] == pytest.approx(r1["a2"]["rating"])
+    # day two's noon post: Sam's gain is just the fight, not the fight minus the drop
+    post = lad.daily_update(mel(2026, 11, 19, 12))
+    w = r["changes"][2]["winner"]
+    assert f"  - Sam_K +{round(w[1]) - round(w[0])}\n" in post
     # history before the start date is untouched
     assert lad.replay("mma", cutoff=mel(2026, 11, 18, 11))["stats"]["a1"]["rating"] == pytest.approx(r0["a1"]["rating"])
 
@@ -319,6 +325,10 @@ def test_noon_post_once_with_biggest_movers(lad, monkeypatch):
     assert len(Chat.sent) >= 1 and text.count("DAILY UPDATE") == 1
     assert text.startswith("🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - JonoTheGoat +")
     assert "- Biggest drops\n  - Sam_K −" in text and "STAND & BANG\n- Biggest gains\n  - Temp48213 +" in text
+    # gains are the fights only: the 10-point drop isn't taken off them
+    jono_gain = int(text.split("  - JonoTheGoat +")[1].split("\n")[0])
+    ch = lad.replay("mma")["changes"][1]["winner"]
+    assert jono_gain == round(ch[1]) - round(ch[0])
     Chat.sent.clear()
     run(Chat(), s, {"dry_run": False}, mel(2026, 11, 21, 15))       # after days off: only the latest noon
     assert len(Chat.sent) == 1 and "No fights in the last day" in Chat.sent[0]
