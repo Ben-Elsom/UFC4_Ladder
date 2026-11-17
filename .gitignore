@@ -3,3 +3,4 @@ __pycache__/
 .pytest_cache/
 preview/
 .DS_Store
+data/chat_log.json

@@ -163,6 +163,25 @@ def test_admin_page_shows_disputes(web):
     assert "<h2>Disputes</h2>" in body and f"Disputed by {PLAYERS['a2']}" in body and "Undo remove" in body
 
 
+def test_flag_shows_five_earlier_messages(web):
+    port, s, _ = web
+    s["chat_log"] = [{"uid": f"c{i}", "ts": T0 + 8_000_000 + i, "sender_id": "a1", "sender_name": "x", "body": f"line {i}"} for i in range(8)]
+    flag(s, "a2", "beat bjkid 2-1", T0 + 9_000_000)
+    body = req(port, "GET", "/admin", cookie=login(port))[2]
+    assert "Earlier messages" in body and "line 3" in body and "line 7" in body and "line 2" not in body
+
+
+def test_chat_text_never_goes_in_the_public_state_file(tmp_path):
+    import json
+    from ladder.run import load_state, remember_chat, save_state
+    s = make_state()
+    remember_chat(s, [{"uid": "u1", "ts": 1, "sender_id": "a1", "sender_name": "x", "body": "secret chat"}])
+    save_state(tmp_path / "state.json", s)
+    assert "secret chat" not in (tmp_path / "state.json").read_text()
+    assert json.loads((tmp_path / "chat_log.json").read_text())[0]["body"] == "secret chat"
+    assert load_state(tmp_path / "state.json")["chat_log"][0]["body"] == "secret chat"
+
+
 def test_html_in_names_is_escaped(web):
     port, s, _ = web
     s["players"]["a3"]["name"] = "<script>x</script>"

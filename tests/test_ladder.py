@@ -252,6 +252,105 @@ def test_dispute_a_split_and_your_own_post(lad):
     assert all(f["status"] == "void" for f in lad.s["fights"])
 
 
+MEL = __import__("zoneinfo").ZoneInfo("Australia/Melbourne")
+
+
+def mel(y, mo, d, h=0, mi=0):
+    from datetime import datetime
+    return int(datetime(y, mo, d, h, mi, tzinfo=MEL).timestamp() * 1000)
+
+
+def test_daily_drop_at_melbourne_noon(lad, monkeypatch):
+    from ladder import engine
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 17, 20))
+    r0 = lad.replay("mma", now=mel(2026, 11, 18, 11, 59))["stats"]
+    r1 = lad.replay("mma", now=mel(2026, 11, 18, 12, 0))["stats"]
+    r3 = lad.replay("mma", now=mel(2026, 11, 20, 13))["stats"]
+    for a in ("a1", "a2"):
+        assert r1[a]["rating"] == pytest.approx(r0[a]["rating"] - 10)
+        assert r3[a]["rating"] == pytest.approx(r0[a]["rating"] - 30)
+    assert lad.replay("mma")["stats"]["a1"]["rating"] == pytest.approx(r0["a1"]["rating"])   # no `now`: as of the last fight
+    # a later fight sees the dropped ratings first, so the drop carries through
+    say(lad, "a2", "beat jono 1-0 mma", mel(2026, 11, 19, 9))
+    r = lad.replay("mma", now=mel(2026, 11, 19, 10))
+    assert r["changes"][2]["winner"][0] == pytest.approx(r1["a2"]["rating"])
+    # history before the start date is untouched
+    assert lad.replay("mma", cutoff=mel(2026, 11, 18, 11))["stats"]["a1"]["rating"] == pytest.approx(r0["a1"]["rating"])
+
+
+def test_noon_follows_daylight_saving():
+    from ladder import engine
+    from datetime import datetime
+    old = engine.DECAY_FROM
+    engine.DECAY_FROM = "2027-04-01"
+    try:
+        ticks = engine.noons(mel(2027, 4, 2), mel(2027, 4, 6))   # clocks go back 4 Apr 2027
+        assert [datetime.fromtimestamp(t / 1000, MEL).hour for t in ticks] == [12, 12, 12, 12]
+        assert ticks[2] - ticks[1] == 25 * H
+        assert engine.last_noon(mel(2027, 4, 5, 11)) == ticks[2] and engine.last_noon(mel(2027, 4, 5, 12)) == ticks[3]
+    finally:
+        engine.DECAY_FROM = old
+
+
+def test_noon_post_once_with_biggest_movers(lad, monkeypatch):
+    from ladder import engine
+    from ladder.run import run
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+
+    class Chat:
+        sent = []
+        def identity(self): return "bot", "Bot"
+        def group_label(self): return "g", "UFC 4: Elites"
+        def members(self): return list(PLAYERS.items())
+        def messages(self, limit=100): return []
+        def send(self, text): self.sent.append(text)
+
+    s = lad.s
+    s["meta"]["started"] = s["meta"]["intro_sent"] = s["meta"]["last_weekly"] = mel(2026, 11, 18, 0)
+    s["meta"]["last_daily"] = 0
+    say(lad, "a1", "beat sam 2-0 mma", mel(2026, 11, 18, 9))
+    say(lad, "a3", "beat jono 1-0 snb", mel(2026, 11, 18, 10))
+    run(Chat(), s, {"dry_run": False}, mel(2026, 11, 18, 11, 59))
+    assert Chat.sent == []                                         # not noon yet
+    run(Chat(), s, {"dry_run": False}, mel(2026, 11, 18, 12, 1))
+    run(Chat(), s, {"dry_run": False}, mel(2026, 11, 18, 12, 2))   # same noon: no repeat
+    text = "\n".join(Chat.sent)
+    assert len(Chat.sent) >= 1 and text.count("DAILY UPDATE") == 1
+    assert text.startswith("🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - JonoTheGoat +")
+    assert "- Biggest drops\n  - Sam_K −" in text and "STAND & BANG\n- Biggest gains\n  - Temp48213 +" in text
+    Chat.sent.clear()
+    run(Chat(), s, {"dry_run": False}, mel(2026, 11, 21, 15))       # after days off: only the latest noon
+    assert len(Chat.sent) == 1 and "No fights in the last day" in Chat.sent[0]
+
+
+def test_board_shows_top_ten_only():
+    s = new_state(); s["bot"] = {"account_id": "bot"}
+    l = Ladder(s, admin_name="BJkid2000")
+    people = {f"p{i}": f"Fighter{i:02d}" for i in range(14)}
+    l.sync_members(list(people.items())); l._n = 0
+    t = T0
+    for i in range(14):                                  # everyone gets 5 fights against the next person
+        for _ in range(3):
+            t += H
+            say(l, f"p{i}", f"beat fighter{(i + 1) % 14:02d} 1-0 mma", t)
+    out = say(l, "p0", "!board mma", t + H)[0]
+    assert out.count("\n- ") == 11 and "\n- 10. " in out and "\n- 11. " not in out and "- +4 more ranked on the site" in out
+
+
+def test_pick_groups(lad):
+    from ladder.engine import PICK_GROUPS
+    for word, group in [("mens", "Men's"), ("men's", "Men's"), ("bigs", "Bigs"), ("littles", "Littles"), ("womens", "Women's")]:
+        seen = set()
+        for i in range(40):
+            out = say(lad, "a1", f"!pick {word}", T0 + i)[0]
+            assert out.startswith(f"🎲 Random fight settings ({group})")
+            seen.add(out.split("- Weight class: ")[1])
+        assert seen <= set(PICK_GROUPS[group]) and len(seen) > 1
+    assert set(PICK_GROUPS["Bigs"]) | set(PICK_GROUPS["Littles"]) == set(PICK_GROUPS["Men's"])
+    assert say(lad, "a1", "!pick", T0 + 99)[0].startswith("🎲 Random fight settings\n")
+
+
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]

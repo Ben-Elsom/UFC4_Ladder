@@ -9,7 +9,9 @@ from __future__ import annotations
 import copy
 import random
 import re
+from datetime import date, datetime, time as dtime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from . import glicko
 from .names import norm, resolve as _fuzzy_resolve
@@ -25,6 +27,39 @@ MIN = 60 * 1000
 H = 60 * MIN
 DAY = 24 * H
 
+# Daily points drop, so nobody can sit on a rank: everyone loses DECAY_POINTS at noon each day.
+TIMEZONE = "Australia/Melbourne"
+DECAY_POINTS = 10
+DECAY_HOUR = 12
+DECAY_FROM = "2026-11-18"     # first drop: noon on this day (earlier history is left alone)
+BOARD_SIZE = 10               # !board shows this many per list; the site shows everyone
+
+
+def noons(start_ms: int, end_ms: int) -> list[int]:
+    """Daily drop times (ms) with start_ms < t <= end_ms."""
+    tz = ZoneInfo(TIMEZONE)
+    first = date.fromisoformat(DECAY_FROM)
+    day = max(first, datetime.fromtimestamp(max(start_ms, 0) / 1000, tz).date())
+    last = datetime.fromtimestamp(end_ms / 1000, tz).date()
+    out = []
+    while day <= last:
+        t = int(datetime.combine(day, dtime(DECAY_HOUR), tz).timestamp() * 1000)
+        if start_ms < t <= end_ms:
+            out.append(t)
+        day += timedelta(days=1)
+    return out
+
+
+def last_noon(now_ms: int) -> int | None:
+    """The most recent drop time at or before now (None before the first one)."""
+    ticks = noons(now_ms - 2 * DAY, now_ms)
+    return ticks[-1] if ticks else None
+
+
+def loses_points(x: dict) -> bool:
+    """Who the daily drop applies to. Everyone with a rating in that mode."""
+    return True
+
 
 NVM_LINE = "- Not a result? Reply nvm"
 SUB = "  - "   # second-level bullet
@@ -36,14 +71,34 @@ WEIGHT_CLASSES = [
 ]
 
 
-def pick_settings(rng=random) -> str:
+PICK_GROUPS = {   # !pick <group>: what each word narrows the weight class to
+    "Men's": [w for w in WEIGHT_CLASSES if w.startswith("Men's")],
+    "Women's": [w for w in WEIGHT_CLASSES if w.startswith("Women's")],
+    "Bigs": ["Men's Welterweight", "Men's Middleweight", "Men's Light Heavyweight", "Men's Heavyweight"],
+    "Littles": ["Men's Flyweight", "Men's Bantamweight", "Men's Featherweight", "Men's Lightweight"],
+}
+PICK_WORDS = {"men": "Men's", "mens": "Men's", "male": "Men's", "women": "Women's", "womens": "Women's",
+              "female": "Women's", "wmns": "Women's", "big": "Bigs", "bigs": "Bigs", "biggs": "Bigs",
+              "little": "Littles", "littles": "Littles", "smalls": "Littles", "small": "Littles"}
+
+
+def pick_group(words: list[str]) -> str | None:
+    for w in words:
+        g = PICK_WORDS.get(re.sub(r"[^a-z]", "", w.lower()))
+        if g:
+            return g
+    return None
+
+
+def pick_settings(rng=random, group: str | None = None) -> str:
+    classes = PICK_GROUPS.get(group, WEIGHT_CLASSES)
     return "\n".join([
-        "🎲 Random fight settings",
+        f"🎲 Random fight settings{f' ({group})' if group else ''}",
         f"- Mode: {rng.choice(['MMA', 'Stand & Bang'])}",
         f"- Time: {rng.choice(['Accelerated', 'Real time'])}",
         f"- Rounds: {rng.choice([3, 5])}",
         f"- HUD: {rng.choice(['Shown', 'Hidden'])}",
-        f"- Weight class: {rng.choice(WEIGHT_CLASSES)}",
+        f"- Weight class: {rng.choice(classes)}",
     ])
 NVM_RE = re.compile(r"^\W*(nvm|nvmd|nm|never\s*mind|nevermind|ignore( (it|that|me))?|forget (it|that)|cancel|not a result|wasn'?t a result|just (joking|kidding)|jk)\b", re.I)
 
@@ -137,7 +192,11 @@ class Ladder:
         return out
 
     # ------------------------------------------------------------ ratings
-    def replay(self, mode: str, now: int | None = None) -> dict[str, Any]:
+    def replay(self, mode: str, now: int | None = None, cutoff: int | None = None) -> dict[str, Any]:
+        """Ratings from the fight log. Daily drops are applied in time order up to `now`
+        (or up to the last fight if no `now`). `cutoff`: ratings as they stood at that moment."""
+        if cutoff is not None:
+            now = cutoff
         stats: dict[str, dict[str, Any]] = {}
         changes: dict[int, dict[str, tuple[float, float]]] = {}
 
@@ -151,9 +210,22 @@ class Ladder:
         def ranked() -> list[str]:
             return sorted((a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS), key=lambda a: -stats[a]["rating"])
 
+        clock = [None]   # time of the last fight or drop applied
+
+        def drops_until(t: int) -> None:
+            if clock[0] is not None:
+                for _ in noons(clock[0], t):
+                    for x in stats.values():
+                        if loses_points(x):
+                            x["rating"] -= DECAY_POINTS
+            clock[0] = t if clock[0] is None else max(clock[0], t)
+
         for f in sorted(self.s["fights"], key=lambda f: f["ts"]):
             if f["mode"] != mode or f["status"] != "ok":
                 continue
+            if cutoff is not None and f["ts"] > cutoff:
+                continue
+            drops_until(f["ts"])
             w, l = st(f["winner"]), st(f["loser"])
             for x in (w, l):
                 if x["last"] is not None:
@@ -176,6 +248,8 @@ class Ladder:
             w["last"] = l["last"] = f["ts"]
             w["best_rating"] = max(w["best_rating"], w["rating"])
 
+        if now is not None:
+            drops_until(now)
         board = ranked()
         for acct, x in stats.items():
             x["rank"] = board.index(acct) + 1 if acct in board else None
@@ -728,6 +802,33 @@ class Ladder:
                 rest.append(a)
         return mode, rest
 
+    def daily_update(self, tick: int, top: int = 3) -> str:
+        """The noon post: everyone's drop, then the biggest gains and drops since the last noon."""
+        prev = (noons(tick - 2 * DAY, tick - 1) or [tick - DAY])[-1]
+        parts = [f"🕛 DAILY UPDATE\n- Everyone lost {DECAY_POINTS} points at 12pm\n{SUB}Fight to keep your spot"]
+        for md, label in MODES.items():
+            fought = {x for f in self.s["fights"] if f["status"] == "ok" and f["mode"] == md and prev < f["ts"] <= tick
+                      for x in (f["winner"], f["loser"])}
+            if not fought:
+                continue
+            before = self.replay(md, cutoff=prev)["stats"]
+            after = self.replay(md, cutoff=tick)["stats"]
+            moved = sorted(((round(after[a]["rating"]) - round(before[a]["rating"] if a in before else glicko.START_RATING), a)
+                            for a in fought if a in after), key=lambda m: (-m[0], self.name(m[1]).lower()))
+            up = [m for m in moved if m[0] > 0][:top]
+            down = sorted((m for m in moved if m[0] < 0), key=lambda m: m[0])[:top]
+            lines = [label.upper()]
+            if up:
+                lines += ["- Biggest gains"] + [f"{SUB}{self.name(a)} +{d}" for d, a in up]
+            if down:
+                lines += ["- Biggest drops"] + [f"{SUB}{self.name(a)} −{-d}" for d, a in down]
+            parts.append("\n".join(lines))
+        if len(parts) == 1:
+            parts[0] += "\n- No fights in the last day"
+        if self.site:
+            parts[-1] += f"\n\n📊 {self.site}"
+        return "\n\n".join(parts)
+
     def combined(self, now: int | None = None) -> list[dict]:
         """Players ranked (5+ fights) in both modes, best average rating first."""
         a, b = (self.replay(md, now=now)["stats"] for md in MODES)
@@ -753,6 +854,7 @@ class Ladder:
                 '- Example: "vs bjkid 2-1 mma"  (your score first)',
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
+                f"- Everyone loses {DECAY_POINTS} points every day at 12pm, so keep fighting to hold your spot",
                 "- Talking about a score, not posting one? Put a \\ in front, e.g. I'll \\3-0 you",
             ]
             if self.site:
@@ -760,7 +862,7 @@ class Ladder:
             lines += [
                 "",
                 "📋 COMMANDS",
-                "- !board – full rankings: MMA, S&B and combined",
+                "- !board – top 10: MMA, S&B and combined",
                 "- !board mma – just MMA",
                 "- !board snb – just Stand & Bang",
                 "- !board combined – average of both modes",
@@ -770,6 +872,7 @@ class Ladder:
                 "- !record jono vs bjkid – record between any two players",
                 "- !recent – last 5 results",
                 "- !pick – random mode, time, rounds, HUD and weight class",
+                "- !pick mens – men's divisions only",
                 f"- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message {self.admin}",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
@@ -780,22 +883,27 @@ class Ladder:
         if cmd in ("dispute", "undo"):
             return self.dispute(msg)
         if cmd in ("pick", "random", "roll"):
-            return [pick_settings()]
+            return [pick_settings(group=pick_group(parts[1:]))]
         if cmd in ("board", "leaderboard", "top", "rankings"):
-            # Everyone ranked, one message per mode so long lists stay readable.
+            # Top BOARD_SIZE, one message per mode so long lists stay readable. The site has everyone.
+            def more(n: int) -> str:
+                return f"\n- +{n} more ranked on the site" if n > 0 else ""
+
             out = []
             for md in [] if both else [mode] if mode else list(MODES):
                 r = self.replay(md, now=now)
-                rows = [f"- {i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"], 1)]
+                rows = [f"- {i}. {self.name(a)} {round(r['stats'][a]['rating'])}" for i, a in enumerate(r["board"][:BOARD_SIZE], 1)]
                 prov = [a for a, x in r["stats"].items() if x["provisional"]]
                 text = f"🏆 {MODES[md].upper()}\n" + ("\n".join(rows) if rows else f"- Nobody ranked yet ({PROVISIONAL_FIGHTS} fights needed)")
+                text += more(len(r["board"]) - BOARD_SIZE)
                 if prov:
                     text += f"\n- +{len(prov)} still getting their first {PROVISIONAL_FIGHTS} fights"
                 out.append(text)
             if both or not mode:
-                rows = [f"- {r['rank']}. {self.name(r['id'])} {round(r['avg'])}" for r in self.combined(now)]
+                comb = self.combined(now)
+                rows = [f"- {r['rank']}. {self.name(r['id'])} {round(r['avg'])}" for r in comb[:BOARD_SIZE]]
                 out.append("🏆 COMBINED (average of both)\n" + ("\n".join(rows) if rows else
-                           f"- Nobody has {PROVISIONAL_FIGHTS} fights in both modes yet"))
+                           f"- Nobody has {PROVISIONAL_FIGHTS} fights in both modes yet") + more(len(comb) - BOARD_SIZE))
             if self.site:
                 out[-1] += f"\n\n📊 {self.site}"
             return out

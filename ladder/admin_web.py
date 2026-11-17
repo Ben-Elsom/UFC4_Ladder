@@ -96,6 +96,8 @@ a { color:var(--red); }
 .fid { font:700 16px "Barlow Condensed", sans-serif; color:var(--muted); }
 .what b { font-weight:600; }
 .acts { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.ctx { margin:6px 0 2px; font-size:13px; } .ctx summary { cursor:pointer; color:var(--muted); }
+.ctxline { padding:3px 8px; border-left:2px solid var(--panel-2); margin:3px 0; overflow-wrap:anywhere; }
 .msg { display:block; font:13px ui-monospace, Menlo, monospace; background:var(--panel-2); padding:4px 8px; border-radius:5px;
   margin-top:4px; white-space:pre-wrap; word-break:break-word; }
 .pill { display:inline-block; font-size:12px; font-weight:600; padding:1px 8px; border-radius:99px; background:var(--panel-2); color:var(--muted); }
@@ -111,6 +113,9 @@ label { display:block; font-weight:600; font-size:13px; color:var(--muted); marg
 .banner { border-radius:10px; padding:10px 14px; margin:0 0 14px; font-weight:500; }
 .banner.ok { background:var(--green-soft); color:var(--green); } .banner.bad { background:var(--red-soft); color:var(--red); }
 .empty { color:var(--muted); padding:14px 0; }
+.leaving { overflow:hidden; transition:opacity .25s ease, transform .25s ease, max-height .3s ease .05s, padding .3s ease .05s; }
+.leaving.gone { opacity:0; transform:translateX(24px); max-height:0 !important; padding-top:0; padding-bottom:0; }
+@media (prefers-reduced-motion: reduce) { .leaving { transition:none; } }
 .flag { padding:14px 0; border-bottom:1px solid var(--line); } .flag:last-child { border-bottom:0; }
 .fix { display:grid; grid-template-columns:1fr 1fr 120px 1fr; gap:8px 10px; margin:6px 0 10px; }
 .fix label, .chk { margin:6px 0 3px; }
@@ -134,7 +139,18 @@ def esc(x) -> str:
 def page(title: str, body: str) -> str:
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>{esc(title)}</title>{FONTS}<style>{CSS}</style></head><body><div class="wrap">{body}</div></body></html>')
+            f'<title>{esc(title)}</title>{FONTS}<style>{CSS}</style></head><body><div class="wrap">{body}</div>'
+            f'<script>{LEAVE_JS}</script></body></html>')
+
+
+# Removing a result or dismissing a flag: slide the row out, then submit (after the confirm box, if any).
+LEAVE_JS = (
+    "document.addEventListener('submit',e=>{const f=e.target;"
+    "if(e.defaultPrevented||f.dataset.go||!/\\/(remove|dismiss)$/.test(f.getAttribute('action')||''))return;"
+    "const row=f.closest('.row,.flag');if(!row||matchMedia('(prefers-reduced-motion: reduce)').matches)return;"
+    "e.preventDefault();f.dataset.go=1;row.style.maxHeight=row.offsetHeight+'px';row.classList.add('leaving');"
+    "row.offsetHeight;row.classList.add('gone');setTimeout(()=>f.submit(),330)})"
+)
 
 
 def when(ts: int | None) -> str:
@@ -209,6 +225,13 @@ class AdminApp:
         who = esc(n.get(r.get("sender"), "")) if r.get("sender") else ""
         head = (f'<div class="what"><b>{esc(r["reason"])}</b> <span class="muted small">R{rid} · {esc(when(r.get("ts")))}</span></div>'
                 f'<span class="msg">{who}{": " if who else ""}{esc(r.get("text", ""))}</span>')
+        uid = (r.get("question") or {}).get("uid")
+        before = [m for m in st.get("chat_log", []) if m["ts"] < (r.get("ts") or 0) and m["uid"] != uid][-5:]
+        if before:
+            head += ('<details class="ctx"><summary>Earlier messages</summary>' + "".join(
+                f'<div class="ctxline"><span class="muted small">{esc(when(m["ts"]))}</span> '
+                f'<b>{esc(n.get(m["sender_id"]) or m.get("sender_name") or "?")}</b>: {esc(m.get("body") or "")}</div>'
+                for m in before) + "</details>")
         dismiss = btn(f"/admin/review/{rid}/dismiss", "Dismiss")
         if r.get("fight_id"):
             return (f'<div class="flag">{head}<p class="small muted">This is about result {r["fight_id"]}. '

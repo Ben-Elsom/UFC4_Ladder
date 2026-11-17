@@ -15,7 +15,7 @@ import time
 import traceback
 from pathlib import Path
 
-from .engine import DAY, Ladder, new_state
+from .engine import DAY, Ladder, last_noon, new_state
 from .site import build_site
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,13 +63,34 @@ def load_config() -> dict:
     return cfg
 
 
+CHAT_LOG_KEEP = 500   # recent chat messages kept for the admin page's context view
+
+
+def chat_log_path(state_path: Path) -> Path:
+    """Chat text lives beside state.json but is never committed: the repo is public."""
+    return state_path.with_name("chat_log.json")
+
+
 def load_state(path: Path) -> dict:
-    return json.loads(path.read_text()) if path.exists() else new_state()
+    state = json.loads(path.read_text()) if path.exists() else new_state()
+    log = chat_log_path(path)
+    state["chat_log"] = json.loads(log.read_text()) if log.exists() else state.get("chat_log", [])
+    return state
 
 
 def save_state(path: Path, state: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(state, indent=1, ensure_ascii=False))
+    public = {k: v for k, v in state.items() if k != "chat_log"}
+    path.write_text(json.dumps(public, indent=1, ensure_ascii=False))
+    chat_log_path(path).write_text(json.dumps(state.get("chat_log", []), ensure_ascii=False))
+
+
+def remember_chat(state: dict, messages: list[dict]) -> None:
+    """Keep the last CHAT_LOG_KEEP messages (who, when, what) so flagged ones can be read in context."""
+    log = {m["uid"]: m for m in state.get("chat_log", [])}
+    for m in messages:
+        log[m["uid"]] = {k: m.get(k) for k in ("uid", "ts", "sender_id", "sender_name", "body")}
+    state["chat_log"] = sorted(log.values(), key=lambda m: m["ts"])[-CHAT_LOG_KEEP:]
 
 
 def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
@@ -100,12 +121,14 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
     ladder.sync_members(chat.members())
 
     messages = chat.messages(limit=100)
+    remember_chat(state, messages)
     if not meta.get("started"):
         # First run: don't treat old chat history as results.
         for m in messages:
             ladder.handle(dict(m, body=""))
         meta["started"] = now
         meta["last_weekly"] = now
+        meta["last_daily"] = last_noon(now) or 0
     else:
         unseen = [m for m in messages if m["uid"] not in set(state["seen"])]
         if len(messages) >= 100 and len(unseen) == len(messages):
@@ -126,6 +149,11 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
         for i, text in enumerate(lines):
             say(("📅 Weekly standings\n\n" if i == 0 else "") + text)
         meta["last_weekly"] = now
+
+    noon = last_noon(now)              # daily drop + biggest movers, once per noon (only the latest after downtime)
+    if noon and noon > meta.get("last_daily", 0):
+        say(ladder.daily_update(noon))
+        meta["last_daily"] = noon
 
     # Login lifetime: remember when the current code was first used.
     if npsso:
