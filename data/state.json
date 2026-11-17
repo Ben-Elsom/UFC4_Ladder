@@ -3175,7 +3175,13 @@
   "166#459494948314980",
   "166#459494951056001",
   "166#459495014088347",
-  "166#459495104302729"
+  "166#459495104302729",
+  "166#459495106015649",
+  "166#459495106129795",
+  "166#459495109422257",
+  "166#459495115453843",
+  "166#459495120105300",
+  "166#459495120119371"
  ],
  "fights": [
   {
@@ -4895,6 +4901,22 @@
    "msg_uid": "165#459494649894332#0",
    "text": "2-1 to me against echogoescrazy snb",
    "status": "ok"
+  },
+  {
+   "id": 86,
+   "mode": "sb",
+   "winner": "7835799679513912497",
+   "loser": "5190974766751866546",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1794902757873,
+   "msg_uid": "166#459495106015649#0",
+   "text": "vs scope 2-1 snb to me",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5101,11 +5123,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794648915987,
-   "text": "🤔 Who was that 1-1 against? Reply with their name. (Your score goes first, so it was a split.)",
-   "sent": true
-  },
   {
    "ts": 1794648964119,
    "text": "❓ Couldn't tell who \"u get boat\" is. Reply with part of their PSN name.",
@@ -6100,9 +6117,14 @@
    "ts": 1794900981263,
    "text": "✅ Stand & Bang result\n- dad_scopez def. echo_goescrazy 2–1\n- dad_scopez 1566 (−10)\n- echo_goescrazy 1332 (+35)",
    "sent": true
+  },
+  {
+   "ts": 1794902767961,
+   "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. dad_scopez 2–1\n- mrwhoopdatahh 1623 (+10)\n- dad_scopez 1560 (−6)",
+   "sent": true
   }
  ],
- "next_fight_id": 86,
+ "next_fight_id": 87,
  "next_review_id": 12,
  "meta": {
   "status": "ok",
@@ -6114,7 +6136,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.0,
-  "last_run": 1794902753769,
+  "last_run": 1794902815752,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
