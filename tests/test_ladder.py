@@ -370,6 +370,30 @@ def test_fights_command(lad):
     assert say(lad, "a2", "!fights snb", T0 + 2 * H)[0].startswith("🥊 MOST FIGHTS · STAND & BANG\n- 1. JonoTheGoat 1\n- 2. Temp48213 1")
 
 
+def test_site_highlight_cards(lad, monkeypatch):
+    from ladder import engine
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    say(lad, "a1", "beat sam 2-1 mma", mel(2026, 11, 11, 20))          # over a week ago
+    say(lad, "a3", "vs sam 1-1 snb", mel(2026, 11, 19, 9))              # today: a split
+    say(lad, "a2", "beat temp 2-0 snb", mel(2026, 11, 19, 10))
+    cards = {c["key"]: c for c in lad.highlights(mel(2026, 11, 19, 15))}
+    assert cards["fights_today"]["name"] == "Sam_K" and cards["fights_today"]["value"] == 4 and cards["fights_today"]["of"] == 4
+    assert cards["wins_today"]["name"] == "Sam_K" and cards["wins_today"]["value"] == 3          # 1 from the split + 2
+    assert cards["points_today"]["name"] == "Sam_K"
+    ch = lad.replay("sb")["changes"]
+    sam = sum(c[side][1] - c[side][0] for fid, c in ch.items() for side in ("winner", "loser")
+              if next(f for f in lad.s["fights"] if f["id"] == fid)[side] == "a2")
+    assert cards["points_today"]["value"] == round(sam)                  # fights only: the noon drop isn't counted
+    assert cards["fights_week"]["value"] == 4 and "a1" not in (cards["fights_week"]["player"],)   # Jono's was 7+ days ago
+    assert cards["rivalry"]["names"] == ["Sam_K", "Temp48213"] or cards["rivalry"]["value"] >= 3
+    assert cards["logged"]["value"] == 7
+    assert all(c["value"] > 0 for c in cards.values())
+    assert lad.highlights(mel(2027, 1, 1)) and not [c for c in lad.highlights(mel(2027, 1, 1)) if c["key"].endswith(("today", "week"))]
+    snap = lad.snapshot(mel(2026, 11, 19, 15))
+    sam_sb = next(p for p in snap["modes"]["sb"]["players"] if p["id"] == "a2")
+    assert len(sam_sb["form"]) == 2 and "move" in sam_sb and "new" in sam_sb and snap["highlights"]
+
+
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]

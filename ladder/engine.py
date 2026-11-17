@@ -1008,10 +1008,82 @@ class Ladder:
         return [who] if who else f"Couldn't tell who \"{text}\" is."
 
     # ------------------------------------------------------------ snapshot for the website
+    def highlights(self, now: int) -> list[dict[str, Any]]:
+        """Candidate cards for the top of the site's rankings page; the page shows three at random.
+        Today = since midnight Melbourne time; week = the last 7 days. Fights that didn't count are skipped,
+        and a card with nothing to show is left out."""
+        tz = ZoneInfo(TIMEZONE)
+        midnight = int(datetime.combine(datetime.fromtimestamp(now / 1000, tz).date(), dtime(0), tz).timestamp() * 1000)
+        windows = {"today": (midnight, "today"), "week": (now - 7 * DAY, "this week")}
+        ok = [f for f in self.s["fights"] if f["status"] == "ok"]
+        changes = {md: self.replay(md)["changes"] for md in MODES}
+        out: list[dict[str, Any]] = []
+
+        def best(totals: dict[str, float]) -> tuple[str, float] | None:
+            top = sorted(((a, v) for a, v in totals.items() if v > 0), key=lambda x: (-x[1], self.name(x[0]).lower()))
+            return top[0] if top else None
+
+        for key, (since, label) in windows.items():
+            fights = [f for f in ok if since <= f["ts"] <= now]
+            games: dict[str, int] = {}
+            wins: dict[str, int] = {}
+            points: dict[str, float] = {}
+            for f in fights:
+                gw, gl = f.get("score") or (1, 0)
+                for a, won in ((f["winner"], gw), (f["loser"], gl)):
+                    games[a] = games.get(a, 0) + gw + gl
+                    wins[a] = wins.get(a, 0) + won
+                ch = changes[f["mode"]].get(f["id"])
+                if ch:
+                    for side in ("winner", "loser"):
+                        points[f[side]] = points.get(f[side], 0) + ch[side][1] - ch[side][0]
+            total = sum(sum(f.get("score") or (1, 0)) for f in fights)
+            if (b := best(games)):
+                out.append({"key": f"fights_{key}", "title": f"Most fights {label}", "kind": "bar", "player": b[0],
+                            "name": self.name(b[0]), "value": b[1], "unit": "fights", "of": total})
+            if (b := best(wins)):
+                out.append({"key": f"wins_{key}", "title": f"Most wins {label}", "kind": "player", "player": b[0],
+                            "name": self.name(b[0]), "value": b[1], "unit": "wins" if b[1] != 1 else "win"})
+            if (b := best(points)):
+                out.append({"key": f"points_{key}", "title": f"Most points gained {label}", "kind": "player", "player": b[0],
+                            "name": self.name(b[0]), "value": round(b[1]), "unit": "points", "signed": True})
+        pairs: dict[tuple[str, str], list[int]] = {}
+        for f in ok:
+            a, b = sorted((f["winner"], f["loser"]))
+            gw, gl = f.get("score") or (1, 0)
+            r = pairs.setdefault((a, b), [0, 0])
+            r[0 if f["winner"] == a else 1] += gw
+            r[1 if f["winner"] == a else 0] += gl
+        if pairs:
+            (a, b), (wa, wb) = max(pairs.items(), key=lambda x: (sum(x[1]), self.name(x[0][0]).lower()))
+            out.append({"key": "rivalry", "title": "Biggest rivalry", "kind": "pair", "players": [a, b],
+                        "names": [self.name(a), self.name(b)], "value": wa + wb, "record": [wa, wb]})
+        riser = None
+        for md in MODES:
+            cur, old = self.replay(md, now=now), self.replay(md, cutoff=now - DAY)
+            for a in cur["board"]:
+                if a in old["board"]:
+                    mv = old["board"].index(a) - cur["board"].index(a)
+                    if mv > 0 and (riser is None or mv > riser[1]):
+                        riser = (a, mv, md, cur["stats"][a]["rating"])
+        if riser:
+            out.append({"key": "riser", "title": "Rising star", "kind": "player", "player": riser[0], "name": self.name(riser[0]),
+                        "value": riser[1], "unit": f"place{'s' if riser[1] != 1 else ''} up in {MODES[riser[2]]}", "trend": True})
+        if ok:
+            out.append({"key": "logged", "title": "Fights logged", "kind": "number", "value": sum(sum(f.get("score") or (1, 0)) for f in ok)})
+        return out
+
     def snapshot(self, now: int) -> dict[str, Any]:
         modes = {}
         for md, label in MODES.items():
             r = self.replay(md, now=now)
+            old = self.replay(md, cutoff=now - DAY)["board"]
+            form: dict[str, list[int]] = {}
+            for f in sorted(self.s["fights"], key=lambda f: f["ts"]):
+                ch = r["changes"].get(f["id"]) if f["mode"] == md and f["status"] == "ok" else None
+                if ch:
+                    for side in ("winner", "loser"):
+                        form.setdefault(f[side], []).append(round(ch[side][1]))
             players = []
             for acct, x in r["stats"].items():
                 players.append({
@@ -1020,6 +1092,9 @@ class Ladder:
                     "fights": x["fights"], "wins": x["wins"], "losses": x["losses"],
                     "sets_won": x["sets_won"], "sets_lost": x["sets_lost"], "streak": x["streak"],
                     "best": round(x["best_rating"]), "last": x["last"],
+                    "move": (old.index(acct) + 1 - x["rank"]) if x["rank"] and acct in old else None,
+                    "new": bool(x["rank"]) and acct not in old,
+                    "form": form.get(acct, [])[-12:],
                 })
             players.sort(key=lambda p: (p["rank"] is None, p["rank"] or 0, -p["rating"]))
             modes[md] = {
@@ -1033,7 +1108,7 @@ class Ladder:
         pending = [{"sender_name": self.name(q["sender"]), "kind": q["kind"], "waiting": q.get("waiting"), "text": q["text"],
                     "ts": q["ts"], "asked_at": q.get("asked_at") or q["ts"]} for q in self.s["pending"]]
         return {
-            "generated": now, "modes": modes,
+            "generated": now, "modes": modes, "highlights": self.highlights(now),
             "combined": [{"id": r["id"], "rank": r["rank"], "avg": round(r["avg"])} for r in self.combined(now)], "fights": fights[::-1], "review": review[::-1], "pending": pending,
             "players": {a: p["name"] for a, p in self.s["players"].items()},
             "members": [a for a, p in self.s["players"].items() if p.get("in_group", True)],

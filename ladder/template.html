@@ -6,109 +6,212 @@
 <title>UFC 4 Ladder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f4f1ec; --panel: #ffffff; --panel-2: #ece7df; --ink: #17140f; --muted: #6b645a; --line: #ddd5c9;
-  --red: #c8261d; --red-soft: #f6dcd9; --gold: #a87a12; --gold-soft: #f3e6c4; --green: #2f7d45; --green-soft: #dcefe1;
-  --amber: #a35c00; --amber-soft: #fbe8cc;
+  --bg: #eeeff2; --side: #f6f7f9; --panel: #ffffff; --panel-2: #f3f4f6; --head: #fafbfc; --ink: #14161a; --ink-2: #2b2f36;
+  --muted: #6b7280; --line: #e6e8ec; --line-2: #eef0f3; --border: #d9dce2;
+  --accent: #6d3be8; --accent-soft: #f4efff; --accent-2: #b57bff; --brand-a: #e3008c; --brand-b: #8a2be2; --nav-on: #c2187a;
+  --green: #14915f; --green-soft: #e3f5ec; --red: #d92d3a; --red-soft: #fdecee; --amber: #a35c00; --amber-soft: #fbe8cc;
+  --gold: #e3a008; --card-tint: #fff4f8; --card-line: #ecdde6;
+  --r1: #fff7d6; --r1b: #fffdf3; --r2: #eef0f3; --r2b: #f8f9fa; --r3: #ffe9e0; --r3b: #fff7f3;
+  --shadow: 0 1px 3px rgba(16,24,40,.08);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f0e0c; --panel: #191714; --panel-2: #23201c; --ink: #f1ece4; --muted: #9a9286; --line: #2f2b26;
-    --red: #ff4a3d; --red-soft: #3a1714; --gold: #e2b347; --gold-soft: #33280f; --green: #5cc97a; --green-soft: #142a1b;
-    --amber: #f0a33c; --amber-soft: #33230c;
+    --bg: #0d0e11; --side: #121418; --panel: #17191e; --panel-2: #1f2228; --head: #1b1d22; --ink: #eef0f4; --ink-2: #d5d8de;
+    --muted: #9198a4; --line: #2a2e35; --line-2: #23262c; --border: #353a42;
+    --accent: #a98bff; --accent-soft: #261d42; --accent-2: #c9a8ff; --nav-on: #ff5cb8;
+    --green: #4fd39a; --green-soft: #12291f; --red: #ff6b74; --red-soft: #33171a; --amber: #f0a33c; --amber-soft: #33230c;
+    --gold: #f5c04a; --card-tint: #22171d; --card-line: #3a2a33;
+    --r1: #2f2812; --r1b: #1d1a12; --r2: #262a31; --r2b: #1c1f24; --r3: #33201a; --r3b: #201915;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
   }
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Inter, system-ui, sans-serif; }
-.wrap { max-width: 880px; margin: 0 auto; padding: 0 16px 64px; }
-header { padding: 28px 0 12px; display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-h1, h2, h3, .cond { font-family: "Barlow Condensed", Inter, sans-serif; letter-spacing: .01em; }
-h1 { margin: 0; font-size: 40px; line-height: 1; font-weight: 800; }
-h1 span { color: var(--red); }
-.sub { color: var(--muted); font-size: 13px; }
-h2 { font-size: 26px; margin: 28px 0 10px; font-weight: 700; }
-h3 { font-size: 20px; margin: 22px 0 6px; font-weight: 700; }
-nav { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); margin: 8px 0 18px; scrollbar-width: none; }
-nav button { background: none; border: 0; color: var(--muted); font: 600 15px Inter, sans-serif; padding: 10px 12px; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
-nav button.on { color: var(--ink); border-color: var(--red); }
-.badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
-.seg { display: inline-flex; background: var(--panel-2); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
-.seg button { border: 0; background: none; color: var(--muted); font: 600 14px Inter, sans-serif; padding: 7px 14px; border-radius: 8px; cursor: pointer; }
-.seg button.on { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+.app { display: flex; min-height: 100vh; }
+
+/* sidebar */
+.side { width: 256px; flex: none; background: var(--side); padding: 24px 14px; border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+.logo { display: flex; align-items: center; gap: 10px; padding: 0 10px 22px; font-weight: 700; font-size: 16px; }
+.hex { width: 30px; height: 30px; flex: none; background: linear-gradient(135deg, var(--brand-a), var(--brand-b)); clip-path: polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); display: flex; align-items: center; justify-content: center; }
+.hex i { width: 12px; height: 12px; background: #fff; clip-path: inherit; }
+.grp { font-size: 13px; color: var(--muted); padding: 14px 12px 6px; }
+nav#tabs { display: contents; }
+.nv { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid transparent; border-radius: 12px; background: none; color: var(--ink-2); font-size: 15px; cursor: pointer; text-align: left; margin-bottom: 2px; }
+.nv:hover { background: var(--panel-2); }
+.nv.on { background: var(--panel); border-color: var(--line); box-shadow: var(--shadow); }
+.nv.on svg { stroke: var(--nav-on); }
+.badge { margin-left: auto; font-size: 12px; background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 1px 7px; font-weight: 600; }
+.note { margin: 26px 4px 0; padding: 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--muted); }
+.note b { color: var(--ink); }
+.side .foot { margin-top: auto; padding: 0 12px; font-size: 12px; color: var(--muted); }
+
+/* main */
+.main { flex: 1; min-width: 0; background: var(--panel); margin: 14px 14px 14px 0; border-radius: 18px; padding: 30px 34px 40px; border: 1px solid var(--line); }
+h1 { font-size: 26px; font-weight: 600; letter-spacing: -.02em; margin: 0; }
+h2 { font-size: 19px; font-weight: 600; margin: 28px 0 12px; letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+.flt { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 9px; padding: 7px 13px; font-size: 14.5px; color: var(--ink-2); background: var(--panel); cursor: pointer; }
+.flt.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.muted { color: var(--muted); } .small { font-size: 13px; }
+.up { color: var(--green); } .down, .dn { color: var(--red); }
+
+/* highlight cards */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 28px; }
+.st { border: 1px solid var(--card-line); border-radius: 14px; padding: 16px 18px; background: linear-gradient(135deg, var(--panel) 60%, var(--card-tint)); min-width: 0; }
+.st .h { font-size: 14.5px; color: var(--ink-2); margin-bottom: 14px; }
+.st .row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.st .who { flex: 1; min-width: 0; }
+.st .who b { display: block; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.st .big { font-size: 21px; color: var(--accent); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.st .bar { height: 5px; background: var(--line-2); border-radius: 9px; margin-top: 12px; }
+.st .bar i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.st .num { font-size: 26px; letter-spacing: -.01em; }
+.ring { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex: none; }
+.pair { display: flex; flex: none; } .pair .av + .av { margin-left: -10px; box-shadow: 0 0 0 2px var(--panel); }
+
+/* avatars, badges */
+.av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; color: #fff; flex: none; }
+.av.s { width: 34px; height: 34px; font-size: 12px; }
+.hx { width: 34px; height: 34px; flex: none; clip-path: polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 14px; }
+.hx.g1 { background: linear-gradient(135deg, #ffd66b, #f5a623); } .hx.g2 { background: linear-gradient(135deg, #d5d9e0, #a3aab6); } .hx.g3 { background: linear-gradient(135deg, #ffa585, #ee6a45); }
+.rk { width: 34px; flex: none; text-align: center; font-size: 19px; color: var(--muted); }
+.mv { font-size: 13.5px; white-space: nowrap; min-width: 34px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 99px; background: var(--panel-2); color: var(--muted); }
+.pill.red { background: var(--red-soft); color: var(--red); } .pill.green { background: var(--green-soft); color: var(--green); }
+.pill.amber { background: var(--amber-soft); color: var(--amber); } .pill.gold { background: var(--r1); color: var(--gold); }
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 24px; } .bars i { width: 3px; border-radius: 2px; background: var(--accent); }
+.name { cursor: pointer; font-weight: 500; } .name:hover { color: var(--accent); }
+
+/* tables (grid rows) */
+.tbl { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.tr { display: grid; align-items: center; gap: 12px; padding: 0 20px; min-height: 64px; border-top: 1px solid var(--line-2); font-size: 14.5px; }
+.tr.th { min-height: 44px; background: var(--head); color: var(--muted); font-size: 13px; border-top: 0; }
+.tr.r1 { background: linear-gradient(90deg, var(--r1), var(--r1b) 60%, var(--panel)); }
+.tr.r2 { background: linear-gradient(90deg, var(--r2), var(--r2b) 60%, var(--panel)); }
+.tr.r3 { background: linear-gradient(90deg, var(--r3), var(--r3b) 60%, var(--panel)); }
+.cell { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.cell .t { min-width: 0; } .cell .t > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.rankcols { grid-template-columns: 96px minmax(0, 1.6fr) 100px 80px 90px minmax(0, 1fr) 110px; }
+.combcols { grid-template-columns: 96px minmax(0, 1.6fr) 100px 90px 90px 80px; }
+.provcols { grid-template-columns: minmax(0, 1.6fr) 100px 80px 120px 110px; }
+.fightcols { grid-template-columns: 56px minmax(0, 1.9fr) 120px 70px 130px 110px; }
+.h2hcols { grid-template-columns: minmax(0, 1.5fr) 130px 70px 90px; }
+.sec { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; } .sec b { font-size: 18px; font-weight: 600; }
+
+/* lists for phones */
+.list { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.lrow { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-top: 1px solid var(--line-2); }
+.lrow:first-child { border-top: 0; }
+.lrow .t { flex: 1; min-width: 0; } .lrow .t > * { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lrow .r { text-align: right; flex: none; }
+.lrow.r1 { background: linear-gradient(90deg, var(--r1), var(--panel)); } .lrow.r2 { background: linear-gradient(90deg, var(--r2), var(--panel)); } .lrow.r3 { background: linear-gradient(90deg, var(--r3), var(--panel)); }
+.mob { display: none; }
+
+/* fighter page */
+.fhead { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.fhead .av { width: 72px; height: 72px; font-size: 24px; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
+.kpis .st .h { margin-bottom: 6px; } .kpis .v { font-size: 24px; font-weight: 600; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; padding-top: 4px; }
+.chart div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.chart span { font-size: 10.5px; color: var(--muted); }
+.chart i { width: 100%; max-width: 24px; border-radius: 6px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
+.box { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+select { font: 500 15px Inter, sans-serif; padding: 8px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--panel); color: var(--ink); max-width: 100%; }
+
+/* how to use + review (carried over) */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; }
 table { width: 100%; border-collapse: collapse; }
-th { text-align: left; font: 600 12px Inter, sans-serif; color: var(--muted); padding: 8px 8px; border-bottom: 1px solid var(--line); }
-td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { text-align: left; font: 600 12px Inter, sans-serif; color: var(--muted); padding: 8px; border-bottom: 1px solid var(--line); }
+td { padding: 10px 8px; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
 tr:last-child td { border-bottom: 0; }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-.rank { font: 800 22px "Barlow Condensed", sans-serif; width: 42px; color: var(--muted); }
-.rank.top { color: var(--ink); }
-.name { font-weight: 600; cursor: pointer; }
-.name:hover { color: var(--red); }
-.rating { font: 700 20px "Barlow Condensed", sans-serif; }
-.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 99px; background: var(--panel-2); color: var(--muted); }
-.pill.red { background: var(--red-soft); color: var(--red); }
-.pill.gold { background: var(--gold-soft); color: var(--gold); }
-.pill.green { background: var(--green-soft); color: var(--green); }
-.pill.amber { background: var(--amber-soft); color: var(--amber); }
-.up { color: var(--green); } .down { color: var(--red); }
-.muted { color: var(--muted); }
-.fight { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.fight:last-child { border-bottom: 0; }
-.fid { font: 700 15px "Barlow Condensed", sans-serif; color: var(--muted); }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
-.stat { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; }
-.stat b { display: block; font: 800 24px "Barlow Condensed", sans-serif; }
-.stat span { font-size: 12px; color: var(--muted); }
-select { font: 600 15px Inter, sans-serif; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); max-width: 100%; }
 code, .msg { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel-2); padding: 2px 6px; border-radius: 5px; }
 .msg { display: block; padding: 8px 10px; margin: 6px 0; white-space: pre-wrap; word-break: break-word; }
-.examples { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; align-items: center; }
-.examples div:nth-child(odd) code { font-size: 14px; }
-.tut p, .tut li { max-width: 68ch; }
-.tut li { margin: 4px 0; }
-.banner { border-radius: 10px; padding: 10px 14px; margin: 0 0 14px; font-weight: 500; }
-.banner.amber { background: var(--amber-soft); color: var(--amber); }
-.banner.red { background: var(--red-soft); color: var(--red); }
-.empty { color: var(--muted); padding: 14px 0; }
-details summary { cursor: pointer; color: var(--muted); font-weight: 600; margin: 10px 0; }
-.newhere { background: none; border: 0; padding: 0; color: var(--red); font: 600 14px Inter, sans-serif; cursor: pointer; }
-@media (max-width: 560px) {
-  .hide-sm { display: none; }
-  h1 { font-size: 32px; }
-  .examples { grid-template-columns: 1fr; }
-  .examples div:nth-child(even) { margin-bottom: 8px; }
-  td, th { padding: 9px 5px; }
+.examples { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; align-items: center; }
+.tut p, .tut li { max-width: 72ch; }
+.tut li { margin: 5px 0; }
+.fight { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line-2); }
+.fight:last-child { border-bottom: 0; }
+.fid { color: var(--muted); font-size: 13px; }
+.banner { border-radius: 10px; padding: 10px 14px; margin: 0 0 16px; font-weight: 500; }
+.banner.amber { background: var(--amber-soft); color: var(--amber); } .banner.red { background: var(--red-soft); color: var(--red); }
+.empty { color: var(--muted); padding: 18px; }
+details summary { cursor: pointer; color: var(--muted); font-weight: 600; margin: 12px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 1180px) {
+  .side { width: 220px; }
+  .main { padding: 26px 24px 36px; }
+  .rankcols { grid-template-columns: 90px minmax(0, 1.6fr) 90px 70px 80px 110px; } .rankcols .form { display: none; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+@media (max-width: 900px) {
+  .app { display: block; }
+  .side { position: sticky; z-index: 5; width: auto; height: auto; padding: 12px 16px 10px; border-right: 0; border-bottom: 1px solid var(--line); flex-direction: column; overflow: hidden; }
+  .side > * { min-width: 0; }
+  .logo { padding: 0 0 10px; justify-content: space-between; }
+  .grp, .note { display: none; }
+  .side .foot { display: none; }
+  .navrow { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .nv { width: auto; flex: none; padding: 7px 12px; font-size: 14px; white-space: nowrap; margin: 0; }
+  .nv svg { display: none; }
+  .main { margin: 0; border: 0; border-radius: 0; padding: 18px 16px 40px; }
+  .desk { display: none; } .mob { display: block; }
+  .stats { grid-template-columns: 1fr; gap: 10px; margin-bottom: 22px; }
+  .two { grid-template-columns: 1fr; }
+  .examples { grid-template-columns: 1fr; } .examples div:nth-child(even) { margin-bottom: 8px; }
+  .filters { margin: 14px 0 16px; gap: 8px; }
+  h1 { font-size: 24px; }
+}
+@media (min-width: 901px) { .navrow { display: contents; } .logo .upd { display: none; } }
+@media (max-width: 420px) { .kpis { gap: 10px; } .kpis .v { font-size: 20px; } .st { padding: 14px 16px; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>UFC 4 <span>Ladder</span></h1>
-      <div class="sub" id="updated"></div>
-    </div>
-    <button class="newhere" data-tab="help">New here? How to post a result →</button>
-  </header>
-  <div id="banners"></div>
-  <nav id="tabs"></nav>
-  <main id="view"></main>
+<div class="app">
+  <aside class="side">
+    <div class="logo"><span style="display:flex;align-items:center;gap:10px"><span class="hex"><i></i></span>UFC 4 Ladder</span><span class="upd small muted" id="updated-m"></span></div>
+    <nav id="tabs"></nav>
+    <div class="note"><b>Daily drop</b><br>Everyone loses 10 points at 12pm. Fight to keep your spot.</div>
+    <div class="foot" id="updated"></div>
+  </aside>
+  <main class="main">
+    <div id="banners"></div>
+    <div id="view"></div>
+  </main>
 </div>
 <script id="ladder-data" type="application/json">__LADDER_DATA__</script>
 <script>
 const D = JSON.parse(document.getElementById('ladder-data').textContent);
 const MODES = ['mma', 'sb'];
-const TABS = [['rank', 'Rankings'], ['fights', 'Fights'], ['fighters', 'Fighters'], ['help', 'How to use'], ['review', 'Needs review']];
+const TABS = [['rank', 'Rankings', 'chart'], ['fights', 'Fights', 'swords'], ['fighters', 'Fighters', 'users'], ['help', 'How to use', 'book'], ['review', 'Needs review', 'clock']];
 const store = { get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
 let tab = location.hash.slice(1) || store.get('tab', 'rank');
 if (!TABS.some(t => t[0] === tab)) tab = 'rank';
 let mode = store.get('mode', 'mma');
 if (![...MODES, 'all'].includes(mode)) mode = 'mma';
+let fmode = 'all';
 let fighter = null;
 
+const ICON = {
+  chart: '<path d="M3 3v18h18M7 15v3M12 10v8M17 6v12"/>',
+  swords: '<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14zM20 17v4H6.5A2.5 2.5 0 0 1 4 18.5"/>',
+  clock: '<path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2"/>',
+  trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+  trend: '<path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/>',
+};
+const ic = (n, size = 18, color = 'currentColor') => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ago = ts => {
   if (!ts) return '';
@@ -121,45 +224,108 @@ const ago = ts => {
 const when = ts => ts ? new Date(ts).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '';
 const signed = n => n > 0 ? `<span class="up">+${n}</span>` : n < 0 ? `<span class="down">−${-n}</span>` : '<span class="muted">±0</span>';
 const streak = s => s > 1 ? `<span class="pill green">W${s}</span>` : s < -1 ? `<span class="pill red">L${-s}</span>` : '';
+const streakTxt = s => s > 0 ? `<span class="up" style="display:inline-flex;align-items:center;gap:5px">${ic('trend', 15)}W${s}</span>` : s < 0 ? `<span class="down">L${-s}</span>` : '<span class="muted">–</span>';
 const nameLink = (id, name) => `<span class="name" data-fighter="${esc(id)}">${esc(name)}</span>`;
 const openReview = () => D.review.filter(r => !r.resolved).length + D.fights.filter(f => f.status === 'disputed').length;
+const COLORS = ['#7c5cff', '#e3008c', '#0ea5e9', '#f59e0b', '#10b981', '#ef4444', '#6366f1', '#14b8a6', '#f97316', '#8b5cf6'];
+const initials = n => { const l = String(n || '').replace(/[^A-Za-z]/g, ''); return (l.slice(0, 2) || '?').toUpperCase(); };
+const av = (name, cls = '') => { let h = 0; for (const c of String(name)) h = (h + c.charCodeAt(0)) % 997; return `<span class="av ${cls}" style="background:${COLORS[h % COLORS.length]}">${esc(initials(name))}</span>`; };
+const hexb = r => r <= 3 ? `<span class="hx g${r}">${r}</span>` : `<span class="rk">${r}</span>`;
+const move = p => p.new ? '<span class="mv" style="color:var(--accent);font-weight:600">new</span>' : p.move > 0 ? `<span class="mv up">↑ ${p.move}</span>` : p.move < 0 ? `<span class="mv down">↓ ${-p.move}</span>` : '<span class="mv muted">–</span>';
+const bars = f => { if (!f || f.length < 2) return '<span class="muted small">–</span>'; const lo = Math.min(...f), hi = Math.max(...f); return `<span class="bars" title="Rating after each of the last ${f.length} fights">${f.map(v => `<i style="height:${6 + (v - lo) / Math.max(1, hi - lo) * 18}px"></i>`).join('')}</span>`; };
+const modeLabel = m => m === 'mma' ? 'MMA' : 'Stand &amp; Bang';
 
-function modeSeg() {
+// Three highlight cards, picked at random once per page load (not on every click).
+const PICKED = (() => {
+  const pool = [...(D.highlights || [])];
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  return pool.slice(0, 3);
+})();
+function card(h) {
+  let body;
+  if (h.kind === 'bar') body = `<div class="row"><span class="big" data-fighter="${esc(h.player)}">${esc(h.name)}</span><span style="margin-left:auto;white-space:nowrap">${h.value} ${esc(h.unit)}</span></div>
+    <div class="bar"><i style="width:${Math.max(6, Math.min(100, h.value / Math.max(1, h.of) * 100))}%"></i></div>`;
+  else if (h.kind === 'pair') body = `<div class="row"><span class="pair">${av(h.names[0])}${av(h.names[1])}</span><div class="who"><b><span data-fighter="${esc(h.players[0])}">${esc(h.names[0])}</span> <span class="muted" style="font-weight:400">vs</span> <span data-fighter="${esc(h.players[1])}">${esc(h.names[1])}</span></b><span class="muted small">${h.record[0]}–${h.record[1]}</span></div><span style="white-space:nowrap">${h.value} fights</span></div>`;
+  else if (h.kind === 'number') body = `<div class="row"><span class="ring">${ic('swords', 20, 'var(--accent)')}</span><span class="num">${h.value}</span></div>`;
+  else body = `<div class="row">${av(h.name)}<div class="who"><b data-fighter="${esc(h.player)}">${esc(h.name)}</b>${h.trend ? `<span class="muted small">${esc(h.unit)}</span>` : ''}</div>
+    <span class="${h.trend || h.signed ? 'up' : ''}" style="display:flex;align-items:center;gap:4px;white-space:nowrap">${h.trend ? ic('trend', 16) : ''}${h.signed ? '+' : ''}${h.value}${h.trend ? '' : ' ' + esc(h.unit)}</span></div>`;
+  return `<div class="st"><div class="h">${esc(h.title)}</div>${body}</div>`;
+}
+const cards = () => PICKED.length ? `<div class="stats">${PICKED.map(card).join('')}</div>` : '';
+function modeFilters() {
   const opts = [...MODES.map(m => [m, D.modes[m].label]), ['all', 'Combined']];
-  return `<div class="seg">${opts.map(([m, label]) => `<button data-mode="${m}" class="${m === mode ? 'on' : ''}">${esc(label)}</button>`).join('')}</div>`;
+  return `<div class="filters">${opts.map(([m, label]) => `<button class="flt ${m === mode ? 'on' : ''}" data-mode="${m}">${esc(label)}</button>`).join('')}</div>`;
+}
+
+function rankTable(ranked) {
+  const desk = `<div class="tbl desk"><div class="tr th rankcols"><div>Ranking</div><div>Fighter</div><div>Rating</div><div>W–L</div><div>Streak</div><div class="form">Form</div><div>Last fight</div></div>` +
+    ranked.map(p => `<div class="tr rankcols ${p.rank <= 3 ? 'r' + p.rank : ''}"><div class="cell">${hexb(p.rank)}${move(p)}</div>
+      <div class="cell">${av(p.name)}<div class="t">${nameLink(p.id, p.name)}<span class="muted small">${p.fights} fights</span></div></div>
+      <div class="cell">${ic('trophy', 16, 'var(--gold)')}${p.rating.toLocaleString()}</div><div>${p.wins}–${p.losses}</div><div>${streakTxt(p.streak)}</div>
+      <div class="form">${bars(p.form)}</div><div><span class="tag">${ic('clock', 13)} ${ago(p.last)}</span></div></div>`).join('') + `</div>`;
+  const mob = `<div class="list mob">` + ranked.map(p => `<div class="lrow ${p.rank <= 3 ? 'r' + p.rank : ''}">${hexb(p.rank)}${av(p.name, 's')}
+      <div class="t">${nameLink(p.id, p.name)}<span class="muted small">${p.wins}–${p.losses}${p.streak ? ' · ' + (p.streak > 0 ? 'W' : 'L') + Math.abs(p.streak) : ''}</span></div>
+      <div class="r"><div style="font-weight:600">${p.rating}</div>${move(p)}</div></div>`).join('') + `</div>`;
+  return desk + mob;
+}
+function provTable(prov) {
+  const need = D.settings.provisional;
+  const desk = `<div class="tbl desk"><div class="tr th provcols"><div>Fighter</div><div>Rating</div><div>W–L</div><div>Fights</div><div>Last fight</div></div>` +
+    prov.map(p => `<div class="tr provcols"><div class="cell">${av(p.name, 's')}<div class="t">${nameLink(p.id, p.name)}</div></div><div>${p.rating}</div><div>${p.wins}–${p.losses}</div>
+      <div><span class="tag">${p.fights}/${need} fights</span></div><div><span class="tag">${ic('clock', 13)} ${ago(p.last)}</span></div></div>`).join('') + `</div>`;
+  const mob = `<div class="list mob">` + prov.map(p => `<div class="lrow">${av(p.name, 's')}<div class="t">${nameLink(p.id, p.name)}<span class="muted small">${p.wins}–${p.losses}</span></div>
+      <div class="r"><div>${p.rating}</div><span class="muted small">${p.fights}/${need}</span></div></div>`).join('') + `</div>`;
+  return desk + mob;
 }
 function combinedView() {
-  // Ranked (5+ fights) in both modes: average the two ratings and rank by that.
   const [a, b] = MODES.map(m => Object.fromEntries(D.modes[m].players.map(p => [p.id, p])));
-  // Same list and order as the bot's !board combined.
   const both = (D.combined || []).map(c => ({
-    id: c.id, name: a[c.id].name, mma: a[c.id].rating, sb: b[c.id].rating, avg: c.avg,
+    id: c.id, name: a[c.id].name, mma: a[c.id].rating, sb: b[c.id].rating, avg: c.avg, rank: c.rank,
     wins: a[c.id].wins + b[c.id].wins, losses: a[c.id].losses + b[c.id].losses,
   }));
   const need = D.settings.provisional;
-  let h = modeSeg();
-  h += `<p class="muted" style="margin-top:0">The average of each fighter's MMA and Stand &amp; Bang ratings. You need ${need} fights in both modes to show up here.</p>`;
-  h += `<div class="card">` + (both.length ? `<table><thead><tr><th>#</th><th>Fighter</th><th class="num">Average</th><th class="num hide-sm">MMA</th><th class="num hide-sm">S&amp;B</th><th class="num">W–L</th></tr></thead><tbody>` +
-    both.map((p, i) => `<tr><td class="rank ${i < 3 ? 'top' : ''}">${i + 1}</td><td>${nameLink(p.id, p.name)}</td>
-      <td class="num rating">${p.avg}</td><td class="num muted hide-sm">${p.mma}</td><td class="num muted hide-sm">${p.sb}</td><td class="num">${p.wins}–${p.losses}</td></tr>`).join('') + `</tbody></table>`
-    : `<div class="empty">Nobody has ${need} fights in both modes yet.</div>`) + `</div>`;
+  let h = `<h1>Rankings</h1>${modeFilters()}${cards()}`;
+  h += `<div class="sec"><b>Combined</b><span class="muted small">The average of each fighter's MMA and Stand &amp; Bang ratings. ${need} fights in both modes to show up here.</span></div>`;
+  if (!both.length) h += `<div class="tbl"><div class="empty">Nobody has ${need} fights in both modes yet.</div></div>`;
+  else {
+    h += `<div class="tbl desk"><div class="tr th combcols"><div>Ranking</div><div>Fighter</div><div>Average</div><div>MMA</div><div>S&amp;B</div><div>W–L</div></div>` +
+      both.map(p => `<div class="tr combcols ${p.rank <= 3 ? 'r' + p.rank : ''}"><div class="cell">${hexb(p.rank)}</div><div class="cell">${av(p.name)}<div class="t">${nameLink(p.id, p.name)}</div></div>
+        <div class="cell">${ic('trophy', 16, 'var(--gold)')}${p.avg}</div><div class="muted">${p.mma}</div><div class="muted">${p.sb}</div><div>${p.wins}–${p.losses}</div></div>`).join('') + `</div>`;
+    h += `<div class="list mob">` + both.map(p => `<div class="lrow ${p.rank <= 3 ? 'r' + p.rank : ''}">${hexb(p.rank)}${av(p.name, 's')}<div class="t">${nameLink(p.id, p.name)}<span class="muted small">MMA ${p.mma} · S&amp;B ${p.sb}</span></div>
+        <div class="r" style="font-weight:600">${p.avg}</div></div>`).join('') + `</div>`;
+  }
   const ids = [...new Set([...Object.keys(a), ...Object.keys(b)])].filter(id => !both.some(p => p.id === id));
   const n = (M, id) => Math.min(M[id] ? M[id].fights : 0, need);
-  if (ids.length) h += `<h3>Not in combined yet</h3><p class="muted" style="margin-top:0">Fights so far in each mode.</p><div class="card"><table><tbody>` +
+  if (ids.length) h += `<h2>Not in combined yet</h2><div class="list">` +
     ids.sort((x, y) => (n(a, y) + n(b, y)) - (n(a, x) + n(b, x)) || D.players[x].localeCompare(D.players[y]))
-      .map(id => `<tr><td>${nameLink(id, D.players[id])}</td><td class="num muted">MMA ${n(a, id)}/${need}</td><td class="num muted">S&amp;B ${n(b, id)}/${need}</td></tr>`).join('') + `</tbody></table></div>`;
+      .map(id => `<div class="lrow">${av(D.players[id], 's')}<div class="t">${nameLink(id, D.players[id])}</div><div class="r small muted">MMA ${n(a, id)}/${need} · S&amp;B ${n(b, id)}/${need}</div></div>`).join('') + `</div>`;
   return h;
 }
 function fightRow(f) {
   const ch = (D.modes[f.mode].changes || {})[f.id];
   const score = f.score ? ` ${f.score[0]}–${f.score[1]}` : '';
-  const how = '';
   const status = f.status === 'disputed' ? ' <span class="pill amber">paused</span>' : f.status === 'void' ? ' <span class="pill">removed</span>' : '';
-  const deltas = ch && f.status === 'ok' ? `<span class="hide-sm">${signed(ch[0])} / ${signed(ch[1])}</span>` : '';
+  const deltas = ch && f.status === 'ok' ? `${signed(ch[0])} / ${signed(ch[1])}` : '';
   return `<div class="fight"><span class="fid">#${f.id}</span>
     <div><span class="pill ${f.mode === 'mma' ? 'red' : 'gold'}">${f.mode === 'mma' ? 'MMA' : 'S&amp;B'}</span>
-      ${nameLink(f.winner, f.winner_name)} <span class="muted">${f.score && f.score[0] === f.score[1] ? 'split with' : 'def.'}</span> ${nameLink(f.loser, f.loser_name)}${esc(score)}${how}${status}</div>
+      ${nameLink(f.winner, f.winner_name)} <span class="muted">${f.score && f.score[0] === f.score[1] ? 'split with' : 'def.'}</span> ${nameLink(f.loser, f.loser_name)}${esc(score)}${status}</div>
     <div class="num muted" style="font-size:13px">${deltas}<br>${ago(f.ts)}</div></div>`;
+}
+function fightTable(list) {
+  const res = f => `${nameLink(f.winner, f.winner_name)} <span class="muted">${f.score && f.score[0] === f.score[1] ? 'split with' : 'def.'}</span> ${nameLink(f.loser, f.loser_name)}`;
+  const pts = f => { const ch = (D.modes[f.mode].changes || {})[f.id]; return ch && f.status === 'ok' ? `${signed(ch[0])} <span class="muted">/</span> ${signed(ch[1])}` : (f.status === 'disputed' ? '<span class="pill amber">paused</span>' : ''); };
+  const sc = f => f.score ? `${f.score[0]}–${f.score[1]}` : '';
+  const desk = `<div class="tbl desk"><div class="tr th fightcols"><div>#</div><div>Result</div><div>Mode</div><div>Score</div><div>Points</div><div>When</div></div>` +
+    list.map(f => `<div class="tr fightcols"><div class="muted">${f.id}</div><div class="cell">${av(f.winner_name, 's')}<div class="t"><span>${res(f)}</span></div></div>
+      <div><span class="tag">${modeLabel(f.mode)}</span></div><div style="font-weight:600">${sc(f)}</div><div>${pts(f)}</div><div><span class="tag">${ic('clock', 13)} ${ago(f.ts)}</span></div></div>`).join('') + `</div>`;
+  const mob = `<div class="list mob">` + list.map(f => `<div class="lrow">${av(f.winner_name, 's')}<div class="t"><span>${res(f)}</span><span class="muted small">${f.mode === 'mma' ? 'MMA' : 'S&amp;B'} · ${ago(f.ts)}</span></div>
+      <div class="r"><div style="font-weight:600">${sc(f)}</div><div class="small">${(() => { const ch = (D.modes[f.mode].changes || {})[f.id]; return ch && f.status === 'ok' ? signed(ch[0]) : ''; })()}</div></div></div>`).join('') + `</div>`;
+  return desk + mob;
+}
+function chart(form, label) {
+  if (!form || !form.length) return `<div class="box"><b style="font-weight:600">${label}</b><div class="empty" style="padding:14px 0 0">No fights yet.</div></div>`;
+  const f = form.slice(-10), lo = Math.min(...f), hi = Math.max(...f);
+  return `<div class="box"><b style="font-weight:600">${label}</b><div style="height:14px"></div><div class="chart">${f.map(v => `<div><span>${v}</span><i style="height:${18 + (v - lo) / Math.max(1, hi - lo) * 90}px"></i></div>`).join('')}</div></div>`;
 }
 
 const views = {
@@ -168,54 +334,63 @@ const views = {
     const M = D.modes[mode];
     const ranked = M.players.filter(p => p.rank);
     const prov = M.players.filter(p => p.provisional);
-    let h = modeSeg();
-    h += `<div class="card">` + (ranked.length ? `<table><thead><tr><th>#</th><th>Fighter</th><th class="num">Rating</th><th class="num">W–L</th><th class="hide-sm"></th><th class="num hide-sm">Last fight</th></tr></thead><tbody>` +
-      ranked.map(p => `<tr><td class="rank ${p.rank <= 3 ? 'top' : ''}">${p.rank}</td>
-        <td>${nameLink(p.id, p.name)}</td>
-        <td class="num rating">${p.rating}</td><td class="num">${p.wins}–${p.losses}</td>
-        <td class="hide-sm">${streak(p.streak)}</td><td class="num muted hide-sm">${ago(p.last)}</td></tr>`).join('') + `</tbody></table>`
-      : `<div class="empty">Nobody is ranked in ${esc(M.label)} yet. You need ${D.settings.provisional} fights to show up here.</div>`) + `</div>`;
-    if (prov.length) h += `<h3>Provisional</h3><p class="muted" style="margin-top:0">Still settling in. Ranked after ${D.settings.provisional} fights.</p><div class="card"><table><tbody>` +
-      prov.map(p => `<tr><td>${nameLink(p.id, p.name)}</td><td class="num">${p.rating}</td><td class="num">${p.wins}–${p.losses}</td><td class="num muted">${p.fights}/${D.settings.provisional} fights</td></tr>`).join('') + `</tbody></table></div>`;
+    let h = `<h1>Rankings</h1>${modeFilters()}${cards()}`;
+    h += `<div class="sec"><b>${esc(M.label)}</b><span class="muted small">${ranked.length} ranked</span></div>`;
+    h += ranked.length ? rankTable(ranked) : `<div class="tbl"><div class="empty">Nobody is ranked in ${esc(M.label)} yet. You need ${D.settings.provisional} fights to show up here.</div></div>`;
+    if (prov.length) h += `<h2>Provisional</h2><p class="muted" style="margin:-6px 0 12px">Still settling in. Ranked after ${D.settings.provisional} fights.</p>` + provTable(prov);
     const played = new Set(M.players.map(p => p.id));
-    const none = (D.members || []).filter(id => !played.has(id)).sort((a, b) => D.players[a].localeCompare(D.players[b]));
-    if (none.length) h += `<h3>No ${esc(M.label)} fights yet</h3><p class="muted" style="margin-top:0">Everyone else in the group chat. Post a result to get started.</p><div class="card"><table><tbody>` +
-      none.map(id => `<tr><td>${nameLink(id, D.players[id])}</td><td class="num muted">1500</td></tr>`).join('') + `</tbody></table></div>`;
+    const none = (D.members || []).filter(id => !played.has(id) && D.players[id]).sort((a, b) => D.players[a].localeCompare(D.players[b]));
+    if (none.length) h += `<h2>No ${esc(M.label)} fights yet</h2><p class="muted" style="margin:-6px 0 12px">Everyone else in the group chat starts at 1500. Post a result to get started.</p><div class="chips">` +
+      none.map(id => `<span class="tag">${nameLink(id, D.players[id])}</span>`).join('') + `</div>`;
     return h;
   },
   fights() {
-    const list = D.fights.filter(f => f.status !== 'void').slice(0, 150);
-    return `<div class="card">${list.length ? list.map(fightRow).join('') : '<div class="empty">No fights logged yet.</div>'}</div>`;
+    const list = D.fights.filter(f => f.status !== 'void' && (fmode === 'all' || f.mode === fmode)).slice(0, 150);
+    const opts = [['all', 'All'], ['mma', 'MMA'], ['sb', 'Stand &amp; Bang']];
+    let h = `<h1>Fights</h1><div class="filters">${opts.map(([m, l]) => `<button class="flt ${m === fmode ? 'on' : ''}" data-fmode="${m}">${l}</button>`).join('')}</div>`;
+    return h + (list.length ? fightTable(list) : '<div class="tbl"><div class="empty">No fights logged yet.</div></div>');
   },
   fighters() {
     const ids = Object.keys(D.players).sort((a, b) => D.players[a].localeCompare(D.players[b]));
-    if (!ids.length) return '<div class="empty">No fighters yet.</div>';
-    if (!fighter || !D.players[fighter]) fighter = ids[0];
-    let h = `<select id="pick">${ids.map(i => `<option value="${esc(i)}" ${i === fighter ? 'selected' : ''}>${esc(D.players[i])}</option>`).join('')}</select>`;
-    for (const m of MODES) {
-      const M = D.modes[m], p = M.players.find(x => x.id === fighter);
-      h += `<h2>${esc(M.label)}</h2>`;
-      if (!p) { h += `<div class="card empty">No ${esc(M.label)} fights yet.</div>`; continue; }
-      const where = p.rank ? `#${p.rank}` : `${p.fights}/${D.settings.provisional}`;
-      h += `<div class="grid">
-        <div class="stat"><b>${where}</b><span>${p.rank ? 'Rank' : 'Provisional'}</span></div>
-        <div class="stat"><b>${p.rating}</b><span>Rating (best ${p.best})</span></div>
-        <div class="stat"><b>${p.wins}–${p.losses}</b><span>Fights W–L</span></div>
-        <div class="stat"><b>${p.sets_won}–${p.sets_lost}</b><span>Results posted W–L</span></div>
-        <div class="stat"><b>${p.streak > 0 ? 'W' + p.streak : p.streak < 0 ? 'L' + (-p.streak) : '–'}</b><span>Streak</span></div></div>`;
-      const opp = {};
-      for (const f of D.fights) {
-        if (f.status !== 'ok' || f.mode !== m || (f.winner !== fighter && f.loser !== fighter)) continue;
-        const o = f.winner === fighter ? f.loser : f.winner, [gw, gl] = f.score || [1, 0];
-        opp[o] = opp[o] || [0, 0];
-        if (f.winner === fighter) { opp[o][0] += gw; opp[o][1] += gl; } else { opp[o][0] += gl; opp[o][1] += gw; }
-      }
-      const rows = Object.entries(opp).sort((a, b) => (b[1][0] + b[1][1]) - (a[1][0] + a[1][1]));
-      if (rows.length) h += `<h3>Head to head</h3><div class="card"><table><tbody>` + rows.map(([o, r]) =>
-        `<tr><td>${nameLink(o, D.players[o])}</td><td class="num"><b>${r[0]}–${r[1]}</b></td><td class="num">${r[0] > r[1] ? '<span class="pill green">ahead</span>' : r[0] < r[1] ? '<span class="pill red">behind</span>' : '<span class="pill">even</span>'}</td></tr>`).join('') + `</tbody></table></div>`;
+    if (!ids.length) return '<h1>Fighters</h1><div class="empty">No fighters yet.</div>';
+    if (!fighter || !D.players[fighter]) {   // open on the top-ranked fighter, else anyone with a fight
+      const top = MODES.map(m => D.modes[m].players[0]).find(Boolean);
+      fighter = top ? top.id : ids[0];
+    }
+    const name = D.players[fighter];
+    const P = Object.fromEntries(MODES.map(m => [m, D.modes[m].players.find(x => x.id === fighter)]));
+    const c = (D.combined || []).find(x => x.id === fighter);
+    const need = D.settings.provisional;
+    const where = p => p ? (p.rank ? `#${p.rank}` : `${p.fights}/${need} fights`) : 'No fights';
+    let h = `<select id="pick" aria-label="Choose a fighter">${ids.map(i => `<option value="${esc(i)}" ${i === fighter ? 'selected' : ''}>${esc(D.players[i])}</option>`).join('')}</select><div style="height:22px"></div>`;
+    const st = (P.mma && P.mma.streak) || (P.sb && P.sb.streak) || 0;
+    h += `<div class="fhead">${av(name)}<div style="min-width:0"><h1>${esc(name)}</h1><div class="tags">
+      <span class="tag">${ic('trophy', 13, 'var(--gold)')} MMA ${where(P.mma)}</span><span class="tag">S&amp;B ${where(P.sb)}</span>
+      ${c ? `<span class="tag">Combined #${c.rank}</span>` : ''}${st ? `<span class="tag">${streakTxt(st)}</span>` : ''}</div></div></div>`;
+    const kp = [
+      ['MMA rating', P.mma ? P.mma.rating.toLocaleString() : '–', P.mma ? `${P.mma.wins}–${P.mma.losses} · ${where(P.mma)}` : 'No fights yet'],
+      ['Stand &amp; Bang', P.sb ? P.sb.rating.toLocaleString() : '–', P.sb ? `${P.sb.wins}–${P.sb.losses} · ${where(P.sb)}` : 'No fights yet'],
+      ['Combined', c ? `#${c.rank}` : '–', c ? `${c.avg} average` : `${need} fights in both modes`],
+      ['Best rating', (Math.max(P.mma ? P.mma.best : 0, P.sb ? P.sb.best : 0) || '–').toLocaleString(), 'Highest in either mode'],
+    ];
+    h += `<div class="kpis">${kp.map(([a, b, s]) => `<div class="st"><div class="h">${a}</div><div class="v">${b}</div><div class="muted small">${s}</div></div>`).join('')}</div>`;
+    h += `<div class="two">${chart(P.mma && P.mma.form, 'MMA rating, last 10 fights')}${chart(P.sb && P.sb.form, 'Stand &amp; Bang rating, last 10 fights')}</div>`;
+    const opp = {};
+    for (const f of D.fights) {
+      if (f.status !== 'ok' || (f.winner !== fighter && f.loser !== fighter)) continue;
+      const o = f.winner === fighter ? f.loser : f.winner, [gw, gl] = f.score || [1, 0], k = o + '|' + f.mode;
+      opp[k] = opp[k] || [o, f.mode, 0, 0];
+      if (f.winner === fighter) { opp[k][2] += gw; opp[k][3] += gl; } else { opp[k][2] += gl; opp[k][3] += gw; }
+    }
+    const rows = Object.values(opp).sort((a, b) => (b[2] + b[3]) - (a[2] + a[3]));
+    if (rows.length) {
+      const verdict = (w, l) => w > l ? '<span class="up">Ahead</span>' : w < l ? '<span class="down">Behind</span>' : '<span class="muted">Even</span>';
+      h += `<h2>Head to head</h2><div class="tbl desk"><div class="tr th h2hcols"><div>Opponent</div><div>Mode</div><div>Games</div><div>Record</div></div>` +
+        rows.map(([o, m, w, l]) => `<div class="tr h2hcols"><div class="cell">${av(D.players[o], 's')}<div class="t">${nameLink(o, D.players[o])}</div></div><div><span class="tag">${modeLabel(m)}</span></div><div style="font-weight:600">${w}–${l}</div><div>${verdict(w, l)}</div></div>`).join('') + `</div>`;
+      h += `<div class="list mob">` + rows.map(([o, m, w, l]) => `<div class="lrow">${av(D.players[o], 's')}<div class="t">${nameLink(o, D.players[o])}<span class="muted small">${m === 'mma' ? 'MMA' : 'Stand &amp; Bang'}</span></div><div class="r"><b>${w}–${l}</b><div class="small">${verdict(w, l)}</div></div></div>`).join('') + `</div>`;
     }
     const mine = D.fights.filter(f => f.status !== 'void' && (f.winner === fighter || f.loser === fighter)).slice(0, 15);
-    if (mine.length) h += `<h3>Recent fights</h3><div class="card">${mine.map(fightRow).join('')}</div>`;
+    if (mine.length) h += `<h2>Recent fights</h2>` + fightTable(mine);
     return h;
   },
   help() {
@@ -312,27 +487,33 @@ const views = {
 };
 
 function render() {
-  document.getElementById('tabs').innerHTML = TABS.map(([k, label]) =>
-    `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${label}${k === 'review' && openReview() ? `<span class="badge">${openReview()}</span>` : ''}</button>`).join('');
-  document.getElementById('view').innerHTML = views[tab]();
+  const nav = TABS.map(([k, label, icon]) =>
+    `<button class="nv ${k === tab ? 'on' : ''}" data-tab="${k}">${ic(icon)}${label}${k === 'review' && openReview() ? `<span class="badge">${openReview()}</span>` : ''}</button>`);
+  document.getElementById('tabs').innerHTML = `<div class="navrow"><div class="grp">Ladder</div>${nav.slice(0, 3).join('')}<div class="grp">Help</div>${nav.slice(3).join('')}</div>`;
+  const view = views[tab]();
+  document.getElementById('view').innerHTML = ['help', 'review'].includes(tab) ? `<h1>${TABS.find(t => t[0] === tab)[1]}</h1><div style="height:18px"></div>${view}` : view;
   const M = D.meta || {};
-  document.getElementById('updated').textContent = `${D.meta.group ? D.meta.group + ' · ' : ''}Updated ${ago(D.generated)}`;
+  const upd = `${M.group ? M.group + ' · ' : ''}Updated ${ago(D.generated)}`;
+  document.getElementById('updated').textContent = upd;
+  document.getElementById('updated-m').textContent = `Updated ${ago(D.generated)}`;
   let b = '';
   if (M.status === 'login_failed') b += `<div class="banner red">The bot's PlayStation login has expired, so new results aren't being read. They'll be picked up once it's renewed.</div>`;
   else if (M.login_days_left != null && M.login_days_left < 7) b += `<div class="banner amber">The bot's login needs renewing in ${Math.max(0, Math.round(M.login_days_left))} days.</div>`;
   if (M.dry_run) b += `<div class="banner amber">Test mode: the bot is reading the chat but not replying yet.</div>`;
   document.getElementById('banners').innerHTML = b;
-  document.querySelector('nav .on')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+  document.querySelector('.navrow .on')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab]'), m = e.target.closest('[data-mode]'), f = e.target.closest('[data-fighter]');
+  const t = e.target.closest('[data-tab]'), m = e.target.closest('[data-mode]'), fm = e.target.closest('[data-fmode]'), f = e.target.closest('[data-fighter]');
   if (t) { tab = t.dataset.tab; window.scrollTo(0, 0); store.set('tab', tab); history.replaceState(null, '', '#' + tab); }
   else if (m) { mode = m.dataset.mode; store.set('mode', mode); }
+  else if (fm) { fmode = fm.dataset.fmode; }
   else if (f) { fighter = f.dataset.fighter; tab = 'fighters'; history.replaceState(null, '', '#fighters'); window.scrollTo(0, 0); }
   else return;
   render();
 });
 document.addEventListener('change', e => { if (e.target.id === 'pick') { fighter = e.target.value; render(); } });
+window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (TABS.some(t => t[0] === h)) { tab = h; render(); } });
 render();
 </script>
 </body>
