@@ -75,48 +75,53 @@ class Shared:
 
 # ---------------------------------------------------------------- page helpers
 CSS = """
-:root { --bg:#f4f1ec; --panel:#fff; --panel-2:#ece7df; --ink:#17140f; --muted:#6b645a; --line:#ddd5c9;
-  --red:#c8261d; --red-soft:#f6dcd9; --green:#2f7d45; --green-soft:#dcefe1; --amber:#a35c00; --amber-soft:#fbe8cc; }
-@media (prefers-color-scheme: dark) { :root { --bg:#0f0e0c; --panel:#191714; --panel-2:#23201c; --ink:#f1ece4;
-  --muted:#9a9286; --line:#2f2b26; --red:#ff4a3d; --red-soft:#3a1714; --green:#5cc97a; --green-soft:#142a1b;
-  --amber:#f0a33c; --amber-soft:#33230c; } }
+:root { --bg:#eeeff2; --side:#f6f7f9; --panel:#fff; --panel-2:#f3f4f6; --head:#fafbfc; --ink:#14161a; --ink-2:#2b2f36; --muted:#6b7280;
+  --line:#e6e8ec; --line-2:#eef0f3; --border:#d9dce2; --accent:#6d3be8; --accent-soft:#f4efff; --accent-2:#b57bff;
+  --red:#d92d3a; --red-soft:#fdecee; --green:#14915f; --green-soft:#e3f5ec; --amber:#a35c00; --amber-soft:#fbe8cc;
+  --shadow:0 1px 3px rgba(16,24,40,.08); color-scheme:light; }
 * { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Inter, system-ui, sans-serif; }
-.wrap { max-width:880px; margin:0 auto; padding:0 16px 64px; }
-header { padding:24px 0 12px; display:flex; align-items:end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-h1, h2 { font-family:"Barlow Condensed", Inter, sans-serif; }
-h1 { margin:0; font-size:36px; line-height:1; font-weight:800; } h1 span { color:var(--red); }
-h2 { font-size:24px; margin:26px 0 10px; font-weight:700; }
-a { color:var(--red); }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+.top { max-width:960px; margin:0 auto; padding:18px 16px 0; display:flex; align-items:center; gap:10px; font-weight:700; font-size:16px; }
+.top .hex { width:28px; height:28px; background:linear-gradient(135deg,#e3008c,#8a2be2); clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); display:flex; align-items:center; justify-content:center; }
+.top .hex i { width:11px; height:11px; background:#fff; clip-path:inherit; }
+.top .tagline { font-weight:500; font-size:13px; color:var(--muted); padding:2px 9px; border:1px solid var(--line); border-radius:999px; background:var(--panel); }
+.wrap { max-width:960px; margin:14px auto 40px; padding:26px 30px 36px; background:var(--panel); border:1px solid var(--line); border-radius:18px; }
+header { padding:0 0 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+h1 { margin:0; font-size:26px; line-height:1.15; font-weight:600; letter-spacing:-.02em; } h1 span { color:inherit; }
+h2 { font-size:19px; margin:30px 0 12px; font-weight:600; letter-spacing:-.01em; }
+a { color:var(--accent); }
 .muted { color:var(--muted); } .small { font-size:13px; }
-.card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:4px 16px; margin-bottom:12px; }
-.row { display:grid; grid-template-columns:34px 1fr auto; gap:4px 12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:2px 18px; margin-bottom:12px; }
+.row { display:grid; grid-template-columns:40px 1fr auto; gap:4px 12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line-2); }
 .row:last-child { border-bottom:0; }
 .row.void .what { opacity:.5; text-decoration:line-through; }
-.fid { font:700 16px "Barlow Condensed", sans-serif; color:var(--muted); }
+.fid { font-size:13px; font-weight:600; color:var(--muted); background:var(--panel-2); border-radius:8px; text-align:center; padding:3px 0; }
 .what b { font-weight:600; }
 .acts { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
 .ctx { margin:6px 0 2px; font-size:13px; } .ctx summary { cursor:pointer; color:var(--muted); }
-.ctxline { padding:3px 8px; border-left:2px solid var(--panel-2); margin:3px 0; overflow-wrap:anywhere; }
-.msg { display:block; font:13px ui-monospace, Menlo, monospace; background:var(--panel-2); padding:4px 8px; border-radius:5px;
+.ctxline { padding:3px 8px; border-left:2px solid var(--line); margin:3px 0; overflow-wrap:anywhere; }
+.msg { display:block; font:13px ui-monospace, Menlo, monospace; background:var(--panel-2); padding:5px 9px; border-radius:7px;
   margin-top:4px; white-space:pre-wrap; word-break:break-word; }
-.pill { display:inline-block; font-size:12px; font-weight:600; padding:1px 8px; border-radius:99px; background:var(--panel-2); color:var(--muted); }
+.pill { display:inline-block; font-size:12px; font-weight:600; padding:1px 9px; border-radius:99px; background:var(--panel-2); color:var(--muted); }
 .pill.red { background:var(--red-soft); color:var(--red); } .pill.amber { background:var(--amber-soft); color:var(--amber); }
-button, .btn { font:600 14px Inter, sans-serif; padding:8px 14px; border-radius:8px; border:1px solid var(--line);
-  background:var(--panel); color:var(--ink); cursor:pointer; text-decoration:none; display:inline-block; min-height:38px; }
-button.primary { background:var(--red); border-color:var(--red); color:#fff; }
-button.danger { color:var(--red); }
-input, select { font:15px Inter, sans-serif; padding:9px 10px; border-radius:8px; border:1px solid var(--line);
+button, .btn { font:500 14px Inter, sans-serif; padding:7px 13px; border-radius:9px; border:1px solid var(--border);
+  background:var(--panel); color:var(--ink-2); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; min-height:36px; }
+button:hover, .btn:hover { border-color:var(--accent); color:var(--accent); }
+button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+button.primary:hover { background:#5b2fd0; color:#fff; }
+button.danger { color:var(--red); } button.danger:hover { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+input, select { font:15px Inter, sans-serif; padding:9px 11px; border-radius:9px; border:1px solid var(--border);
   background:var(--panel); color:var(--ink); width:100%; }
-label { display:block; font-weight:600; font-size:13px; color:var(--muted); margin:14px 0 4px; }
+input:focus, select:focus { outline:2px solid var(--accent-soft); border-color:var(--accent); }
+label { display:block; font-weight:500; font-size:13px; color:var(--muted); margin:14px 0 4px; }
 .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.banner { border-radius:10px; padding:10px 14px; margin:0 0 14px; font-weight:500; }
+.banner { border-radius:10px; padding:10px 14px; margin:0 0 16px; font-weight:500; }
 .banner.ok { background:var(--green-soft); color:var(--green); } .banner.bad { background:var(--red-soft); color:var(--red); }
-.empty { color:var(--muted); padding:14px 0; }
+.empty { color:var(--muted); padding:16px 0; }
 .leaving { overflow:hidden; transition:opacity .25s ease, transform .25s ease, max-height .3s ease .05s, padding .3s ease .05s; }
 .leaving.gone { opacity:0; transform:translateX(24px); max-height:0 !important; padding-top:0; padding-bottom:0; }
 @media (prefers-reduced-motion: reduce) { .leaving { transition:none; } }
-.flag { padding:14px 0; border-bottom:1px solid var(--line); } .flag:last-child { border-bottom:0; }
+.flag { padding:16px 0; border-bottom:1px solid var(--line-2); } .flag:last-child { border-bottom:0; }
 .fix { display:grid; grid-template-columns:1fr 1fr 120px 1fr; gap:8px 10px; margin:6px 0 10px; }
 .fix label, .chk { margin:6px 0 3px; }
 .chk { display:block; font-size:13px; font-weight:600; color:var(--ink); margin-top:12px; }
@@ -125,11 +130,13 @@ label { display:block; font-weight:600; font-size:13px; color:var(--muted); marg
 select.need { border-color:var(--amber); background:var(--amber-soft); }
 .acts.left { justify-content:flex-start; }
 form.inline { display:inline; margin:0; }
-@media (max-width:560px) { .fix { grid-template-columns:1fr 1fr; } .row { grid-template-columns:28px 1fr; } .acts { grid-column:2; justify-content:flex-start; } }
+#q { margin-bottom:2px; }
+@media (max-width:560px) { .wrap { margin:10px 0 0; border-radius:0; border-left:0; border-right:0; padding:20px 16px 32px; }
+  .fix { grid-template-columns:1fr 1fr; } .row { grid-template-columns:34px 1fr; } .acts { grid-column:2; justify-content:flex-start; } }
 """
 
 FONTS = ('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">')
+         '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">')
 
 
 def esc(x) -> str:
@@ -139,7 +146,8 @@ def esc(x) -> str:
 def page(title: str, body: str) -> str:
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>{esc(title)}</title>{FONTS}<style>{CSS}</style></head><body><div class="wrap">{body}</div>'
+            f'<meta name="color-scheme" content="light"><title>{esc(title)}</title>{FONTS}<style>{CSS}</style></head><body>'
+            f'<div class="top"><span class="hex"><i></i></span>UFC 4 Ladder<span class="tagline">Admin</span></div><div class="wrap">{body}</div>'
             f'<script>{LEAVE_JS}</script></body></html>')
 
 
@@ -319,7 +327,7 @@ class AdminApp:
         live = sum(1 for f in fights if f["status"] != "void")
         site = f' · <a href="{esc(self.site_url)}">Public site</a>' if self.site_url else ""
         banner = f'<div class="banner {"bad" if bad else "ok"}">{esc(note)}</div>' if note else ""
-        body = (f'<header><div><h1>UFC 4 <span>Ladder</span> admin</h1>'
+        body = (f'<header><div><h1>Admin</h1>'
                 f'<div class="muted small">{live} results counted{site}</div></div>'
                 f'<form class="inline" method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{tok}"><button>Log out</button></form></header>'
                 f'{banner}')
@@ -381,7 +389,7 @@ class AdminApp:
     def login_page(self, err: str = "") -> str:
         banner = f'<div class="banner bad">{esc(err)}</div>' if err else ""
         return page("Ladder admin", (
-            f'<header><h1>UFC 4 <span>Ladder</span> admin</h1></header>{banner}'
+            f'<header><h1>Admin</h1></header>{banner}'
             '<form method="post" action="/admin/login" class="card" style="padding:16px;max-width:380px">'
             '<label for="pw" style="margin-top:0">Password</label>'
             '<input id="pw" name="password" type="password" autocomplete="current-password" autofocus required>'
