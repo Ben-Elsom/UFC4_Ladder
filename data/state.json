@@ -3303,7 +3303,11 @@
   "167#459496607011198",
   "167#459496618205447",
   "167#459496628209507",
-  "167#459496634707451"
+  "167#459496634707451",
+  "167#459496646097015",
+  "167#459496652755786",
+  "167#459496654390466",
+  "167#459496657182981"
  ],
  "fights": [
   {
@@ -5199,6 +5203,22 @@
    "msg_uid": "167#459496461751215#0",
    "text": "Vs Bunky 0-1 mma",
    "status": "ok"
+  },
+  {
+   "id": 97,
+   "mode": "sb",
+   "winner": "1622088612165582170",
+   "loser": "5190974766751866546",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5190974766751866546",
+   "ts": 1794908799827,
+   "msg_uid": "167#459496652755786#0",
+   "text": "1-0 to bunky snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5466,11 +5486,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794656356904,
-   "text": "✅ Stand & Bang result\n- dad_scopez def. BJkid2000 2–0\n- dad_scopez 1643 (+50)\n- BJkid2000 1395 (−105) (2/5 fights)",
-   "sent": true
-  },
   {
    "ts": 1794656382622,
    "text": "✅ Stand & Bang result\n- dad_scopez def. BJkid2000 2–0\n- dad_scopez 1670 (+27)\n- BJkid2000 1348 (−47) (4/5 fights)",
@@ -6465,9 +6480,14 @@
    "ts": 1794908124491,
    "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1612\n- 2. blumzylol 1609\n- 3. mrwhoopdatahh 1606\n- 4. Rat_on_Roidz 1557\n- 5. sweatytrixter 1524\n- 6. bunky_skudz 1448\n- 7. echo_goescrazy 1339\n- 8. grubby_flea257 1278\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1794908802998,
+   "text": "✅ Stand & Bang result\n- bunky_skudz def. dad_scopez 1–0\n- bunky_skudz 1452 (+58)\n- dad_scopez 1546 (−14)",
+   "sent": true
   }
  ],
- "next_fight_id": 97,
+ "next_fight_id": 98,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6479,7 +6499,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.9,
-  "last_run": 1794908760704,
+  "last_run": 1794908822757,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
