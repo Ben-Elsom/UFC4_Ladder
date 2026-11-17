@@ -2817,7 +2817,12 @@
   "161#459491498744210",
   "162#459491499131371",
   "162#459491501382792",
-  "162#459491520953956"
+  "162#459491520953956",
+  "162#459491532176931",
+  "162#459491533096520",
+  "162#459491536001088",
+  "162#459491536304939",
+  "162#459491536728239"
  ],
  "fights": [
   {
@@ -4426,38 +4431,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "7835799679513912497",
-   "uid": "161#459491461360854",
-   "ts": 1794888520940,
-   "text": "he whooped me 4-0 in mma lmao",
-   "drafts": [
-    {
-     "sender": "7835799679513912497",
-     "uid": "161#459491461360854#0",
-     "ts": 1794888520940,
-     "text": "he whooped me 4-0 in mma lmao",
-     "won": false,
-     "score": [
-      4,
-      0
-     ],
-     "text_score": "0-4",
-     "mode": "mma",
-     "method": null,
-     "opp": null,
-     "options": null,
-     "unknown": true,
-     "name_text": "he"
-    }
-   ],
-   "waiting": "name",
-   "asking": 0,
-   "kind": "batch",
-   "asked_at": 1794888520940
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -4596,6 +4570,46 @@
     "mode": null,
     "kind": "who",
     "asked_at": 1794838286008
+   }
+  },
+  {
+   "id": 10,
+   "kind": "unanswered",
+   "reason": "Unclear opponent",
+   "text": "he whooped me 4-0 in mma lmao",
+   "sender": "7835799679513912497",
+   "ts": 1794888520940,
+   "fight_id": null,
+   "resolved": false,
+   "question": {
+    "sender": "7835799679513912497",
+    "uid": "161#459491461360854",
+    "ts": 1794888520940,
+    "text": "he whooped me 4-0 in mma lmao",
+    "drafts": [
+     {
+      "sender": "7835799679513912497",
+      "uid": "161#459491461360854#0",
+      "ts": 1794888520940,
+      "text": "he whooped me 4-0 in mma lmao",
+      "won": false,
+      "score": [
+       4,
+       0
+      ],
+      "text_score": "0-4",
+      "mode": "mma",
+      "method": null,
+      "opp": null,
+      "options": null,
+      "unknown": true,
+      "name_text": "he"
+     }
+    ],
+    "waiting": "name",
+    "asking": 0,
+    "kind": "batch",
+    "asked_at": 1794888520940
    }
   }
  ],
@@ -5537,7 +5551,7 @@
   }
  ],
  "next_fight_id": 80,
- "next_review_id": 10,
+ "next_review_id": 11,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -5548,7 +5562,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.1,
-  "last_run": 1794888782853,
+  "last_run": 1794888850507,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
