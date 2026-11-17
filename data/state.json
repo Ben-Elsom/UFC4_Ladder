@@ -2919,7 +2919,11 @@
   "163#459492535187524",
   "163#459492537108801",
   "163#459492539274443",
-  "163#459492543123190"
+  "163#459492543123190",
+  "163#459492543993577",
+  "163#459492546448433",
+  "163#459492548442309",
+  "163#459492552398658"
  ],
  "fights": [
   {
@@ -4571,17 +4575,6 @@
    "mode": null,
    "kind": "who",
    "asked_at": 1794892535224
-  },
-  {
-   "sender": "7146209385156048498",
-   "uid": "163#459492543123190",
-   "ts": 1794892746574,
-   "text": "Msg say 1-0 get better buddy",
-   "mine": 1,
-   "theirs": 0,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1794892746574
   }
  ],
  "review": [
@@ -5720,6 +5713,11 @@
    "ts": 1794892746771,
    "text": "- l-_-MARTENE-_-l, who was that 1-0 against?\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1794892764136,
+   "text": "👍 No worries, ignored that one.",
+   "sent": true
   }
  ],
  "next_fight_id": 82,
@@ -5734,7 +5732,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.1,
-  "last_run": 1794892746771,
+  "last_run": 1794892811951,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
