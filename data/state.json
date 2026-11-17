@@ -2591,7 +2591,9 @@
   "159#459479399860519",
   "159#459485514258499",
   "159#459485842853587",
-  "159#459485844349392"
+  "159#459485844349392",
+  "159#459488016115719",
+  "159#459488017177999"
  ],
  "fights": [
   {
@@ -4070,6 +4072,22 @@
    "msg_uid": "159#459478842144713#0",
    "text": "Vs whoop 0-1 to him snb",
    "status": "ok"
+  },
+  {
+   "id": 72,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "6459805198974452339",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794875062952,
+   "msg_uid": "159#459488016115719",
+   "text": "i beat grubby 3-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5059,9 +5077,14 @@
    "ts": 1794839228476,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. sweatytrixter 1–0\n- mrwhoopdatahh 1658 (+18)\n- sweatytrixter 1568 (−14)",
    "sent": true
+  },
+  {
+   "ts": 1794875069024,
+   "text": "✅ MMA result\n- blumzylol def. grubby_flea257 3–0\n- blumzylol 1712 (+21)\n- grubby_flea257 1298 (−38)",
+   "sent": true
   }
  ],
- "next_fight_id": 72,
+ "next_fight_id": 73,
  "next_review_id": 10,
  "meta": {
   "status": "ok",
@@ -5073,7 +5096,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 57.3,
-  "last_run": 1794874719908,
+  "last_run": 1794875069024,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
