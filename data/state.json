@@ -3270,7 +3270,8 @@
   "166#459495725858236",
   "167#459495731256597",
   "167#459495770789674",
-  "167#459495773497290"
+  "167#459495773497290",
+  "167#459496206148987"
  ],
  "fights": [
   {
@@ -5102,6 +5103,22 @@
    "msg_uid": "167#459495770789674#0",
    "text": "Vs bunky 2-0 snb",
    "status": "ok"
+  },
+  {
+   "id": 93,
+   "mode": "mma",
+   "winner": "1622088612165582170",
+   "loser": "6758403479034326755",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "6758403479034326755",
+   "ts": 1794907055269,
+   "msg_uid": "167#459496206148987#0",
+   "text": "vs bunky 1-2 to him mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5369,11 +5386,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794653844025,
-   "text": "dad_scopez lost to maoripunisher_ 0-2\nMMA or Stand & Bang?\nReply mma or snb\nNot a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794653863670,
    "text": "✅ #9 Stand & Bang · maoripunisher_ def. dad_scopez 2–0 · maoripunisher_ 1690 (+111) (3/5 fights) · dad_scopez 1471 (−86)",
@@ -6368,9 +6380,14 @@
    "ts": 1794905361976,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. bunky_skudz 2–0\n- sweatytrixter 1596 (+20)\n- bunky_skudz 1417 (−74)",
    "sent": true
+  },
+  {
+   "ts": 1794907062282,
+   "text": "✅ MMA result\n- bunky_skudz def. sweatytrixter 2–1\n- bunky_skudz 1508 (+36)\n- sweatytrixter 1429 (−71) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 93,
+ "next_fight_id": 94,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6382,7 +6399,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.9,
-  "last_run": 1794905424050,
+  "last_run": 1794907062282,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
