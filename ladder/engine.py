@@ -201,6 +201,8 @@ class Ladder:
         low = body.lower()
         if low.startswith("!"):
             return self._command(msg, low[1:].split())
+        if re.fullmatch(r"dispute\W*", low):
+            return self.dispute(msg)
         if "\\" in body:
             return []  # backslash = "just talking, not a result", e.g. "I'm going to \\3-0 you"
 
@@ -655,6 +657,38 @@ class Ladder:
             s += f" {f['score'][0]}–{f['score'][1]}"
         return s
 
+    # ------------------------------------------------------------ disputes
+    def dispute(self, msg: dict) -> list[str]:
+        """Take the sender's most recent result off the ladder, the whole set, so it can be posted again.
+        Only the most recent one: anything older goes to the admin."""
+        who = msg["sender_id"]
+        mine = [f for f in self.s["fights"] if f["status"] != "void" and who in (f["winner"], f["loser"])]
+        if not mine:
+            return [f"- {self.name(who)}, you don't have a result to dispute"]
+        f = max(mine, key=lambda x: (x.get("updated_ts", x["ts"]), x["id"]))
+        f["status"] = "void"
+        f["note"] = f"disputed by {self.name(who)}"
+        f.setdefault("disputes", []).append({"by": who, "ts": msg["ts"]})
+        for q in [q for q in self.s["pending"] if q.get("fight_id") == f["id"]]:
+            self.s["pending"].remove(q)
+        for r in self.s["review"]:
+            if not r["resolved"] and r.get("fight_id") == f["id"]:
+                r["resolved"], r["resolution"] = True, f"disputed by {self.name(who)}"
+        games = sum(f.get("score") or (1, 0))
+        gone = {1: "That game is", 2: "Both games are"}.get(games, f"All {games} games are")
+        return [f"⚠️ Result disputed by {self.name(who)}\n"
+                f"- Removed: {self._describe(f)} ({MODES[f['mode']]})\n"
+                f"- {gone} off the ladder and the points are reversed\n"
+                f"- Post the correct result\n"
+                f"{SUB}Older result wrong? Message {self.admin}"]
+
+    def dispute_counts(self) -> dict[str, int]:
+        out: dict[str, int] = {}
+        for f in self.s["fights"]:
+            for d in f.get("disputes", []):
+                out[d["by"]] = out.get(d["by"], 0) + 1
+        return out
+
     # ------------------------------------------------------------ review
     def _add_review(self, kind: str, reason: str, d: dict, fight_id: int | None = None) -> None:
         rid = self.s["next_review_id"]
@@ -736,12 +770,15 @@ class Ladder:
                 "- !record jono vs bjkid – record between any two players",
                 "- !recent – last 5 results",
                 "- !pick – random mode, time, rounds, HUD and weight class",
+                f"- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message {self.admin}",
                 "",
                 f"❓ Problems or questions? Message {self.admin}",
             ]
             if self.site:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]
+        if cmd in ("dispute", "undo"):
+            return self.dispute(msg)
         if cmd in ("pick", "random", "roll"):
             return [pick_settings()]
         if cmd in ("board", "leaderboard", "top", "rankings"):

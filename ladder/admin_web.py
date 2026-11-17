@@ -267,6 +267,11 @@ class AdminApp:
             rows = []
             for f in fights:
                 st_pill = {"void": '<span class="pill red">Removed</span> ', "disputed": '<span class="pill amber">Doesn\'t match</span> '}.get(f["status"], "")
+                if f["status"] == "void" and f.get("disputes"):
+                    st_pill = f'<span class="pill red">Disputed by {esc(n.get(f["disputes"][-1]["by"], "?"))}</span> '
+                elif f.get("disputes"):
+                    st_pill = f'<span class="pill amber">Disputed {len(f["disputes"])}×, put back</span> '
+
                 by = esc(n.get(f.get("reported_by"), "admin"))
                 text = f'<span class="msg">{by}: {esc(f.get("text", ""))}</span>' if f.get("text") else ""
                 acts = (btn(f"/admin/fight/{f['id']}/restore", "Undo remove") if f["status"] == "void" else
@@ -283,6 +288,10 @@ class AdminApp:
                             f'<div class="acts">{acts}</div></div>')
 
             rev = [self.flag_card(st, r, n, btn, tok) for r in reviews]
+            disputes: dict[str, int] = {}
+            for f in st["fights"]:
+                for d in f.get("disputes", []):
+                    disputes[d["by"]] = disputes.get(d["by"], 0) + 1
 
         live = sum(1 for f in fights if f["status"] != "void")
         site = f' · <a href="{esc(self.site_url)}">Public site</a>' if self.site_url else ""
@@ -294,6 +303,11 @@ class AdminApp:
         if rev:
             body += (f'<h2>Flagged messages ({len(rev)})</h2><p class="muted small" style="margin-top:-6px">Fill in what\'s missing '
                      f'(highlighted) and add it, ask the player again in the chat, or dismiss it.</p><div class="card">{"".join(rev)}</div>')
+        if disputes:
+            top = sorted(disputes.items(), key=lambda x: (-x[1], n.get(x[0], "").lower()))
+            body += ('<h2>Disputes</h2><div class="card">' + "".join(
+                f'<div class="row"><div class="fid">{c}</div><div><div class="what">{esc(n.get(a, "?"))}</div></div></div>'
+                for a, c in top) + '</div>')
         body += (f'<h2>Results</h2><input id="q" type="search" placeholder="Search by name, mode or message" autocomplete="off">'
                  f'<div style="height:10px"></div><div class="card" id="list">'
                  f'{"".join(rows) or "<div class=empty>No results yet</div>"}</div>'

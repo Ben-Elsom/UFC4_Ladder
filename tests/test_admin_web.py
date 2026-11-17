@@ -155,6 +155,14 @@ def test_list_remove_undo_and_edit(web):
     assert code == 303 and "err=" in h["Location"] and not s["outbox"]
 
 
+def test_admin_page_shows_disputes(web):
+    port, s, _ = web
+    lad = Ladder(s, admin_name="BJkid2000")
+    lad.dispute({"sender_id": "a2", "ts": T0 + 99_000_000})
+    body = req(port, "GET", "/admin", cookie=login(port))[2]
+    assert "<h2>Disputes</h2>" in body and f"Disputed by {PLAYERS['a2']}" in body and "Undo remove" in body
+
+
 def test_html_in_names_is_escaped(web):
     port, s, _ = web
     s["players"]["a3"]["name"] = "<script>x</script>"

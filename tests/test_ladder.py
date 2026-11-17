@@ -229,6 +229,29 @@ def test_backslash_means_not_a_result(lad):
     assert say(lad, "a1", "!rank", T0)                            # commands still work
 
 
+def test_dispute_removes_your_most_recent_whole_set(lad):
+    say(lad, "a1", "beat sam 1-0 snb", T0)
+    say(lad, "a1", "beat sam 2-1 mma", T0 + H)
+    out = say(lad, "a2", "!dispute", T0 + 2 * H)[0]               # Sam disputes: newest is the 2-1
+    assert out == ("⚠️ Result disputed by Sam_K\n- Removed: JonoTheGoat def. Sam_K 2–1 (MMA)\n"
+                   "- All 3 games are off the ladder and the points are reversed\n- Post the correct result\n"
+                   "  - Older result wrong? Message BJkid2000")
+    assert [f["status"] for f in lad.s["fights"]] == ["ok", "void"]
+    assert "a1" not in lad.replay("mma")["stats"]
+    say(lad, "a2", "lost to jono 2-0 mma", T0 + 3 * H)           # reposted
+    assert "Both games are off" in say(lad, "a1", "Dispute!", T0 + 4 * H)[0]   # Jono disputes that: fine
+    assert "That game is off" in say(lad, "a1", "dispute", T0 + 5 * H)[0]      # then the 1-0 is his newest
+    assert lad.dispute_counts() == {"a2": 1, "a1": 2}
+    assert "don't have a result" in say(lad, "a1", "!dispute", T0 + 6 * H)[0]
+    assert say(lad, "a3", "we should dispute that", T0 + 6 * H) == []          # only the word on its own
+
+
+def test_dispute_a_split_and_your_own_post(lad):
+    say(lad, "a1", "vs sam 1-1 snb", T0)
+    assert "Both games are off" in say(lad, "a1", "!dispute", T0 + 60_000)[0]
+    assert all(f["status"] == "void" for f in lad.s["fights"])
+
+
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
