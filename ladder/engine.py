@@ -201,6 +201,8 @@ class Ladder:
         low = body.lower()
         if low.startswith("!"):
             return self._command(msg, low[1:].split())
+        if "\\" in body:
+            return []  # backslash = "just talking, not a result", e.g. "I'm going to \\3-0 you"
 
         pending = next((q for q in self.s["pending"]
                         if q["sender"] == msg["sender_id"] or msg["sender_id"] in q.get("players", ())), None)
@@ -536,7 +538,57 @@ class Ladder:
         self._resolve_unreadable(d)
         return [self._confirm(f, f"🔄 {MODES[f['mode']]} result updated (was {was})")]
 
+    def _session(self, d: dict) -> list[dict]:
+        """This pair's results in this mode from the same sitting: newest first, each within
+        SET_UPDATE_MINUTES of the next one (and the newest within it of this post)."""
+        pair, out, last = {d["winner"], d["loser"]}, [], d["ts"]
+        for f in reversed(self.s["fights"]):
+            if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
+                continue
+            if last - f.get("updated_ts", f["ts"]) > SET_UPDATE_MINUTES * MIN:
+                break
+            out.append(f)
+            last = f["ts"]
+        return out
+
+    def _against_session(self, d: dict) -> list[str] | None:
+        """A post that's the score for the whole sitting, not one more game.
+
+        Applies when the other player posts, or when there's already more than one result
+        tonight: e.g. you post 0-1 then 1-0, and they post 1-1 -> already got it, nothing added.
+        A bigger total adds only the missing games. Anything else falls through to the usual checks."""
+        session = self._session(d)
+        if not session or (len(session) == 1 and session[0]["reported_by"] == d["sender"]):
+            return None
+        a, b = d["winner"], d["loser"]
+        have = {a: sum(self._games(f, a) for f in session), b: sum(self._games(f, b) for f in session)}
+        dw, dl = d["score"] or (1, 0)
+        new = {a: dw, b: dl}
+        me, opp = (a, b) if d["sender"] != b else (b, a)        # the poster's name first
+        overall = f"{self.name(me)} {have[me]}–{have[opp]} {self.name(opp)} overall"
+        if new == have:
+            latest = session[0]
+            if d["sender"] not in latest.get("confirmed_by", []) and d["sender"] != latest["reported_by"]:
+                latest.setdefault("confirmed_by", []).append(d["sender"])
+            latest["method"] = latest.get("method") or d["method"]
+            self._resolve_unreadable(d)
+            if len(session) == 1:
+                return [f"👍 Already got that one\n- {self._describe(latest)}\n- Thanks for confirming"]
+            return [f"👍 Already got that\n- {overall} ({MODES[d['mode']]})\n- Thanks for confirming"]
+        if not (all(new[x] >= have[x] for x in (a, b)) and sum(new.values()) > sum(have.values())):
+            return None
+        if len(session) == 1:
+            return self._update_set(session[0], d)
+        extra = {x: new[x] - have[x] for x in (a, b)}
+        w, l = (a, b) if extra[a] >= extra[b] else (b, a)
+        add = dict(d, winner=w, loser=l, score=(extra[w], extra[l]))
+        now = f"{self.name(me)} {new[me]}–{new[opp]} {self.name(opp)} overall"
+        return self._record(add, f"✅ {MODES[d['mode']]} result added ({now})")
+
     def _finalise(self, d: dict) -> list[str]:
+        whole = self._against_session(d)
+        if whole is not None:
+            return whole
         carried_on = self._continues(d)
         if carried_on:
             return self._update_set(carried_on, d)
@@ -568,7 +620,7 @@ class Ladder:
                     f"- Reply 1, 2 or 3\n{NVM_LINE}"]
         return self._record(d)
 
-    def _record(self, d: dict) -> list[str]:
+    def _record(self, d: dict, head: str | None = None) -> list[str]:
         mode = d["mode"]
         fid = self.s["next_fight_id"]
         self.s["next_fight_id"] += 1
@@ -579,7 +631,7 @@ class Ladder:
         }
         self.s["fights"].append(fight)
         self._resolve_unreadable(d)
-        return [self._confirm(fight, f"✅ {MODES[mode]} result")]
+        return [self._confirm(fight, head or f"✅ {MODES[mode]} result")]
 
     def _confirm(self, fight: dict, head: str) -> str:
         after = self.replay(fight["mode"])
@@ -667,6 +719,7 @@ class Ladder:
                 '- Example: "vs bjkid 2-1 mma"  (your score first)',
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
+                "- Talking about a score, not posting one? Put a \\ in front, e.g. I'll \\3-0 you",
             ]
             if self.site:
                 lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")

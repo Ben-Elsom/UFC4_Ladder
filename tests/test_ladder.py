@@ -188,6 +188,47 @@ def test_record_between_any_two_players_with_nicknames():
     assert "Couldn't tell who \"zzqx\"" in say(l, "a3", "!record jono vs zzqx", T0 + 2 * H)[0]
 
 
+def _games(lad):
+    live = [f for f in lad.s["fights"] if f["status"] == "ok"]
+    won = lambda who: sum((f.get("score") or (1, 0))[0 if f["winner"] == who else 1] for f in live if who in (f["winner"], f["loser"]))
+    return won("a1"), won("a2")
+
+
+def test_other_player_posting_the_session_score_is_not_counted_again(lad):
+    say(lad, "a1", "0-1 vs sam snb", T0)                         # Sam won game 1
+    say(lad, "a1", "vs sam 1-0 snb", T0 + 8 * 60_000)            # Jono won game 2
+    out = say(lad, "a2", "1-1", T0 + 9 * 60_000)                 # Sam: "it's 1-1"
+    assert out[0].startswith("👍 Already got that\n- Sam_K 1–1 JonoTheGoat overall (Stand & Bang)")
+    assert _games(lad) == (1, 1) and len(lad.s["fights"]) == 2
+    out = say(lad, "a2", "vs jono 1-2 snb", T0 + 20 * 60_000)    # later: "jono 2-1 now"
+    assert out[0].startswith("✅ Stand & Bang result added (Sam_K 1–2 JonoTheGoat overall)\n- JonoTheGoat def. Sam_K 1–0")
+    assert _games(lad) == (2, 1)
+
+
+def test_running_total_after_single_games_adds_only_the_missing_ones(lad):
+    say(lad, "a1", "beat sam 1-0 mma", T0)
+    say(lad, "a1", "beat sam 1-0 mma", T0 + 10 * 60_000)         # per-game posting still counts
+    assert _games(lad) == (2, 0)
+    say(lad, "a1", "beat sam 3-0 mma", T0 + 20 * 60_000)         # then a running total
+    assert _games(lad) == (3, 0)
+    assert "Already got that" in say(lad, "a1", "beat sam 3-0 mma", T0 + 21 * 60_000)[0]
+    assert _games(lad) == (3, 0)
+
+
+def test_tally_update_and_other_player_confirm_still_work(lad):
+    say(lad, "a1", "beat sam 1-0 mma", T0)
+    assert "updated (was 1–0)" in say(lad, "a1", "beat sam 2-0 mma", T0 + 60_000)[0]
+    assert "Already got that one" in say(lad, "a2", "lost to jono 0-2 mma", T0 + 30 * 60_000)[0]
+    assert _games(lad) == (2, 0) and len(lad.s["fights"]) == 1
+
+
+def test_backslash_means_not_a_result(lad):
+    for text in [r"I'm going to \0 and 1 you", r"gonna \3-0 you sam", r"\beat sam 2-1 mma"]:
+        assert say(lad, "a1", text, T0) == []
+    assert not lad.s["fights"] and not lad.s["pending"]
+    assert say(lad, "a1", "!rank", T0)                            # commands still work
+
+
 def test_commands(lad):
     say(lad, "a1", "beat sam 2-1 mma", T0)
     assert "Sam_K" in say(lad, "a2", "!rank", T0 + 1)[0]
