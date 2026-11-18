@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "140#459430326916527",
-  "140#459430339970625",
   "140#459430342486743",
   "140#459430349101581",
   "140#459430365461886",
@@ -3314,7 +3312,9 @@
   "171#459512803225946",
   "171#459512803627285",
   "171#459513012964601",
-  "171#459513015168606"
+  "171#459513015168606",
+  "171#459513020244101",
+  "171#459513022174282"
  ],
  "fights": [
   {
@@ -5370,6 +5370,22 @@
    "msg_uid": "171#459512801872194",
    "text": "i beat bush 2-0 mma (for the bot)",
    "status": "ok"
+  },
+  {
+   "id": 106,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "1454899339008006367",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794972735328,
+   "msg_uid": "171#459513020244101",
+   "text": "i beat bush 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5642,11 +5658,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794666205866,
-   "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. grubby_flea257 3–0\n- mrwhoopdatahh 1560 (+161) (4/5 fights)\n- grubby_flea257 1323 (−103)",
-   "sent": true
-  },
   {
    "ts": 1794666416683,
    "text": "- mrwhoopdatahh, who was that 2-0 against?\n- Not a result? Reply nvm",
@@ -6641,9 +6652,14 @@
    "ts": 1794971885977,
    "text": "✅ MMA result\n- blumzylol def. BushEater- 2–0\n- blumzylol 1718 (+18)\n- BushEater- 1425 (−75) (2/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1794972739638,
+   "text": "✅ MMA result\n- blumzylol def. BushEater- 1–0\n- blumzylol 1725 (+7)\n- BushEater- 1402 (−23) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 106,
+ "next_fight_id": 107,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6654,8 +6670,8 @@
   "login_hash": "a398dea4b056e1ec",
   "login_since": 1794640102107,
   "login_warned": false,
-  "login_days_left": 56.2,
-  "last_run": 1794972714053,
+  "login_days_left": 56.1,
+  "last_run": 1794972775975,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
