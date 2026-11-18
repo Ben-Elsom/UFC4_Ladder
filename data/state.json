@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "141#459431366024826",
-  "141#459431366661695",
-  "141#459431368959617",
   "141#459431370765128",
   "141#459431371173467",
   "141#459431374075277",
@@ -3314,7 +3311,10 @@
   "172#459525490666185",
   "172#459525501238304",
   "172#459530644849433",
-  "172#459530957744856"
+  "172#459530957744856",
+  "172#459530987724811",
+  "172#459531001476412",
+  "172#459531031442647"
  ],
  "fights": [
   {
@@ -6694,7 +6694,7 @@
  "next_fight_id": 109,
  "next_review_id": 14,
  "meta": {
-  "status": "error",
+  "status": "ok",
   "dry_run": false,
   "group": "UFC 4: Elites",
   "started": 1794640102107,
@@ -6703,12 +6703,11 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.3,
-  "last_run": 1795042889181,
+  "last_run": 1795043163803,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
   "last_error": 1795043027959,
-  "last_daily": 1794963600000,
-  "error": "PSNAWPServerError: <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>\nAn error occurred while processing your request.<p>\nReference&#32;&#35;30&#46;c514df17&#46;1795043036&#46;ce3dd62\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;30&#46;c514df17&#46;1795043036&#46;ce3dd62</P>\n</BODY></HTML>\n"
+  "last_daily": 1794963600000
  }
 }
