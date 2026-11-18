@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "141#459431383347191",
-  "141#459431384885816",
-  "141#459431385460174",
   "141#459431388912108",
   "141#459431388918263",
   "141#459431389125562",
@@ -3314,7 +3311,10 @@
   "172#459531214791296",
   "172#459531223523936",
   "172#459531231051981",
-  "172#459531358434807"
+  "172#459531358434807",
+  "172#459531361162740",
+  "172#459531365203861",
+  "172#459531368018030"
  ],
  "fights": [
   {
@@ -5418,6 +5418,22 @@
    "msg_uid": "171#459520516756841#0",
    "text": "1-0 vs crazy_maori SnB",
    "status": "ok"
+  },
+  {
+   "id": 109,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "2622241265805770209",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795044395327,
+   "msg_uid": "172#459531365203861",
+   "text": "i beat echo 2-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5690,11 +5706,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794735305054,
-   "text": "✅ Stand & Bang result\n- sweatytrixter def. mrwhoopdatahh 1–0\n- sweatytrixter 1587 (+87) (1/5 fights)\n- mrwhoopdatahh 1473 (−50) (4/5 fights)",
-   "sent": true
-  },
   {
    "ts": 1794736639077,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Vboatt08 1–0\n- sweatytrixter 1662 (+75) (2/5 fights)\n- Vboatt08 1567 (−65) (3/5 fights)",
@@ -6689,9 +6700,14 @@
    "ts": 1795003475423,
    "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Flyweight",
    "sent": true
+  },
+  {
+   "ts": 1795044403077,
+   "text": "✅ MMA result\n- blumzylol def. echo_goescrazy 2–0\n- blumzylol 1699 (+9)\n- echo_goescrazy 1313 (−11)",
+   "sent": true
   }
  ],
- "next_fight_id": 109,
+ "next_fight_id": 110,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6703,7 +6719,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.3,
-  "last_run": 1795044372229,
+  "last_run": 1795044434416,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
