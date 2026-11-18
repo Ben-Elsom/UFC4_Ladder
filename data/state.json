@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "140#459430736548714",
-  "140#459430738975747",
-  "140#459430739210869",
   "140#459430740228843",
   "140#459430746278436",
   "140#459430749922600",
@@ -3314,7 +3311,10 @@
   "171#459520449963082",
   "171#459520453861295",
   "171#459520483896101",
-  "171#459520514565941"
+  "171#459520514565941",
+  "171#459520516756841",
+  "171#459520519640574",
+  "171#459520521299109"
  ],
  "fights": [
   {
@@ -5402,6 +5402,22 @@
    "msg_uid": "171#459514513031077",
    "text": "I beat blumzylol 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 108,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "6450564279765446538",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795002018581,
+   "msg_uid": "171#459520516756841#0",
+   "text": "1-0 vs crazy_maori SnB",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5674,11 +5690,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794666433496,
-   "text": "- mrwhoopdatahh, was that MMA or Stand & Bang?\n- mrwhoopdatahh def. grubby_flea257 2-0\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794666464448,
    "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !recent – last 5 results\n- !pick – random weight class, rounds, time and HUD\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
@@ -6673,9 +6684,14 @@
    "ts": 1794978567617,
    "text": "✅ MMA result\n- grubby_flea257 def. blumzylol 1–0\n- grubby_flea257 1262 (+68)\n- blumzylol 1690 (−35)",
    "sent": true
+  },
+  {
+   "ts": 1795002026600,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. Crazy_Maori6 1–0\n- BJkid2000 1462 (+38)\n- Crazy_Maori6 1399 (−101) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 108,
+ "next_fight_id": 109,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6687,7 +6703,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.8,
-  "last_run": 1795002012336,
+  "last_run": 1795002074890,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
