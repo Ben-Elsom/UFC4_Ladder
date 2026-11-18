@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "140#459430319431696",
-  "140#459430320092329",
-  "140#459430320143841",
   "140#459430323268965",
   "140#459430325248232",
   "140#459430326916527",
@@ -3314,7 +3311,10 @@
   "171#459511573114616",
   "171#459512380796758",
   "171#459512704329125",
-  "171#459512793146240"
+  "171#459512793146240",
+  "171#459512801872194",
+  "171#459512803225946",
+  "171#459512803627285"
  ],
  "fights": [
   {
@@ -5354,6 +5354,22 @@
    "msg_uid": "171#459509616286039",
    "text": "i beat echo 2-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 105,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "1454899339008006367",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1794971882313,
+   "msg_uid": "171#459512801872194",
+   "text": "i beat bush 2-0 mma (for the bot)",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5626,11 +5642,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794666042155,
-   "text": "- mrwhoopdatahh, was that MMA or Stand & Bang?\n- mrwhoopdatahh def. grubby_flea257 3-0\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794666205866,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. grubby_flea257 3–0\n- mrwhoopdatahh 1560 (+161) (4/5 fights)\n- grubby_flea257 1323 (−103)",
@@ -6625,9 +6636,14 @@
    "ts": 1794963604475,
    "text": "🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - mrwhoopdatahh +77\n  - bunky_skudz +56\n  - maoripunisher_ +41\n- Biggest drops\n  - grubby_flea257 −77\n  - sweatytrixter −57\n  - blumzylol −12\n\nSTAND & BANG\n- Biggest gains\n  - blumzylol +56\n  - sweatytrixter +48\n  - maoripunisher_ +40\n- Biggest drops\n  - mrwhoopdatahh −60\n  - bunky_skudz −48\n  - dad_scopez −44\n\nMOST FIGHTS TODAY\n- 1. bunky_skudz 19\n- 2. sweatytrixter 15\n- 3. dad_scopez 14\n- 4. mrwhoopdatahh 12\n- 5. blumzylol 11\n- 6. grubby_flea257 6\n- 7. Rat_on_Roidz 6\n- 8. echo_goescrazy 5\n- 9. maoripunisher_ 5\n- 10. BJkid2000 3\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1794971885977,
+   "text": "✅ MMA result\n- blumzylol def. BushEater- 2–0\n- blumzylol 1718 (+18)\n- BushEater- 1425 (−75) (2/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 105,
+ "next_fight_id": 106,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6639,7 +6655,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 56.2,
-  "last_run": 1794971851940,
+  "last_run": 1794971914331,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
