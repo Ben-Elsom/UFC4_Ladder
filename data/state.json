@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "141#459431635874519",
-  "141#459431640077147",
   "141#459431641397301",
   "141#459431643862312",
   "142#459431644617549",
@@ -3314,7 +3312,9 @@
   "172#459536265417652",
   "172#459536266678265",
   "172#459536267352243",
-  "172#459536274950349"
+  "172#459536274950349",
+  "172#459536429196007",
+  "172#459536429744537"
  ],
  "fights": [
   {
@@ -5450,6 +5450,22 @@
    "msg_uid": "172#459536206851928#0",
    "text": "Vs echo 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 111,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "2622241265805770209",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795064178689,
+   "msg_uid": "172#459536429744537#0",
+   "text": "Vs echo mma 1-0",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5722,11 +5738,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794752000419,
-   "text": "🏆 STAND & BANG\n- 1. dad_scopez 1603\n- 2. Granite_chin23 1558\n- 3. maoripunisher_ 1541\n- 4. FenioFtw_ 1498\n- 5. grubby_flea257 1351\n- +7 still getting their first 5 fights\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
-   "sent": true
-  },
   {
    "ts": 1794752180767,
    "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !recent – last 5 results\n- !pick – random weight class, rounds, time and HUD\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
@@ -6721,9 +6732,14 @@
    "ts": 1795063330340,
    "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Real time\n- Rounds: 5\n- HUD: Hidden\n- Weight class: Men's Welterweight",
    "sent": true
+  },
+  {
+   "ts": 1795064177062,
+   "text": "✅ MMA result\n- BJkid2000 def. echo_goescrazy 1–0\n- BJkid2000 1777 (+6)\n- echo_goescrazy 1296 (−3)",
+   "sent": true
   }
  ],
- "next_fight_id": 111,
+ "next_fight_id": 112,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6735,7 +6751,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795063603992,
+  "last_run": 1795064177062,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
