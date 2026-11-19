@@ -315,10 +315,6 @@
   }
  },
  "seen": [
-  "143#459432341769847",
-  "143#459432348458412",
-  "143#459432350566214",
-  "143#459432468959893",
   "143#459432471698660",
   "143#459432478613936",
   "143#459432482372283",
@@ -3314,7 +3310,11 @@
   "174#459542718009386",
   "174#459542725923268",
   "174#459542729173965",
-  "174#459542730374737"
+  "174#459542730374737",
+  "174#459542732235592",
+  "174#459542735020503",
+  "174#459542735805194",
+  "174#459542736589735"
  ],
  "fights": [
   {
@@ -5883,11 +5883,6 @@
  ],
  "log": [
   {
-   "ts": 1794787923645,
-   "text": "🔄 MMA result updated (was 3–1)\n- Rat_on_Roidz def. echo_goescrazy 4–1\n- Rat_on_Roidz 1568 (+68)\n- echo_goescrazy 1346 (−37)",
-   "sent": true
-  },
-  {
    "ts": 1794795955397,
    "text": "✅ MMA result\n- blumzylol def. mrwhoopdatahh 3–0\n- blumzylol 1728 (+110)\n- mrwhoopdatahh 1575 (−117)",
    "sent": true
@@ -6881,6 +6876,11 @@
    "ts": 1795088729355,
    "text": "Silent_Kommander\n- MMA: no fights yet\n- Stand & Bang: no fights yet\n- Combined: needs 5 fights in both modes\n\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795088805454,
+   "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n- Everyone loses 10 points every day at 12pm, so keep fighting to hold your spot\n- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – top 10: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !record jono vs bjkid – record between any two players\n- !recent – last 5 results\n- !fights – who's had the most fights\n- !pick – random mode, time, rounds, HUD and weight class\n- !pick mens – men's divisions only\n- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message BJkid2000\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 121,
@@ -6895,7 +6895,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795088791365,
+  "last_run": 1795088859301,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
