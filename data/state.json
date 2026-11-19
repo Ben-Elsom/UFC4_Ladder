@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "142#459432136351354",
-  "142#459432136529767",
-  "142#459432137051606",
   "142#459432139778449",
   "142#459432143796191",
   "142#459432152947378",
@@ -3314,7 +3311,10 @@
   "173#459541246267571",
   "173#459541250225349",
   "173#459541275382019",
-  "173#459541522643389"
+  "173#459541522643389",
+  "173#459541524657274",
+  "173#459541528522194",
+  "173#459541536105904"
  ],
  "fights": [
   {
@@ -5578,6 +5578,22 @@
    "msg_uid": "173#459541216235239#0",
    "text": "vs hustler 2-0 snb to me",
    "status": "ok"
+  },
+  {
+   "id": 119,
+   "mode": "sb",
+   "winner": "7835799679513912497",
+   "loser": "6459805198974452339",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "7835799679513912497",
+   "ts": 1795084080692,
+   "msg_uid": "173#459541524657274#0",
+   "text": "vs grubby 2-1 snb to me",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5850,11 +5866,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794786280050,
-   "text": "✅ MMA result\n- Rat_on_Roidz def. echo_goescrazy 1–0\n- Rat_on_Roidz 1559 (+59) (1/5 fights)\n- echo_goescrazy 1362 (−21)",
-   "sent": true
-  },
   {
    "ts": 1794787015581,
    "text": "🔄 MMA result updated (was 1–0)\n- Rat_on_Roidz and echo_goescrazy split 1–1\n- Rat_on_Roidz 1456 (−44) (2/5 fights)\n- echo_goescrazy 1398 (+15)",
@@ -6849,9 +6860,14 @@
    "ts": 1795082883532,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. Hustler_money 2–0\n- mrwhoopdatahh 1599 (+21)\n- Hustler_money 1442 (−30)",
    "sent": true
+  },
+  {
+   "ts": 1795084092545,
+   "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. grubby_flea257 2–1\n- mrwhoopdatahh 1583 (−16)\n- grubby_flea257 1309 (+24)",
+   "sent": true
   }
  ],
- "next_fight_id": 119,
+ "next_fight_id": 120,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6863,7 +6879,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.9,
-  "last_run": 1795084078270,
+  "last_run": 1795084140359,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
