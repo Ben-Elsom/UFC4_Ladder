@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "142#459432003643102",
   "142#459432003982704",
   "142#459432012877060",
   "142#459432018273573",
@@ -3314,7 +3313,8 @@
   "173#459537067145835",
   "173#459537068278058",
   "173#459537069044206",
-  "173#459537069824500"
+  "173#459537069824500",
+  "173#459538377786362"
  ],
  "fights": [
   {
@@ -5514,6 +5514,22 @@
    "msg_uid": "173#459536912461168#0",
    "text": "Vs rat 1-0 SnB",
    "status": "ok"
+  },
+  {
+   "id": 115,
+   "mode": "mma",
+   "winner": "6459805198974452339",
+   "loser": "2622241265805770209",
+   "score": [
+    2,
+    2
+   ],
+   "method": null,
+   "reported_by": "2622241265805770209",
+   "ts": 1795071788227,
+   "msg_uid": "173#459538377786362#0",
+   "text": "2-2 against grubby mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5786,11 +5802,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794785005949,
-   "text": "🔄 Stand & Bang result updated (was 1–0)\n- Rat_on_Roidz and echo_goescrazy split 1–1\n- Rat_on_Roidz 1431 (−69) (2/5 fights)\n- echo_goescrazy 1344 (+38)",
-   "sent": true
-  },
   {
    "ts": 1794785335545,
    "text": "- Rat_on_Roidz, was that MMA or Stand & Bang?\n- Rat_on_Roidz def. echo_goescrazy 2-1\n- Not a result? Reply nvm",
@@ -6785,9 +6796,14 @@
    "ts": 1795066666649,
    "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1653\n- 2. blumzylol 1608\n- 3. mrwhoopdatahh 1594\n- 4. maoripunisher_ 1518\n- 5. Rat_on_Roidz 1515\n- 6. sweatytrixter 1509\n- 7. bunky_skudz 1423\n- 8. echo_goescrazy 1302\n- 9. grubby_flea257 1292\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795071793334,
+   "text": "✅ MMA result\n- grubby_flea257 and echo_goescrazy split 2–2\n- grubby_flea257 1264 (+12)\n- echo_goescrazy 1285 (−8)",
+   "sent": true
   }
  ],
- "next_fight_id": 115,
+ "next_fight_id": 116,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6799,7 +6815,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.0,
-  "last_run": 1795070337012,
+  "last_run": 1795071793334,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
