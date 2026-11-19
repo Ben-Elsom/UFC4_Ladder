@@ -315,11 +315,6 @@
   }
  },
  "seen": [
-  "142#459431959199072",
-  "142#459431966573918",
-  "142#459431975495452",
-  "142#459431977627453",
-  "142#459431978213187",
   "142#459431978443682",
   "142#459431979029283",
   "142#459431984551081",
@@ -3314,7 +3309,12 @@
   "173#459536818362377",
   "173#459536832779440",
   "173#459536835058879",
-  "173#459536912461168"
+  "173#459536912461168",
+  "173#459536914025464",
+  "173#459536914646782",
+  "173#459536916564631",
+  "173#459536919273965",
+  "173#459536920609396"
  ],
  "fights": [
   {
@@ -5787,11 +5787,6 @@
  ],
  "log": [
   {
-   "ts": 1794784874980,
-   "text": "✅ Stand & Bang result\n- Rat_on_Roidz def. echo_goescrazy 1–0\n- Rat_on_Roidz 1546 (+46) (1/5 fights)\n- echo_goescrazy 1280 (−26) (4/5 fights)",
-   "sent": true
-  },
-  {
    "ts": 1794784937042,
    "text": "- echo_goescrazy, was that MMA or Stand & Bang?\n- echo_goescrazy and Private_Lahd split 1-1\n- Not a result? Reply nvm",
    "sent": true
@@ -6785,6 +6780,11 @@
    "ts": 1795066069271,
    "text": "✅ Stand & Bang result\n- BJkid2000 def. Rat_on_Roidz 1–0\n- BJkid2000 1523 (+32)\n- Rat_on_Roidz 1482 (−20)",
    "sent": true
+  },
+  {
+   "ts": 1795066087046,
+   "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Light Heavyweight",
+   "sent": true
   }
  ],
  "next_fight_id": 115,
@@ -6799,7 +6799,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795066069271,
+  "last_run": 1795066136688,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
