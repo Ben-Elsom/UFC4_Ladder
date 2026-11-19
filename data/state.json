@@ -315,10 +315,6 @@
   }
  },
  "seen": [
-  "142#459431657681447",
-  "142#459431658366467",
-  "142#459431660567170",
-  "142#459431660864738",
   "142#459431661471972",
   "142#459431661490872",
   "142#459431662714373",
@@ -3314,7 +3310,11 @@
   "172#459536451119658",
   "172#459536460902754",
   "172#459536470301780",
-  "172#459536589852430"
+  "172#459536589852430",
+  "172#459536594454697",
+  "172#459536596584050",
+  "172#459536597563256",
+  "173#459536600314651"
  ],
  "fights": [
   {
@@ -5466,6 +5466,22 @@
    "msg_uid": "172#459536429744537#0",
    "text": "Vs echo mma 1-0",
    "status": "ok"
+  },
+  {
+   "id": 112,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "2622241265805770209",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795064830406,
+   "msg_uid": "172#459536596584050#0",
+   "text": "Vs echo mma 1-0",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5738,11 +5754,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794753763483,
-   "text": "BJkid2000 vs Granite_chin23\n- MMA: 0-0\n- Stand & Bang: 0-1",
-   "sent": true
-  },
   {
    "ts": 1794753791887,
    "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 lost to grubby_flea257 0-1\n- Not a result? Reply nvm",
@@ -6737,9 +6748,14 @@
    "ts": 1795064233919,
    "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Heavyweight",
    "sent": true
+  },
+  {
+   "ts": 1795064830822,
+   "text": "✅ MMA result\n- BJkid2000 def. echo_goescrazy 1–0\n- BJkid2000 1783 (+6)\n- echo_goescrazy 1293 (−3)",
+   "sent": true
   }
  ],
- "next_fight_id": 112,
+ "next_fight_id": 113,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6751,7 +6767,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795064807679,
+  "last_run": 1795064871295,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
