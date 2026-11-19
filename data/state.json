@@ -315,14 +315,6 @@
   }
  },
  "seen": [
-  "142#459431682923535",
-  "142#459431685984361",
-  "142#459431927163927",
-  "142#459431938475444",
-  "142#459431940214463",
-  "142#459431944629820",
-  "142#459431947402594",
-  "142#459431950451636",
   "142#459431950790021",
   "142#459431955520832",
   "142#459431958704129",
@@ -3314,7 +3306,15 @@
   "173#459536618631745",
   "173#459536637735999",
   "173#459536639164766",
-  "173#459536804279924"
+  "173#459536804279924",
+  "173#459536805931554",
+  "173#459536806318721",
+  "173#459536808197763",
+  "173#459536809923335",
+  "173#459536812336641",
+  "173#459536814799554",
+  "173#459536817140208",
+  "173#459536818362377"
  ],
  "fights": [
   {
@@ -5482,6 +5482,22 @@
    "msg_uid": "172#459536596584050#0",
    "text": "Vs echo mma 1-0",
    "status": "ok"
+  },
+  {
+   "id": 113,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "6579191292114061295",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795065649682,
+   "msg_uid": "173#459536806318721#0",
+   "text": "Vs rat 1-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5754,16 +5770,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794784702344,
-   "text": "- Rat_on_Roidz, who was that 1-0 against?\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
-   "ts": 1794784755675,
-   "text": "- Rat_on_Roidz, I couldn't find \"gg\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794784809726,
    "text": "- Rat_on_Roidz, I couldn't find \"ye\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
@@ -6753,9 +6759,19 @@
    "ts": 1795064993533,
    "text": "🏆 STAND & BANG\n- 1. maoripunisher_ 1604\n- 2. Granite_chin23 1600\n- 3. sweatytrixter 1596\n- 4. mrwhoopdatahh 1578\n- 5. blumzylol 1528\n- 6. Rat_on_Roidz 1527\n- 7. dad_scopez 1517\n- 8. FenioFtw_ 1478\n- 9. Hustler_money 1462\n- 10. BJkid2000 1452\n- +5 more ranked on the site\n- +4 still getting their first 5 fights\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795065657436,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. Rat_on_Roidz 1–0\n- BJkid2000 1491 (+39)\n- Rat_on_Roidz 1502 (−25)",
+   "sent": true
+  },
+  {
+   "ts": 1795065688736,
+   "text": "🎲 Random fight settings (Men's)\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Middleweight",
+   "sent": true
   }
  ],
- "next_fight_id": 113,
+ "next_fight_id": 114,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6767,7 +6783,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795065643168,
+  "last_run": 1795065708456,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
