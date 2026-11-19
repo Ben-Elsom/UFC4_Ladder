@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "143#459432652835270",
-  "143#459432654987368",
-  "143#459432656538105",
   "143#459432658115405",
   "143#459432659199590",
   "143#459432659250090",
@@ -3314,7 +3311,10 @@
   "174#459543059800360",
   "174#459543060580025",
   "174#459543061368138",
-  "174#459543091383052"
+  "174#459543091383052",
+  "174#459543093936771",
+  "174#459543096655227",
+  "174#459543097662242"
  ],
  "fights": [
   {
@@ -5915,11 +5915,6 @@
  ],
  "log": [
   {
-   "ts": 1794813872032,
-   "text": "🎲 Random fight settings\n- Weight class: Women's Flyweight\n- Rounds: 3\n- Time: Real time\n- HUD: Shown",
-   "sent": true
-  },
-  {
    "ts": 1794815226324,
    "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !recent – last 5 results\n- !pick – random mode, weight class, rounds, time and HUD\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
@@ -6913,6 +6908,11 @@
    "ts": 1795090074112,
    "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1674\n- 2. blumzylol 1608\n- 3. mrwhoopdatahh 1596\n- 4. maoripunisher_ 1518\n- 5. Rat_on_Roidz 1515\n- 6. sweatytrixter 1509\n- 7. bunky_skudz 1423\n- 8. echo_goescrazy 1298\n- 9. grubby_flea257 1286\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795090218107,
+   "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Featherweight",
+   "sent": true
   }
  ],
  "next_fight_id": 123,
@@ -6927,7 +6927,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795090203703,
+  "last_run": 1795090265925,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
