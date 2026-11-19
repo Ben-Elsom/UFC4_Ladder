@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "143#459432640295928",
-  "143#459432641574233",
-  "143#459432643792349",
   "143#459432646499762",
   "143#459432649028948",
   "143#459432649367779",
@@ -3314,7 +3311,10 @@
   "174#459542907259687",
   "174#459542914153089",
   "174#459542926427277",
-  "174#459543037287214"
+  "174#459543037287214",
+  "174#459543039410980",
+  "174#459543040059644",
+  "174#459543043871400"
  ],
  "fights": [
   {
@@ -5626,40 +5626,25 @@
    "msg_uid": "174#459542898571056#0",
    "text": "Vs silent 1-0 snb",
    "status": "ok"
-  }
- ],
- "pending": [
+  },
   {
-   "sender": "5879038572944845531",
-   "uid": "174#459543037287214",
-   "ts": 1795089989403,
-   "text": "Vs silent 1-0",
-   "drafts": [
-    {
-     "sender": "5879038572944845531",
-     "uid": "174#459543037287214#0",
-     "ts": 1795089989403,
-     "text": "Vs silent 1-0",
-     "won": true,
-     "score": [
-      1,
-      0
-     ],
-     "text_score": "1-0",
-     "mode": null,
-     "method": null,
-     "opp": "4299122342822608270",
-     "options": null,
-     "unknown": false,
-     "name_text": "silent"
-    }
+   "id": 122,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "4299122342822608270",
+   "score": [
+    1,
+    0
    ],
-   "waiting": "mode",
-   "asking": 0,
-   "asked_at": 1795089989403,
-   "kind": "batch"
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795089989403,
+   "msg_uid": "174#459543037287214#0",
+   "text": "Vs silent 1-0",
+   "status": "ok"
   }
  ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -5929,11 +5914,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794797543004,
-   "text": "✅ Stand & Bang result\n- maoripunisher_ def. dad_scopez 2–0\n- maoripunisher_ 1600 (+77)\n- dad_scopez 1557 (−59)",
-   "sent": true
-  },
   {
    "ts": 1794797562865,
    "text": "- maoripunisher_, was that MMA or Stand & Bang?\n- maoripunisher_ def. dad_scopez 2-0\n- Not a result? Reply nvm",
@@ -6928,9 +6908,14 @@
    "ts": 1795089994502,
    "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 def. Silent_Kommander 1-0\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1795090011875,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. Silent_Kommander 1–0\n- BJkid2000 1564 (+17)\n- Silent_Kommander 1374 (−47) (2/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 122,
+ "next_fight_id": 123,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6942,7 +6927,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795089994502,
+  "last_run": 1795090059821,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
