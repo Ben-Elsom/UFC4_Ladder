@@ -315,14 +315,6 @@
   }
  },
  "seen": [
-  "143#459432197249819",
-  "143#459432197775982",
-  "143#459432200750185",
-  "143#459432203264291",
-  "143#459432206331461",
-  "143#459432207319269",
-  "143#459432208348987",
-  "143#459432226679977",
   "143#459432247174275",
   "143#459432247354099",
   "143#459432258728128",
@@ -3314,7 +3306,15 @@
   "173#459542477789066",
   "173#459542489349098",
   "174#459542648611947",
-  "174#459542697861121"
+  "174#459542697861121",
+  "174#459542699563227",
+  "174#459542701908678",
+  "174#459542703146305",
+  "174#459542703891928",
+  "174#459542705466275",
+  "174#459542707389778",
+  "174#459542711128169",
+  "174#459542713978622"
  ],
  "fights": [
   {
@@ -5883,16 +5883,6 @@
  ],
  "log": [
   {
-   "ts": 1794787285338,
-   "text": "🔄 MMA result updated (was 1–1)\n- Rat_on_Roidz def. echo_goescrazy 2–1\n- Rat_on_Roidz 1505 (+5) (3/5 fights)\n- echo_goescrazy 1379 (−4)",
-   "sent": true
-  },
-  {
-   "ts": 1794787778473,
-   "text": "🔄 MMA result updated (was 2–1)\n- Rat_on_Roidz def. echo_goescrazy 3–1\n- Rat_on_Roidz 1540 (+40) (4/5 fights)\n- echo_goescrazy 1361 (−22)",
-   "sent": true
-  },
-  {
    "ts": 1794787923645,
    "text": "🔄 MMA result updated (was 3–1)\n- Rat_on_Roidz def. echo_goescrazy 4–1\n- Rat_on_Roidz 1568 (+68)\n- echo_goescrazy 1346 (−37)",
    "sent": true
@@ -6881,6 +6871,16 @@
    "ts": 1795085973265,
    "text": "✅ Stand & Bang result\n- SlattSlatt92 def. Granite_chin23 2–0\n- SlattSlatt92 1680 (+180) (2/5 fights)\n- Granite_chin23 1566 (−34)",
    "sent": true
+  },
+  {
+   "ts": 1795088690019,
+   "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 5\n- HUD: Hidden\n- Weight class: Men's Lightweight",
+   "sent": true
+  },
+  {
+   "ts": 1795088729355,
+   "text": "Silent_Kommander\n- MMA: no fights yet\n- Stand & Bang: no fights yet\n- Combined: needs 5 fights in both modes\n\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 121,
@@ -6895,7 +6895,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795088667538,
+  "last_run": 1795088729355,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
