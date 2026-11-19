@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "143#459432478613936",
-  "143#459432482372283",
-  "143#459432486469264",
-  "143#459432563379954",
-  "143#459432565235935",
-  "143#459432568246693",
   "143#459432570759435",
   "143#459432574048800",
   "143#459432640295928",
@@ -3314,7 +3308,13 @@
   "174#459542735020503",
   "174#459542735805194",
   "174#459542736589735",
-  "174#459542898571056"
+  "174#459542898571056",
+  "174#459542899939041",
+  "174#459542904401234",
+  "174#459542905711235",
+  "174#459542907056646",
+  "174#459542907259687",
+  "174#459542914153089"
  ],
  "fights": [
   {
@@ -5899,11 +5899,6 @@
  ],
  "log": [
   {
-   "ts": 1794797052137,
-   "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- BJkid2000 1681 (+102) (2/5 fights)\n- blumzylol 1691 (−37)",
-   "sent": true
-  },
-  {
    "ts": 1794797528346,
    "text": "✅ Stand & Bang result\n- dad_scopez def. maoripunisher_ 2–1\n- dad_scopez 1616 (+13)\n- maoripunisher_ 1523 (−18)",
    "sent": true
@@ -6897,6 +6892,11 @@
    "ts": 1795089449633,
    "text": "✅ Stand & Bang result\n- BJkid2000 def. Silent_Kommander 1–0\n- BJkid2000 1547 (+24)\n- Silent_Kommander 1421 (−79) (1/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1795089478287,
+   "text": "🎲 Random fight settings (Men's)\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Light Heavyweight",
+   "sent": true
   }
  ],
  "next_fight_id": 122,
@@ -6911,7 +6911,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795089449633,
+  "last_run": 1795089514619,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
