@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "142#459432159421164",
   "142#459432159687836",
   "142#459432160577137",
   "142#459432161428158",
@@ -3314,7 +3313,8 @@
   "173#459541954044367",
   "173#459541959674685",
   "173#459541969278560",
-  "173#459541970343481"
+  "173#459541970343481",
+  "173#459542007829490"
  ],
  "fights": [
   {
@@ -5594,6 +5594,22 @@
    "msg_uid": "173#459541524657274#0",
    "text": "vs grubby 2-1 snb to me",
    "status": "ok"
+  },
+  {
+   "id": 120,
+   "mode": "sb",
+   "winner": "4059537754695891971",
+   "loser": "4444062021544416430",
+   "score": [
+    2,
+    0
+   ],
+   "method": null,
+   "reported_by": "4444062021544416430",
+   "ts": 1795085968083,
+   "msg_uid": "173#459542007829490",
+   "text": "Gg slatts\n\nSlatts def granite 2-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5866,11 +5882,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794787015581,
-   "text": "🔄 MMA result updated (was 1–0)\n- Rat_on_Roidz and echo_goescrazy split 1–1\n- Rat_on_Roidz 1456 (−44) (2/5 fights)\n- echo_goescrazy 1398 (+15)",
-   "sent": true
-  },
   {
    "ts": 1794787285338,
    "text": "🔄 MMA result updated (was 1–1)\n- Rat_on_Roidz def. echo_goescrazy 2–1\n- Rat_on_Roidz 1505 (+5) (3/5 fights)\n- echo_goescrazy 1379 (−4)",
@@ -6865,9 +6876,14 @@
    "ts": 1795084092545,
    "text": "✅ Stand & Bang result\n- mrwhoopdatahh def. grubby_flea257 2–1\n- mrwhoopdatahh 1583 (−16)\n- grubby_flea257 1309 (+24)",
    "sent": true
+  },
+  {
+   "ts": 1795085973265,
+   "text": "✅ Stand & Bang result\n- SlattSlatt92 def. Granite_chin23 2–0\n- SlattSlatt92 1680 (+180) (2/5 fights)\n- Granite_chin23 1566 (−34)",
+   "sent": true
   }
  ],
- "next_fight_id": 120,
+ "next_fight_id": 121,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6879,7 +6895,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795085856376,
+  "last_run": 1795085973265,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
