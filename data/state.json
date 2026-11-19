@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "143#459432659199590",
-  "143#459432659250090",
-  "143#459432662516478",
-  "143#459432664831441",
-  "143#459432669213278",
-  "143#459432679591408",
   "143#459432715225214",
   "143#459432874749562",
   "143#459432877145483",
@@ -3314,7 +3308,13 @@
   "174#459543093936771",
   "174#459543096655227",
   "174#459543097662242",
-  "174#459543265964588"
+  "174#459543265964588",
+  "174#459543266800847",
+  "174#459543267563775",
+  "174#459543269902620",
+  "174#459543270699901",
+  "174#459543271653130",
+  "174#459543275314566"
  ],
  "fights": [
   {
@@ -5642,6 +5642,22 @@
    "msg_uid": "174#459543037287214#0",
    "text": "Vs silent 1-0",
    "status": "ok"
+  },
+  {
+   "id": 123,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "4299122342822608270",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795090885940,
+   "msg_uid": "174#459543266800847#0",
+   "text": "1-0 vs silent snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5914,11 +5930,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794815226324,
-   "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – full rankings: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !recent – last 5 results\n- !pick – random mode, weight class, rounds, time and HUD\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
-   "sent": true
-  },
   {
    "ts": 1794815260940,
    "text": "🏆 MMA\n- 1. blumzylol 1691\n- 2. mrwhoopdatahh 1575\n- 3. Rat_on_Roidz 1568\n- 4. echo_goescrazy 1346\n- +4 still getting their first 5 fights",
@@ -6913,9 +6924,14 @@
    "ts": 1795090218107,
    "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Featherweight",
    "sent": true
+  },
+  {
+   "ts": 1795090897948,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. Silent_Kommander 1–0\n- BJkid2000 1577 (+13)\n- Silent_Kommander 1342 (−32) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 123,
+ "next_fight_id": 124,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6927,7 +6943,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795090883727,
+  "last_run": 1795090945686,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
