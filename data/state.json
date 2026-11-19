@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "142#459431950790021",
-  "142#459431955520832",
   "142#459431958704129",
   "142#459431959199072",
   "142#459431966573918",
@@ -3314,7 +3312,9 @@
   "173#459536812336641",
   "173#459536814799554",
   "173#459536817140208",
-  "173#459536818362377"
+  "173#459536818362377",
+  "173#459536832779440",
+  "173#459536835058879"
  ],
  "fights": [
   {
@@ -5771,11 +5771,6 @@
  ],
  "log": [
   {
-   "ts": 1794784809726,
-   "text": "- Rat_on_Roidz, I couldn't find \"ye\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
    "ts": 1794784846662,
    "text": "- Rat_on_Roidz, was that MMA or Stand & Bang?\n- Rat_on_Roidz def. echo_goescrazy 1-0\n- Not a result? Reply nvm",
    "sent": true
@@ -6769,6 +6764,11 @@
    "ts": 1795065688736,
    "text": "🎲 Random fight settings (Men's)\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Middleweight",
    "sent": true
+  },
+  {
+   "ts": 1795065758756,
+   "text": "Granite_chin23 vs mrwhoopdatahh\n- MMA: 0-0\n- Stand & Bang: 1-0",
+   "sent": true
   }
  ],
  "next_fight_id": 114,
@@ -6783,7 +6783,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795065708456,
+  "last_run": 1795065770182,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
