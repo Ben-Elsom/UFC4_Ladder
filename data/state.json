@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "141#459431465897019",
-  "141#459431478110598",
   "141#459431486904542",
   "141#459431549855364",
   "141#459431550092599",
@@ -3314,7 +3312,9 @@
   "172#459536073863686",
   "172#459536076329241",
   "172#459536078374065",
-  "172#459536081444273"
+  "172#459536081444273",
+  "172#459536206203012",
+  "172#459536206851928"
  ],
  "fights": [
   {
@@ -5434,6 +5434,22 @@
    "msg_uid": "172#459531365203861",
    "text": "i beat echo 2-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 110,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "2622241265805770209",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795063308015,
+   "msg_uid": "172#459536206851928#0",
+   "text": "Vs echo 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5706,11 +5722,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794748137275,
-   "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 lost to Granite_chin23 0-1\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794748157326,
    "text": "✅ Stand & Bang result\n- Granite_chin23 def. BJkid2000 1–0\n- Granite_chin23 1558 (+27)\n- BJkid2000 1542 (−80) (3/5 fights)",
@@ -6705,9 +6716,14 @@
    "ts": 1795062799890,
    "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Light Heavyweight",
    "sent": true
+  },
+  {
+   "ts": 1795063312345,
+   "text": "✅ MMA result\n- BJkid2000 def. echo_goescrazy 1–0\n- BJkid2000 1771 (+8)\n- echo_goescrazy 1299 (−4)",
+   "sent": true
   }
  ],
- "next_fight_id": 110,
+ "next_fight_id": 111,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6719,7 +6735,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795062822663,
+  "last_run": 1795063312345,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
