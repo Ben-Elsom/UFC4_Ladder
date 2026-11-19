@@ -6742,7 +6742,7 @@
  "next_fight_id": 112,
  "next_review_id": 14,
  "meta": {
-  "status": "ok",
+  "status": "error",
   "dry_run": false,
   "group": "UFC 4: Elites",
   "started": 1794640102107,
@@ -6751,11 +6751,12 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 55.1,
-  "last_run": 1795064373881,
+  "last_run": 1795064569136,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
-  "last_error": 1795056953654,
-  "last_daily": 1795050000000
+  "last_error": 1795064577487,
+  "last_daily": 1795050000000,
+  "error": "PSNAWPServerError: <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>\nAn error occurred while processing your request.<p>\nReference&#32;&#35;30&#46;172ada17&#46;1795064610&#46;51fb0f4\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;30&#46;172ada17&#46;1795064610&#46;51fb0f4</P>\n</BODY></HTML>\n"
  }
 }
