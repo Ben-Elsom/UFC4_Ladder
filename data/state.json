@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "143#459432574048800",
   "143#459432640295928",
   "143#459432641574233",
   "143#459432643792349",
@@ -3314,7 +3313,8 @@
   "174#459542907056646",
   "174#459542907259687",
   "174#459542914153089",
-  "174#459542926427277"
+  "174#459542926427277",
+  "174#459543037287214"
  ],
  "fights": [
   {
@@ -5628,7 +5628,38 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "5879038572944845531",
+   "uid": "174#459543037287214",
+   "ts": 1795089989403,
+   "text": "Vs silent 1-0",
+   "drafts": [
+    {
+     "sender": "5879038572944845531",
+     "uid": "174#459543037287214#0",
+     "ts": 1795089989403,
+     "text": "Vs silent 1-0",
+     "won": true,
+     "score": [
+      1,
+      0
+     ],
+     "text_score": "1-0",
+     "mode": null,
+     "method": null,
+     "opp": "4299122342822608270",
+     "options": null,
+     "unknown": false,
+     "name_text": "silent"
+    }
+   ],
+   "waiting": "mode",
+   "asking": 0,
+   "asked_at": 1795089989403,
+   "kind": "batch"
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -5898,11 +5929,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794797528346,
-   "text": "✅ Stand & Bang result\n- dad_scopez def. maoripunisher_ 2–1\n- dad_scopez 1616 (+13)\n- maoripunisher_ 1523 (−18)",
-   "sent": true
-  },
   {
    "ts": 1794797543004,
    "text": "✅ Stand & Bang result\n- maoripunisher_ def. dad_scopez 2–0\n- maoripunisher_ 1600 (+77)\n- dad_scopez 1557 (−59)",
@@ -6897,6 +6923,11 @@
    "ts": 1795089478287,
    "text": "🎲 Random fight settings (Men's)\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Light Heavyweight",
    "sent": true
+  },
+  {
+   "ts": 1795089994502,
+   "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 def. Silent_Kommander 1-0\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 122,
@@ -6911,7 +6942,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.8,
-  "last_run": 1795089582019,
+  "last_run": 1795089994502,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
