@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "143#459433457551657",
-  "143#459433464887420",
   "143#459433480710509",
   "143#459433542963605",
   "143#459433567111612",
@@ -3314,7 +3312,9 @@
   "174#459554920570344",
   "174#459554921346769",
   "174#459555399492721",
-  "174#459556719974168"
+  "174#459556719974168",
+  "174#459556724325838",
+  "174#459556726540860"
  ],
  "fights": [
   {
@@ -5674,6 +5674,22 @@
    "msg_uid": "174#459543651537715#0",
    "text": "1-0 against bj snb",
    "status": "ok"
+  },
+  {
+   "id": 125,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "4059537754695891971",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795143454397,
+   "msg_uid": "174#459556724325838",
+   "text": "i beat slatt 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5946,11 +5962,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794818341450,
-   "text": "- BJkid2000, who was that 1-0 against?\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794818358619,
    "text": "✅ MMA result\n- BJkid2000 def. mrwhoopdatahh 1–0\n- BJkid2000 1725 (+44) (3/5 fights)\n- mrwhoopdatahh 1553 (−22)",
@@ -6945,9 +6956,14 @@
    "ts": 1795136404838,
    "text": "🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - BJkid2000 +20\n  - grubby_flea257 +12\n- Biggest drops\n  - echo_goescrazy −18\n\nSTAND & BANG\n- Biggest gains\n  - SlattSlatt92 +180\n  - vanz_nz +93\n  - BJkid2000 +83\n- Biggest drops\n  - Silent_Kommander −158\n  - Rat_on_Roidz −45\n  - Granite_chin23 −34\n\nMOST FIGHTS TODAY\n- 1. grubby_flea257 12\n- 2. vanz_nz 10\n- 3. BJkid2000 9\n- 4. echo_goescrazy 7\n- 5. Hustler_money 6\n- 6. mrwhoopdatahh 5\n- 7. Silent_Kommander 3\n- 8. Granite_chin23 2\n- 9. Rat_on_Roidz 2\n- 10. SlattSlatt92 2\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795143459855,
+   "text": "✅ MMA result\n- blumzylol def. SlattSlatt92 1–0\n- blumzylol 1688 (+9)\n- SlattSlatt92 1452 (−48) (1/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 125,
+ "next_fight_id": 126,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6959,7 +6975,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.2,
-  "last_run": 1795143437201,
+  "last_run": 1795143499355,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
