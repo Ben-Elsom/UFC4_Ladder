@@ -265,6 +265,7 @@ def mel(y, mo, d, h=0, mi=0):
 def test_daily_drop_at_melbourne_noon(lad, monkeypatch):
     from ladder import engine
     monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    lad.s["meta"]["rules_from"] = mel(2026, 11, 17)
     say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 16, 20))
     r0 = lad.replay("mma", now=mel(2026, 11, 18, 11, 59))["stats"]
     r1 = lad.replay("mma", now=mel(2026, 11, 18, 12, 0))["stats"]
@@ -658,6 +659,7 @@ def test_combined_board_and_rank(lad):
 def test_drop_skips_fighters_and_stops_at_floor(lad, monkeypatch):
     from ladder import engine
     monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    lad.s["meta"]["rules_from"] = mel(2026, 11, 17)
     say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 17, 9))
     r0 = lad.replay("mma", now=mel(2026, 11, 17, 13))["stats"]
     monkeypatch.setattr(engine, "DECAY_FLOOR", r0["a2"]["rating"] - 15)
@@ -671,7 +673,7 @@ def test_game_streak_bonus_linear_uncapped_and_reset(lad):
     t = T0
     say(lad, "a1", "beat sam 1-0 mma", t - H)                       # before the bonus started: no bonus
     assert lad.replay("mma")["changes"][1]["bonus"] == 0
-    lad.s["meta"]["streak_from"] = t
+    lad.s["meta"]["rules_from"] = t
     out = say(lad, "a1", "beat sam 1-0 mma", t)
     ch = lad.replay("mma")["changes"][2]
     assert ch["bonus"] == 1 and ch["streak"] == 1                   # streaks start fresh: +1 for a 1-win streak
@@ -695,7 +697,7 @@ def test_new_player_starts_at_ranked_average(lad, monkeypatch):
     for i in range(3):
         say(lad, "a1", "beat sam 2-1 mma", t); t += H
     t = mel(2026, 11, 22, 9)                                          # four drops later
-    lad.s["meta"]["streak_from"] = t
+    lad.s["meta"]["rules_from"] = t
     r = lad.replay("mma", now=t)["stats"]
     avg = (r["a1"]["rating"] + r["a2"]["rating"]) / 2
     assert avg < 1480
@@ -712,3 +714,17 @@ def test_medals_and_days_at_number_one(lad):
     assert "takes #1" not in out[0]                                   # already #1
     card = next(h for h in lad.highlights(t + 2 * DAY) if h["key"] == "reign_mma")
     assert card["name"] == "JonoTheGoat" and card["value"] == 3 and card["unit"] == "days at #1"
+
+
+def test_new_rules_not_applied_before_switch_on(lad, monkeypatch):
+    from ladder import engine
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 18, 9))
+    r0 = lad.replay("mma", now=mel(2026, 11, 18, 11))["stats"]
+    lad.s["meta"]["rules_from"] = mel(2026, 11, 19, 13)
+    r = lad.replay("mma", now=mel(2026, 11, 20, 13))["stats"]
+    # 18th and 19th: old rule, everyone drops even after fighting. 20th: new rule, no fight since the 19th, drops.
+    assert r["a1"]["rating"] == pytest.approx(r0["a1"]["rating"] - 30)
+    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 20, 14))
+    r = lad.replay("mma", now=mel(2026, 11, 21, 13))
+    assert r["stats"]["a1"]["rating"] == pytest.approx(r["changes"][2]["winner"][1])   # fought, so no drop on the 21st

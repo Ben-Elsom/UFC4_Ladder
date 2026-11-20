@@ -207,8 +207,9 @@ class Ladder:
             now = cutoff
         stats: dict[str, dict[str, Any]] = {}
         changes: dict[int, dict[str, tuple[float, float]]] = {}
-        # Streak bonus and average starting rating: only for fights from the moment they were announced.
-        rules_from = self.s.get("meta", {}).get("streak_from")
+        # New rules (drop only for non-fighters with a floor, streak bonus, average start) apply only from the
+        # moment they were announced (meta.rules_from). Nothing before that is recalculated.
+        rules_from = self.s.get("meta", {}).get("rules_from")
         started = [False]
 
         def ranked() -> list[str]:
@@ -241,7 +242,9 @@ class Ladder:
                 for tick in noons(clock[0], t):
                     since = prev_noon(tick)
                     for x in stats.values():
-                        if loses_points(x, since):
+                        if not (rules_from and tick >= rules_from):
+                            x["rating"] -= DECAY_POINTS       # the old rule, kept for drops before the switch-on
+                        elif loses_points(x, since):
                             x["rating"] = max(DECAY_FLOOR, x["rating"] - DECAY_POINTS)
                     check_top(tick)
             clock[0] = t if clock[0] is None else max(clock[0], t)
@@ -930,7 +933,7 @@ class Ladder:
                 f"- No fight that day? You lose {DECAY_POINTS} points at 12pm (never below {DECAY_FLOOR}), so keep fighting to hold your spot",
                 "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
             ]
-            if self.s.get("meta", {}).get("streak_from"):
+            if self.s.get("meta", {}).get("rules_from"):
                 lines.insert(5, "- Win streak bonus: +1 extra for a win, +2 for your 2nd in a row, +3 for the 3rd, and so on")
             if self.site:
                 lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")
