@@ -207,6 +207,9 @@ class Ladder:
             now = cutoff
         stats: dict[str, dict[str, Any]] = {}
         changes: dict[int, dict[str, tuple[float, float]]] = {}
+        # Streak bonus and average starting rating: only for fights from the moment they were announced.
+        rules_from = self.s.get("meta", {}).get("streak_from")
+        started = [False]
 
         def ranked() -> list[str]:
             return sorted((a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS), key=lambda a: -stats[a]["rating"])
@@ -214,7 +217,7 @@ class Ladder:
         def st(acct: str) -> dict[str, Any]:
             if acct not in stats:
                 # A first fight in this mode starts at the ranked players' average, so new players don't jump the queue.
-                board = ranked()
+                board = ranked() if started[0] else []
                 start = sum(stats[a]["rating"] for a in board) / len(board) if board else glicko.START_RATING
                 stats[acct] = {
                     "rating": start, "rd": glicko.START_RD, "vol": glicko.START_VOL, "start": start,
@@ -249,6 +252,10 @@ class Ladder:
             if cutoff is not None and f["ts"] > cutoff:
                 continue
             drops_until(f["ts"])
+            if rules_from and f["ts"] >= rules_from and not started[0]:
+                started[0] = True
+                for x in stats.values():
+                    x["streak"] = 0        # everyone's streak starts fresh when the bonus starts
             w, l = st(f["winner"]), st(f["loser"])
             for x in (w, l):
                 if x["last"] is not None:
@@ -261,17 +268,21 @@ class Ladder:
             l["rating"], l["rd"], l["vol"] = glicko.update(l["rating"], l["rd"], l["vol"], l_res)
             # Streaks count games. The game order inside a set isn't known, so a set where you dropped a game
             # restarts your streak: 1 if you won the set (you won the last game), 0 otherwise.
-            # Bonus: +1 for your 2nd win in a row, +2 for the 3rd, and so on (no cap). Only clean sets earn it.
+            # Bonus: each win adds your streak length, +1 for a 1-win streak, +2 for 2 in a row, and so on (no cap).
             bonus = 0
-            if gw == gl:
+            if not started[0]:      # before the bonus: streaks counted sets, and a split left them alone
+                if gw != gl:
+                    w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
+                    l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
+            elif gw == gl:
                 w["streak"] = l["streak"] = 0
             elif gl == 0:
                 run = max(w["streak"], 0)
-                bonus = sum(range(run, run + gw))
+                bonus = sum(range(run + 1, run + gw + 1))
                 w["streak"] = run + gw
                 l["streak"] = min(l["streak"], 0) - gw
             else:
-                w["streak"], l["streak"] = 1, 0
+                w["streak"], l["streak"], bonus = 1, 0, 1
             w["rating"] += bonus
             changes[f["id"]] = {"winner": (before[0], w["rating"]), "loser": (before[1], l["rating"]),
                                 "bonus": bonus, "streak": w["streak"]}
@@ -756,8 +767,9 @@ class Ladder:
             x = after["stats"][acct]
             medal = MEDALS.get(x["rank"], "")
             extra = ""
-            if won and ch.get("streak", 0) >= 2:
-                extra = f" · 🔥{ch['streak']} win streak" + (f", +{ch['bonus']} bonus" if ch.get("bonus") else "")
+            if won and ch.get("bonus"):
+                extra = (f" · 🔥{ch['streak']} win streak, +{ch['bonus']} bonus" if ch["streak"] >= 2
+                         else f" · +{ch['bonus']} streak bonus")
             tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
             was = before.get(acct, {}).get("rank")
             if medal and (was is None or was > x["rank"]):
@@ -916,9 +928,10 @@ class Ladder:
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
                 f"- No fight that day? You lose {DECAY_POINTS} points at 12pm (never below {DECAY_FLOOR}), so keep fighting to hold your spot",
-                "- Win streaks pay: +1 extra for your 2nd win in a row, +2 for the 3rd, and so on",
                 "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
             ]
+            if self.s.get("meta", {}).get("streak_from"):
+                lines.insert(5, "- Win streak bonus: +1 extra for a win, +2 for your 2nd in a row, +3 for the 3rd, and so on")
             if self.site:
                 lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")
             lines += [

@@ -460,7 +460,7 @@ def test_split_counts_and_moves_ratings_toward_each_other(lad):
     assert after["a2"]["rating"] > before["a2"]["rating"]   # lower-rated player gains
     assert after["a1"]["rating"] < before["a1"]["rating"]
     assert after["a1"]["wins"] == 6 and after["a1"]["losses"] == 2
-    assert after["a1"]["streak"] == 0                        # a split restarts the streak
+    assert after["a1"]["streak"] == 2                        # before the bonus, a split doesn't break a streak
     out = say(lad, "a1", "vs sam 2-2 mma", t + 60_000)       # other player posts it too
     assert "Already got" in out[0]
 
@@ -667,26 +667,38 @@ def test_drop_skips_fighters_and_stops_at_floor(lad, monkeypatch):
     assert r["a2"]["rating"] == pytest.approx(r0["a2"]["rating"] - 15)   # held at the floor
 
 
-def test_game_streak_bonus_uncapped_and_reset(lad):
+def test_game_streak_bonus_linear_uncapped_and_reset(lad):
     t = T0
-    say(lad, "a1", "beat sam 1-0 mma", t)
-    ch = lad.replay("mma")["changes"]
-    assert ch[1]["bonus"] == 0 and ch[1]["streak"] == 1
-    out = say(lad, "a1", "beat temp 3-0 mma", t + H)
+    say(lad, "a1", "beat sam 1-0 mma", t - H)                       # before the bonus started: no bonus
+    assert lad.replay("mma")["changes"][1]["bonus"] == 0
+    lad.s["meta"]["streak_from"] = t
+    out = say(lad, "a1", "beat sam 1-0 mma", t)
     ch = lad.replay("mma")["changes"][2]
-    assert ch["bonus"] == 1 + 2 + 3 and ch["streak"] == 4          # games 2, 3 and 4 in a row
-    assert "🔥4 win streak, +6 bonus" in out[0]
-    say(lad, "a1", "beat sam 2-1 mma", t + 2 * H)                    # dropped a game: restart, no bonus
+    assert ch["bonus"] == 1 and ch["streak"] == 1                   # streaks start fresh: +1 for a 1-win streak
+    assert "+1 streak bonus" in out[0]
+    out = say(lad, "a1", "beat temp 3-0 mma", t + H)
+    ch = lad.replay("mma")["changes"][3]
+    assert ch["bonus"] == 2 + 3 + 4 and ch["streak"] == 4          # wins 2, 3 and 4 in a row
+    assert "🔥4 win streak, +9 bonus" in out[0]
+    say(lad, "a1", "beat sam 2-1 mma", t + 2 * H)                    # dropped a game: back to a 1-win streak
     st = lad.replay("mma")
-    assert st["changes"][3]["bonus"] == 0 and st["stats"]["a1"]["streak"] == 1 and st["stats"]["a2"]["streak"] == 0
+    assert st["changes"][4]["bonus"] == 1 and st["stats"]["a1"]["streak"] == 1 and st["stats"]["a2"]["streak"] == 0
+    say(lad, "a2", "vs jono 1-1 mma", t + 3 * H)                     # a split resets both
+    st = lad.replay("mma")["stats"]
+    assert st["a1"]["streak"] == 0 and st["a2"]["streak"] == 0
 
 
-def test_new_player_starts_at_ranked_average(lad):
-    t = T0
+def test_new_player_starts_at_ranked_average(lad, monkeypatch):
+    from ladder import engine
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    t = mel(2026, 11, 17, 9)
     for i in range(3):
         say(lad, "a1", "beat sam 2-1 mma", t); t += H
-    r = lad.replay("mma")["stats"]
+    t = mel(2026, 11, 22, 9)                                          # four drops later
+    lad.s["meta"]["streak_from"] = t
+    r = lad.replay("mma", now=t)["stats"]
     avg = (r["a1"]["rating"] + r["a2"]["rating"]) / 2
+    assert avg < 1480
     say(lad, "a3", "beat jono 1-0 mma", t)
     assert lad.replay("mma")["stats"]["a3"]["start"] == pytest.approx(avg)
 
