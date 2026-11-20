@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "143#459433646013511",
-  "143#459433646448744",
-  "143#459433646515062",
   "143#459433649607624",
   "143#459433651736527",
   "144#459433656478521",
@@ -3314,7 +3311,10 @@
   "174#459557897136625",
   "174#459557903441483",
   "174#459557905285023",
-  "174#459558138286749"
+  "174#459558138286749",
+  "174#459558143754547",
+  "174#459558143867457",
+  "174#459558144714533"
  ],
  "fights": [
   {
@@ -5690,6 +5690,22 @@
    "msg_uid": "174#459556724325838",
    "text": "i beat slatt 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 126,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "6028910841825523632",
+   "score": [
+    2,
+    1
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795148999041,
+   "msg_uid": "174#459558143754547",
+   "text": "i beat vanz 2-1 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5962,11 +5978,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794818358619,
-   "text": "✅ MMA result\n- BJkid2000 def. mrwhoopdatahh 1–0\n- BJkid2000 1725 (+44) (3/5 fights)\n- mrwhoopdatahh 1553 (−22)",
-   "sent": true
-  },
   {
    "ts": 1794818404421,
    "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Lightweight",
@@ -6961,9 +6972,14 @@
    "ts": 1795143459855,
    "text": "✅ MMA result\n- blumzylol def. SlattSlatt92 1–0\n- blumzylol 1688 (+9)\n- SlattSlatt92 1452 (−48) (1/5 fights)",
    "sent": true
+  },
+  {
+   "ts": 1795148999546,
+   "text": "✅ Stand & Bang result\n- blumzylol def. vanz_nz 2–1\n- blumzylol 1504 (−14)\n- vanz_nz 1337 (+9)",
+   "sent": true
   }
  ],
- "next_fight_id": 126,
+ "next_fight_id": 127,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6975,7 +6991,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 54.1,
-  "last_run": 1795148982735,
+  "last_run": 1795149044433,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
