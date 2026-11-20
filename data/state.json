@@ -5979,11 +5979,6 @@
  ],
  "log": [
   {
-   "ts": 1794818404421,
-   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Shown\n- Weight class: Men's Lightweight",
-   "sent": true
-  },
-  {
    "ts": 1794818499672,
    "text": "- maoripunisher_, was that MMA or Stand & Bang?\n- maoripunisher_ def. Hustler_money 2-1\n- Not a result? Reply nvm",
    "sent": true
@@ -6977,6 +6972,11 @@
    "ts": 1795148999546,
    "text": "✅ Stand & Bang result\n- blumzylol def. vanz_nz 2–1\n- blumzylol 1504 (−14)\n- vanz_nz 1337 (+9)",
    "sent": true
+  },
+  {
+   "ts": 1795179719349,
+   "text": "🎙️ LADDER UPDATE\n\n🕛 DAILY POINTS DROP\n- At 12pm, only players who haven't fought since the day before lose 10 points\n  - Fought? You keep your points\n- Nobody drops below 1200\n\n🔥 WIN STREAK BONUS (starts now)\n- Every win adds a bonus equal to your streak\n  - 1 win: +1, 2 in a row: +2, 3 in a row: +3, and so on, no limit\n- Every game counts, so a 3-0 is 3 wins in a row\n- Drop a game and your streak starts again\n- MMA and Stand & Bang have separate streaks\n\n👑 TOP 3\n- Results now show 👑 🥈 🥉 next to the top 3\n- Take a top 3 spot and the bot will call it out\n\n🆕 NEW PLAYERS\n- Your first fight starts you at the ladder average, not 1500\n\n📊 The site now also shows how many days the #1 has held the top spot\nhttps://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 127,
@@ -6991,11 +6991,12 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.8,
-  "last_run": 1795179628158,
+  "last_run": 1795179719349,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
   "last_error": 1795100683939,
-  "last_daily": 1795136400000
+  "last_daily": 1795136400000,
+  "rules_from": 1795179718858
  }
 }
