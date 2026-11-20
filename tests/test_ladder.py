@@ -265,7 +265,7 @@ def mel(y, mo, d, h=0, mi=0):
 def test_daily_drop_at_melbourne_noon(lad, monkeypatch):
     from ladder import engine
     monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
-    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 17, 20))
+    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 16, 20))
     r0 = lad.replay("mma", now=mel(2026, 11, 18, 11, 59))["stats"]
     r1 = lad.replay("mma", now=mel(2026, 11, 18, 12, 0))["stats"]
     r3 = lad.replay("mma", now=mel(2026, 11, 20, 13))["stats"]
@@ -274,9 +274,11 @@ def test_daily_drop_at_melbourne_noon(lad, monkeypatch):
         assert r3[a]["rating"] == pytest.approx(r0[a]["rating"] - 30)
     assert lad.replay("mma")["stats"]["a1"]["rating"] == pytest.approx(r0["a1"]["rating"])   # no `now`: as of the last fight
     # a later fight sees the dropped ratings first, so the drop carries through
-    say(lad, "a2", "beat jono 1-0 mma", mel(2026, 11, 19, 9))
-    r = lad.replay("mma", now=mel(2026, 11, 19, 10))
+    say(lad, "a2", "beat jono 1-0 mma", mel(2026, 11, 18, 13))
+    r = lad.replay("mma", now=mel(2026, 11, 19, 12))
     assert r["changes"][2]["winner"][0] == pytest.approx(r1["a2"]["rating"])
+    # both fought since the last noon, so neither drops at the next one
+    assert r["stats"]["a2"]["rating"] == pytest.approx(r["changes"][2]["winner"][1])
     # day two's noon post: Sam's gain is just the fight, not the fight minus the drop
     post = lad.daily_update(mel(2026, 11, 19, 12))
     w = r["changes"][2]["winner"]
@@ -323,7 +325,7 @@ def test_noon_post_once_with_biggest_movers(lad, monkeypatch):
     run(Chat(), s, {"dry_run": False}, mel(2026, 11, 18, 12, 2))   # same noon: no repeat
     text = "\n".join(Chat.sent)
     assert len(Chat.sent) >= 1 and text.count("DAILY UPDATE") == 1
-    assert text.startswith("🕛 DAILY UPDATE\n- Everyone lost 10 points at 12pm\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - JonoTheGoat +")
+    assert text.startswith("🕛 DAILY UPDATE\n- Didn't fight since yesterday's 12pm? You lost 10 points\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - JonoTheGoat +")
     assert "- Biggest drops\n  - Sam_K −" in text and "STAND & BANG\n- Biggest gains\n  - Temp48213 +" in text
     assert "MOST FIGHTS TODAY\n- 1. JonoTheGoat 3\n- 2. Sam_K 2\n- 3. Temp48213 1" in text
     # gains are the fights only: the 10-point drop isn't taken off them
@@ -458,7 +460,7 @@ def test_split_counts_and_moves_ratings_toward_each_other(lad):
     assert after["a2"]["rating"] > before["a2"]["rating"]   # lower-rated player gains
     assert after["a1"]["rating"] < before["a1"]["rating"]
     assert after["a1"]["wins"] == 6 and after["a1"]["losses"] == 2
-    assert after["a1"]["streak"] == 2                        # a split doesn't break a streak
+    assert after["a1"]["streak"] == 0                        # a split restarts the streak
     out = say(lad, "a1", "vs sam 2-2 mma", t + 60_000)       # other player posts it too
     assert "Already got" in out[0]
 
@@ -651,3 +653,50 @@ def test_combined_board_and_rank(lad):
     assert "Combined" not in say(l, "a1", "!board mma", t + 5)[0]
     snap = l.snapshot(t + 6)
     assert [c["id"] for c in snap["combined"]] == ["a1", "a2"]
+
+
+def test_drop_skips_fighters_and_stops_at_floor(lad, monkeypatch):
+    from ladder import engine
+    monkeypatch.setattr(engine, "DECAY_FROM", "2026-11-18")
+    say(lad, "a1", "beat sam 1-0 mma", mel(2026, 11, 17, 9))
+    r0 = lad.replay("mma", now=mel(2026, 11, 17, 13))["stats"]
+    monkeypatch.setattr(engine, "DECAY_FLOOR", r0["a2"]["rating"] - 15)
+    say(lad, "a1", "beat jono 1-0 snb", mel(2026, 11, 18, 9))      # a fight in the other mode doesn't count
+    r = lad.replay("mma", now=mel(2026, 11, 20, 13))["stats"]
+    assert r["a1"]["rating"] == pytest.approx(r0["a1"]["rating"] - 30)
+    assert r["a2"]["rating"] == pytest.approx(r0["a2"]["rating"] - 15)   # held at the floor
+
+
+def test_game_streak_bonus_uncapped_and_reset(lad):
+    t = T0
+    say(lad, "a1", "beat sam 1-0 mma", t)
+    ch = lad.replay("mma")["changes"]
+    assert ch[1]["bonus"] == 0 and ch[1]["streak"] == 1
+    out = say(lad, "a1", "beat temp 3-0 mma", t + H)
+    ch = lad.replay("mma")["changes"][2]
+    assert ch["bonus"] == 1 + 2 + 3 and ch["streak"] == 4          # games 2, 3 and 4 in a row
+    assert "🔥4 win streak, +6 bonus" in out[0]
+    say(lad, "a1", "beat sam 2-1 mma", t + 2 * H)                    # dropped a game: restart, no bonus
+    st = lad.replay("mma")
+    assert st["changes"][3]["bonus"] == 0 and st["stats"]["a1"]["streak"] == 1 and st["stats"]["a2"]["streak"] == 0
+
+
+def test_new_player_starts_at_ranked_average(lad):
+    t = T0
+    for i in range(3):
+        say(lad, "a1", "beat sam 2-1 mma", t); t += H
+    r = lad.replay("mma")["stats"]
+    avg = (r["a1"]["rating"] + r["a2"]["rating"]) / 2
+    say(lad, "a3", "beat jono 1-0 mma", t)
+    assert lad.replay("mma")["stats"]["a3"]["start"] == pytest.approx(avg)
+
+
+def test_medals_and_days_at_number_one(lad):
+    t = T0
+    for i in range(3):
+        say(lad, "a1", "beat sam 2-1 mma", t); t += H
+    out = say(lad, "a1", "beat sam 1-0 mma", t)
+    assert "- 👑 JonoTheGoat " in out[0] and "- 🥈 Sam_K " in out[0]
+    assert "takes #1" not in out[0]                                   # already #1
+    card = next(h for h in lad.highlights(t + 2 * DAY) if h["key"] == "reign_mma")
+    assert card["name"] == "JonoTheGoat" and card["value"] == 3 and card["unit"] == "days at #1"

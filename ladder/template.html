@@ -238,7 +238,7 @@ function card(h) {
     <div class="bar"><i style="width:${Math.max(6, Math.min(100, h.value / Math.max(1, h.of) * 100))}%"></i></div>`;
   else if (h.kind === 'pair') body = `<div class="row"><span class="pair">${av(h.names[0])}${av(h.names[1])}</span><div class="who"><b><span data-fighter="${esc(h.players[0])}">${esc(h.names[0])}</span> <span class="muted" style="font-weight:400">vs</span> <span data-fighter="${esc(h.players[1])}">${esc(h.names[1])}</span></b><span class="muted small">${h.record[0]}–${h.record[1]}</span></div><span style="white-space:nowrap">${h.value} fights</span></div>`;
   else if (h.kind === 'number') body = `<div class="row"><span class="ring">${ic('swords', 20, 'var(--accent)')}</span><span class="num">${h.value}</span></div>`;
-  else body = `<div class="row">${av(h.name)}<div class="who"><b data-fighter="${esc(h.player)}">${esc(h.name)}</b>${h.trend ? `<span class="muted small">${esc(h.unit)}</span>` : ''}</div>
+  else body = `<div class="row">${av(h.name)}<div class="who"><b data-fighter="${esc(h.player)}">${h.crown ? '👑 ' : ''}${esc(h.name)}</b>${h.trend ? `<span class="muted small">${esc(h.unit)}</span>` : ''}</div>
     <span class="${h.trend || h.signed ? 'up' : ''}" style="display:flex;align-items:center;gap:4px;white-space:nowrap">${h.trend ? ic('trend', 16) : ''}${h.signed ? '+' : ''}${h.value}${h.trend ? '' : ' ' + esc(h.unit)}</span></div>`;
   return `<div class="st"><div class="h">${esc(h.title)}</div>${body}</div>`;
 }

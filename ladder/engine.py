@@ -27,9 +27,11 @@ MIN = 60 * 1000
 H = 60 * MIN
 DAY = 24 * H
 
-# Daily points drop, so nobody can sit on a rank: everyone loses DECAY_POINTS at noon each day.
+# Daily points drop, so nobody can sit on a rank: at noon, everyone who didn't fight since the last noon
+# loses DECAY_POINTS, but the drop never takes anyone below DECAY_FLOOR.
 TIMEZONE = "Australia/Melbourne"
 DECAY_POINTS = 10
+DECAY_FLOOR = 1200
 DECAY_HOUR = 12
 DECAY_FROM = "2026-11-18"     # first drop: noon on this day (earlier history is left alone)
 BOARD_SIZE = 10               # !board shows this many per list; the site shows everyone
@@ -56,11 +58,17 @@ def last_noon(now_ms: int) -> int | None:
     return ticks[-1] if ticks else None
 
 
-def loses_points(x: dict) -> bool:
-    """Who the daily drop applies to. Everyone with a rating in that mode."""
-    return True
+def prev_noon(tick: int) -> int:
+    """The drop before this one (or a day earlier, for the first drop)."""
+    return (noons(tick - 2 * DAY, tick - 1) or [tick - DAY])[-1]
 
 
+def loses_points(x: dict, since: int) -> bool:
+    """Who the daily drop applies to: no fight in this mode since `since` (the last noon), and still above the floor."""
+    return (x["last"] is None or x["last"] <= since) and x["rating"] > DECAY_FLOOR
+
+
+MEDALS = {1: "👑", 2: "🥈", 3: "🥉"}
 NVM_LINE = "- Not a result? Reply nvm"
 SUB = "  - "   # second-level bullet
 
@@ -200,24 +208,39 @@ class Ladder:
         stats: dict[str, dict[str, Any]] = {}
         changes: dict[int, dict[str, tuple[float, float]]] = {}
 
-        def st(acct: str) -> dict[str, Any]:
-            return stats.setdefault(acct, {
-                "rating": glicko.START_RATING, "rd": glicko.START_RD, "vol": glicko.START_VOL,
-                "last": None, "fights": 0, "wins": 0, "losses": 0, "sets_won": 0, "sets_lost": 0,
-                "streak": 0, "best_rating": glicko.START_RATING,
-            })
-
         def ranked() -> list[str]:
             return sorted((a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS), key=lambda a: -stats[a]["rating"])
+
+        def st(acct: str) -> dict[str, Any]:
+            if acct not in stats:
+                # A first fight in this mode starts at the ranked players' average, so new players don't jump the queue.
+                board = ranked()
+                start = sum(stats[a]["rating"] for a in board) / len(board) if board else glicko.START_RATING
+                stats[acct] = {
+                    "rating": start, "rd": glicko.START_RD, "vol": glicko.START_VOL, "start": start,
+                    "last": None, "fights": 0, "wins": 0, "losses": 0, "sets_won": 0, "sets_lost": 0,
+                    "streak": 0, "best_rating": start,
+                }
+            return stats[acct]
+
+        top = {"player": None, "since": None}   # the current #1 and when they took it
+
+        def check_top(t: int) -> None:
+            board = ranked()
+            lead = board[0] if board else None
+            if lead != top["player"]:
+                top["player"], top["since"] = lead, (t if lead else None)
 
         clock = [None]   # time of the last fight or drop applied
 
         def drops_until(t: int) -> None:
             if clock[0] is not None:
-                for _ in noons(clock[0], t):
+                for tick in noons(clock[0], t):
+                    since = prev_noon(tick)
                     for x in stats.values():
-                        if loses_points(x):
-                            x["rating"] -= DECAY_POINTS
+                        if loses_points(x, since):
+                            x["rating"] = max(DECAY_FLOOR, x["rating"] - DECAY_POINTS)
+                    check_top(tick)
             clock[0] = t if clock[0] is None else max(clock[0], t)
 
         for f in sorted(self.s["fights"], key=lambda f: f["ts"]):
@@ -236,17 +259,31 @@ class Ladder:
             before = (w["rating"], l["rating"])
             w["rating"], w["rd"], w["vol"] = glicko.update(w["rating"], w["rd"], w["vol"], w_res)
             l["rating"], l["rd"], l["vol"] = glicko.update(l["rating"], l["rd"], l["vol"], l_res)
-            changes[f["id"]] = {"winner": (before[0], w["rating"]), "loser": (before[1], l["rating"])}
+            # Streaks count games. The game order inside a set isn't known, so a set where you dropped a game
+            # restarts your streak: 1 if you won the set (you won the last game), 0 otherwise.
+            # Bonus: +1 for your 2nd win in a row, +2 for the 3rd, and so on (no cap). Only clean sets earn it.
+            bonus = 0
+            if gw == gl:
+                w["streak"] = l["streak"] = 0
+            elif gl == 0:
+                run = max(w["streak"], 0)
+                bonus = sum(range(run, run + gw))
+                w["streak"] = run + gw
+                l["streak"] = min(l["streak"], 0) - gw
+            else:
+                w["streak"], l["streak"] = 1, 0
+            w["rating"] += bonus
+            changes[f["id"]] = {"winner": (before[0], w["rating"]), "loser": (before[1], l["rating"]),
+                                "bonus": bonus, "streak": w["streak"]}
             w["fights"] += gw + gl
             l["fights"] += gw + gl
             w["wins"] += gw; w["losses"] += gl
             l["wins"] += gl; l["losses"] += gw
             if gw != gl:   # a split (2-2) counts every fight but isn't a set win or loss
                 w["sets_won"] += 1; l["sets_lost"] += 1
-                w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
-                l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
             w["last"] = l["last"] = f["ts"]
             w["best_rating"] = max(w["best_rating"], w["rating"])
+            check_top(f["ts"])
 
         if now is not None:
             drops_until(now)
@@ -254,7 +291,7 @@ class Ladder:
         for acct, x in stats.items():
             x["rank"] = board.index(acct) + 1 if acct in board else None
             x["provisional"] = x["fights"] < PROVISIONAL_FIGHTS
-        return {"stats": stats, "board": board, "changes": changes}
+        return {"stats": stats, "board": board, "changes": changes, "top": top}
 
     # ------------------------------------------------------------ chat handling
     def handle(self, msg: dict[str, Any]) -> list[str]:
@@ -709,16 +746,28 @@ class Ladder:
 
     def _confirm(self, fight: dict, head: str) -> str:
         after = self.replay(fight["mode"])
+        before = self.replay(fight["mode"], cutoff=fight["ts"] - 1)["stats"]
         ch = after["changes"][fight["id"]]
+        mode = MODES[fight["mode"]]
+        news = []
 
-        def fmt(acct: str, pair: tuple[float, float]) -> str:
+        def fmt(acct: str, pair: tuple[float, float], won: bool) -> str:
             delta = round(pair[1]) - round(pair[0])
             x = after["stats"][acct]
+            medal = MEDALS.get(x["rank"], "")
+            extra = ""
+            if won and ch.get("streak", 0) >= 2:
+                extra = f" · 🔥{ch['streak']} win streak" + (f", +{ch['bonus']} bonus" if ch.get("bonus") else "")
             tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
-            return f"{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}){tag}"
+            was = before.get(acct, {}).get("rank")
+            if medal and (was is None or was > x["rank"]):
+                news.append(f"- {medal} {self.name(acct)} takes #1 in {mode}" if x["rank"] == 1
+                            else f"- {medal} {self.name(acct)} moves up to #{x['rank']} in {mode}")
+            return f"{medal + ' ' if medal else ''}{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}{extra}){tag}"
 
-        return (f"{head}\n- {self._describe(fight)}\n"
-                f"- {fmt(fight['winner'], ch['winner'])}\n- {fmt(fight['loser'], ch['loser'])}")
+        lines = [head, f"- {self._describe(fight)}",
+                 f"- {fmt(fight['winner'], ch['winner'], True)}", f"- {fmt(fight['loser'], ch['loser'], False)}"]
+        return "\n".join(lines + news)
 
     def _describe(self, f: dict) -> str:
         sc = f.get("score")
@@ -804,7 +853,7 @@ class Ladder:
         """The noon post: everyone's drop, then the biggest gains and drops from fights since the last noon.
         Gains are measured after yesterday's drop and before today's, so the 10 points don't count against them."""
         prev = (noons(tick - 2 * DAY, tick - 1) or [tick - DAY])[-1]
-        parts = [f"🕛 DAILY UPDATE\n- Everyone lost {DECAY_POINTS} points at 12pm\n{SUB}Fight to keep your spot"]
+        parts = [f"🕛 DAILY UPDATE\n- Didn't fight since yesterday's 12pm? You lost {DECAY_POINTS} points\n{SUB}Fight to keep your spot"]
         for md, label in MODES.items():
             fought = {x for f in self.s["fights"] if f["status"] == "ok" and f["mode"] == md and prev < f["ts"] < tick
                       for x in (f["winner"], f["loser"])}
@@ -812,7 +861,7 @@ class Ladder:
                 continue
             before = self.replay(md, cutoff=prev)["stats"]
             after = self.replay(md, cutoff=tick - 1)["stats"]      # just before today's drop
-            moved = sorted(((round(after[a]["rating"]) - round(before[a]["rating"] if a in before else glicko.START_RATING), a)
+            moved = sorted(((round(after[a]["rating"]) - round(before[a]["rating"] if a in before else after[a]["start"]), a)
                             for a in fought if a in after), key=lambda m: (-m[0], self.name(m[1]).lower()))
             up = [m for m in moved if m[0] > 0][:top]
             down = sorted((m for m in moved if m[0] < 0), key=lambda m: m[0])[:top]
@@ -866,7 +915,8 @@ class Ladder:
                 '- Example: "vs bjkid 2-1 mma"  (your score first)',
                 "- Winners are responsible for posting their results if they want them on the leaderboard",
                 f"{SUB}No green tick, no points",
-                f"- Everyone loses {DECAY_POINTS} points every day at 12pm, so keep fighting to hold your spot",
+                f"- No fight that day? You lose {DECAY_POINTS} points at 12pm (never below {DECAY_FLOOR}), so keep fighting to hold your spot",
+                "- Win streaks pay: +1 extra for your 2nd win in a row, +2 for the 3rd, and so on",
                 "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
             ]
             if self.site:
@@ -1058,6 +1108,13 @@ class Ladder:
             (a, b), (wa, wb) = max(pairs.items(), key=lambda x: (sum(x[1]), self.name(x[0][0]).lower()))
             out.append({"key": "rivalry", "title": "Biggest rivalry", "kind": "pair", "players": [a, b],
                         "names": [self.name(a), self.name(b)], "value": wa + wb, "record": [wa, wb]})
+        for md, label in MODES.items():
+            t = self.replay(md, now=now)["top"]
+            if t["player"]:
+                days = (now - t["since"]) // DAY + 1   # the day they took it counts as day 1
+                out.append({"key": f"reign_{md}", "title": f"{label} #1", "kind": "player", "player": t["player"],
+                            "name": self.name(t["player"]), "crown": True,
+                            "value": days, "unit": "day at #1" if days == 1 else "days at #1"})
         riser = None
         for md in MODES:
             cur, old = self.replay(md, now=now), self.replay(md, cutoff=now - DAY)
