@@ -315,11 +315,6 @@
   }
  },
  "seen": [
-  "146#459450655811328",
-  "146#459450658537669",
-  "146#459450659172844",
-  "146#459450661213437",
-  "146#459450663670647",
   "146#459450664647355",
   "146#459450666094231",
   "146#459450666387451",
@@ -3314,7 +3309,12 @@
   "177#459588606601653",
   "177#459588610467841",
   "177#459588615332033",
-  "177#459588616110641"
+  "177#459588616110641",
+  "177#459588618684533",
+  "177#459588618832108",
+  "177#459588619621356",
+  "177#459588624063514",
+  "177#459588634162803"
  ],
  "fights": [
   {
@@ -6419,11 +6419,6 @@
  ],
  "log": [
   {
-   "ts": 1794833230091,
-   "text": "✅ Stand & Bang result\n- sweatytrixter def. blumzylol 1–0\n- sweatytrixter 1615 (+20)\n- blumzylol 1534 (−63) (3/5 fights)",
-   "sent": true
-  },
-  {
    "ts": 1794833736956,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. blumzylol 1–0\n- sweatytrixter 1631 (+16)\n- blumzylol 1492 (−42) (4/5 fights)",
    "sent": true
@@ -7417,6 +7412,11 @@
    "ts": 1795268036072,
    "text": "- grubby_flea257, who was that 3-2 against?\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1795268059532,
+   "text": "- grubby_flea257, I couldn't find \"lol ggs\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 148,
@@ -7431,7 +7431,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.7,
-  "last_run": 1795268036072,
+  "last_run": 1795268104055,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
