@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "144#459434074492253",
-  "144#459434076132289",
-  "144#459434076673837",
   "144#459434078601092",
   "144#459434080477447",
   "144#459434088120418",
@@ -3314,7 +3311,10 @@
   "175#459579091348218",
   "175#459579102146739",
   "175#459579106017171",
-  "175#459579122676221"
+  "175#459579122676221",
+  "175#459579602518008",
+  "175#459579603671997",
+  "175#459579605854645"
  ],
  "fights": [
   {
@@ -5738,6 +5738,22 @@
    "msg_uid": "175#459578907160813#0",
    "text": "Vs Blumzy 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 129,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "8133734209062276856",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795232826843,
+   "msg_uid": "175#459579603671997#0",
+   "text": "Vs Blumzy 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6010,11 +6026,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794819843627,
-   "text": "✅ MMA result\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1769 (+18)\n- maoripunisher_ 1431 (−28) (2/5 fights)",
-   "sent": true
-  },
   {
    "ts": 1794819888705,
    "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Heavyweight",
@@ -7009,9 +7020,14 @@
    "ts": 1795230108496,
    "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- 👑 BJkid2000 1825 (+27 · 🔥2 win streak, +2 bonus)\n- 🥈 blumzylol 1663 (−11)",
    "sent": true
+  },
+  {
+   "ts": 1795232832154,
+   "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- 👑 BJkid2000 1849 (+24 · 🔥3 win streak, +3 bonus)\n- 🥈 blumzylol 1653 (−10)",
+   "sent": true
   }
  ],
- "next_fight_id": 129,
+ "next_fight_id": 130,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7023,7 +7039,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.1,
-  "last_run": 1795232809782,
+  "last_run": 1795232871534,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
