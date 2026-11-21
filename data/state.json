@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "144#459433909684928",
-  "144#459433910586703",
-  "144#459433913320622",
-  "144#459433917927502",
-  "144#459433920556790",
-  "144#459433921507514",
   "144#459433922580552",
   "144#459433939564917",
   "144#459433940533050",
@@ -3314,7 +3308,13 @@
   "175#459578434771159",
   "175#459578436418288",
   "175#459578642107446",
-  "175#459578643069031"
+  "175#459578643069031",
+  "175#459578643929302",
+  "175#459578644096953",
+  "175#459578648368593",
+  "175#459578656145715",
+  "175#459578658520522",
+  "175#459578660289503"
  ],
  "fights": [
   {
@@ -5706,6 +5706,22 @@
    "msg_uid": "174#459558143754547",
    "text": "i beat vanz 2-1 snb",
    "status": "ok"
+  },
+  {
+   "id": 127,
+   "mode": "mma",
+   "winner": "5879038572944845531",
+   "loser": "8133734209062276856",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795229078503,
+   "msg_uid": "175#459578644096953#0",
+   "text": "Vs Blumzy 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -5978,16 +5994,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794818961744,
-   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Accelerated\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Middleweight",
-   "sent": true
-  },
-  {
-   "ts": 1794819593497,
-   "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Women's Flyweight",
-   "sent": true
-  },
   {
    "ts": 1794819605004,
    "text": "✅ MMA result\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1751 (+26) (4/5 fights)\n- maoripunisher_ 1459 (−41) (1/5 fights)",
@@ -6977,9 +6983,19 @@
    "ts": 1795229074574,
    "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Middleweight",
    "sent": true
+  },
+  {
+   "ts": 1795229091954,
+   "text": "✅ MMA result\n- BJkid2000 def. blumzylol 1–0\n- 👑 BJkid2000 1798 (+35 · +1 streak bonus)\n- 🥈 blumzylol 1674 (−14)",
+   "sent": true
+  },
+  {
+   "ts": 1795229131500,
+   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Accelerated\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Flyweight",
+   "sent": true
   }
  ],
- "next_fight_id": 127,
+ "next_fight_id": 128,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -6991,7 +7007,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.2,
-  "last_run": 1795229074574,
+  "last_run": 1795229143055,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
