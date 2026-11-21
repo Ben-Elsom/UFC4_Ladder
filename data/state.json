@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "146#459448510353792",
   "146#459448540269727",
   "146#459448561135827",
   "146#459448571650605",
@@ -3314,7 +3313,8 @@
   "177#459586935847654",
   "177#459586939477855",
   "177#459587093152439",
-  "177#459587268882901"
+  "177#459587268882901",
+  "177#459587342086207"
  ],
  "fights": [
   {
@@ -6054,6 +6054,22 @@
    "msg_uid": "177#459586920638543",
    "text": "I beat haka 3-1",
    "status": "ok"
+  },
+  {
+   "id": 145,
+   "mode": "sb",
+   "winner": "2931324305327760287",
+   "loser": "6459805198974452339",
+   "score": [
+    3,
+    0
+   ],
+   "method": null,
+   "reported_by": "2931324305327760287",
+   "ts": 1795263055024,
+   "msg_uid": "177#459587342086207#0",
+   "text": "Ggz grubby , 3-0 to me snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6326,11 +6342,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794831826276,
-   "text": "✅ Stand & Bang result\n- Granite_chin23 def. maoripunisher_ 2–0\n- Granite_chin23 1647 (+35)\n- maoripunisher_ 1584 (−31)",
-   "sent": true
-  },
   {
    "ts": 1794831965971,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. TonganLion35 1–0\n- sweatytrixter 1595 (+18)\n- TonganLion35 1468 (−26)",
@@ -7325,9 +7336,14 @@
    "ts": 1795261435892,
    "text": "✅ Stand & Bang result\n- grubby_flea257 def. Haka_ula 3–1 (4 fights added)\n- grubby_flea257 1321 (+40 · +1 streak bonus)\n- Haka_ula 1226 (−88)",
    "sent": true
+  },
+  {
+   "ts": 1795263055434,
+   "text": "✅ Stand & Bang result\n- dirtychauchage_ def. grubby_flea257 3–0 (3 fights added)\n- dirtychauchage_ 1578 (+126 · 🔥3 win streak, +6 bonus) (3/5 fights)\n- grubby_flea257 1292 (−29)",
+   "sent": true
   }
  ],
- "next_fight_id": 145,
+ "next_fight_id": 146,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7339,7 +7355,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795262776666,
+  "last_run": 1795263055434,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
