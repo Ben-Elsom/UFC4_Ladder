@@ -5778,7 +5778,7 @@
    "loser": "7835799679513912497",
    "score": [
     1,
-    1
+    0
    ],
    "method": null,
    "reported_by": "8133734209062276856",
@@ -5801,7 +5801,18 @@
      }
     }
    ],
-   "updated_ts": 1795242021100
+   "history": [
+    {
+     "ts": 1795243385528,
+     "action": "admin fix: 1-1 was a separate 2 games, not an update",
+     "was": {
+      "score": [
+       1,
+       1
+      ]
+     }
+    }
+   ]
   },
   {
    "id": 132,
@@ -5849,7 +5860,7 @@
    "ts": 1795242273002,
    "msg_uid": "176#459582021888569",
    "text": "i beat mrwhoop 1-0 snb",
-   "status": "ok",
+   "status": "void",
    "updates": [
     {
      "ts": 1795242456604,
@@ -5865,7 +5876,13 @@
      }
     }
    ],
-   "updated_ts": 1795242456604
+   "updated_ts": 1795242456604,
+   "history": [
+    {
+     "ts": 1795243385528,
+     "action": "admin fix: removed (re-post / wrong update after the 1-1 bug)"
+    }
+   ]
   },
   {
    "id": 135,
@@ -5897,7 +5914,34 @@
    "ts": 1795242514361,
    "msg_uid": "176#459582083676634",
    "text": "i beat mrwhoop 1-0",
-   "status": "ok"
+   "status": "void",
+   "history": [
+    {
+     "ts": 1795243385528,
+     "action": "admin fix: removed (re-post / wrong update after the 1-1 bug)"
+    }
+   ]
+  },
+  {
+   "id": 137,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    1
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795242021100,
+   "msg_uid": "admin#fix#137",
+   "text": "i beat mrwhoop 1-1 snb",
+   "status": "ok",
+   "games": [
+    "7835799679513912497",
+    "8133734209062276856"
+   ],
+   "note": "added by admin: the 1-1 posted 17:20, a loss then a win"
   }
  ],
  "pending": [],
@@ -6170,11 +6214,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794826225352,
-   "text": "✅ Stand & Bang result\n- sweatytrixter def. dad_scopez 1–0\n- sweatytrixter 1584 (+57)\n- dad_scopez 1584 (−16)",
-   "sent": true
-  },
   {
    "ts": 1794826967520,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. dad_scopez 1–0\n- sweatytrixter 1625 (+41)\n- dad_scopez 1570 (−14)",
@@ -7169,9 +7208,14 @@
    "ts": 1795242530787,
    "text": "✅ Stand & Bang result\n- blumzylol def. mrwhoopdatahh 1–0\n- blumzylol 1564 (+23 · +1 streak bonus)\n- mrwhoopdatahh 1533 (−13)",
    "sent": true
+  },
+  {
+   "ts": 1795243416761,
+   "text": "🎙️ WE HAVE A CORRECTION\n- Stand & Bang: blumzylol's 1-1 vs mrwhoopdatahh was wrongly counted as a change to the 2nd win. Fixed: 3–1 to blumzylol (W, W, then the 1–1)\n- blumzylol 1565 (#4 · 1 win streak)\n- mrwhoopdatahh 1537 (#6)\n- From now on every score you post adds new fights. Already got a ✅? Don't post it again. Wrong? !dispute\n- Splits count your losses first, then your wins: post 1-1 and you finish on a 1-win streak",
+   "sent": true
   }
  ],
- "next_fight_id": 137,
+ "next_fight_id": 138,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7183,12 +7227,13 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.0,
-  "last_run": 1795242676737,
+  "last_run": 1795243416761,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
   "last_error": 1795229768110,
   "last_daily": 1795222800000,
-  "rules_from": 1795179718858
+  "rules_from": 1795179718858,
+  "splits_from": 1795243385528
  }
 }
