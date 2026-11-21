@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "144#459434094181382",
   "144#459434095282738",
   "144#459434100017187",
   "144#459434101114746",
@@ -3314,7 +3313,8 @@
   "175#459580691119058",
   "175#459581392249529",
   "175#459581397548423",
-  "175#459581400536710"
+  "175#459581400536710",
+  "175#459581487784728"
  ],
  "fights": [
   {
@@ -5770,6 +5770,22 @@
    "msg_uid": "175#459581397548423",
    "text": "i beat mrwhoop 1-0 snb",
    "status": "ok"
+  },
+  {
+   "id": 131,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795240186659,
+   "msg_uid": "175#459581487784728",
+   "text": "i beat mrwhoop 1-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6042,11 +6058,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794820480955,
-   "text": "✅ MMA result\n- maoripunisher_ def. BJkid2000 1–0\n- maoripunisher_ 1553 (+122) (3/5 fights)\n- BJkid2000 1691 (−78)",
-   "sent": true
-  },
   {
    "ts": 1794820526237,
    "text": "🔧 Correction: MMA result (was maoripunisher_ def. BJkid2000 1–0)\n- BJkid2000 def. maoripunisher_ 1–0\n- BJkid2000 1783 (+14)\n- maoripunisher_ 1411 (−20) (3/5 fights)",
@@ -7041,9 +7052,14 @@
    "ts": 1795239839583,
    "text": "✅ Stand & Bang result\n- blumzylol def. mrwhoopdatahh 1–0\n- blumzylol 1539 (+35 · +1 streak bonus)\n- 🥉 mrwhoopdatahh 1547 (−16)",
    "sent": true
+  },
+  {
+   "ts": 1795240192795,
+   "text": "✅ Stand & Bang result\n- blumzylol def. mrwhoopdatahh 1–0\n- 🥉 blumzylol 1569 (+30 · 🔥2 win streak, +2 bonus)\n- mrwhoopdatahh 1533 (−14)\n- 🥉 blumzylol moves up to #3 in Stand & Bang",
+   "sent": true
   }
  ],
- "next_fight_id": 131,
+ "next_fight_id": 132,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7055,7 +7071,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.1,
-  "last_run": 1795239879062,
+  "last_run": 1795240192795,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
