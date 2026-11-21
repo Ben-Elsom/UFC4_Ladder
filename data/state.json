@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "146#459450666387451",
-  "146#459450667089407",
-  "146#459450669327855",
   "146#459450670876392",
   "146#459450672295175",
   "146#459450673392438",
@@ -3314,7 +3311,10 @@
   "177#459588624063514",
   "177#459588634162803",
   "177#459588679917592",
-  "177#459589280440545"
+  "177#459589280440545",
+  "177#459589288850030",
+  "177#459589290918591",
+  "177#459589291698903"
  ],
  "fights": [
   {
@@ -6438,11 +6438,6 @@
  ],
  "log": [
   {
-   "ts": 1794833736956,
-   "text": "✅ Stand & Bang result\n- sweatytrixter def. blumzylol 1–0\n- sweatytrixter 1631 (+16)\n- blumzylol 1492 (−42) (4/5 fights)",
-   "sent": true
-  },
-  {
    "ts": 1794835283388,
    "text": "- Rat_on_Roidz, was that MMA or Stand & Bang?\n- Rat_on_Roidz def. Granite_chin23 1-0\n- Not a result? Reply nvm",
    "sent": true
@@ -7436,6 +7431,11 @@
    "ts": 1795268059532,
    "text": "- grubby_flea257, I couldn't find \"lol ggs\" in this chat\n  - Reply with part of their PSN name\n- Not a result? Reply nvm",
    "sent": true
+  },
+  {
+   "ts": 1795270664459,
+   "text": "📋 COMMANDS\n- !board – top 10: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank mma / snb / combined – just one\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !record jono vs bjkid – record between any two players\n- !recent – last 5 results\n- !fights – who's had the most fights\n- !pick – random mode, time, rounds, HUD and weight class\n- !pick mens – men's divisions only\n- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message BJkid2000\n- !help general / !help commands – just one part of this\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://is.gd/ufc4ladder",
+   "sent": true
   }
  ],
  "next_fight_id": 148,
@@ -7450,7 +7450,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.7,
-  "last_run": 1795270630792,
+  "last_run": 1795270695492,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
