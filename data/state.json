@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "146#459448024479385",
-  "146#459448035287924",
-  "146#459448036333683",
-  "146#459448342312983",
-  "146#459448345271129",
-  "146#459448381768346",
   "146#459448382893245",
   "146#459448404240379",
   "146#459448411091638",
@@ -3314,7 +3308,13 @@
   "176#459586677883909",
   "176#459586679064577",
   "176#459586679865009",
-  "176#459586864719785"
+  "176#459586864719785",
+  "176#459586869411542",
+  "176#459586872236660",
+  "176#459586872291860",
+  "176#459586877052679",
+  "176#459586878629586",
+  "176#459586878758599"
  ],
  "fights": [
   {
@@ -6022,6 +6022,22 @@
    "msg_uid": "176#459586677883909",
    "text": "i beat bunky 1-0 mma",
    "status": "ok"
+  },
+  {
+   "id": 143,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "1622088612165582170",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795261208638,
+   "msg_uid": "176#459586869411542",
+   "text": "i beat bunky 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6294,11 +6310,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794831149898,
-   "text": "✅ Stand & Bang result\n- sweatytrixter def. TonganLion35 1–0\n- sweatytrixter 1581 (+29)\n- TonganLion35 1530 (−42)",
-   "sent": true
-  },
   {
    "ts": 1794831655903,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. TonganLion35 1–0\n- sweatytrixter 1603 (+22)\n- TonganLion35 1499 (−31)",
@@ -7293,9 +7304,14 @@
    "ts": 1795260461903,
    "text": "✅ MMA result\n- blumzylol def. bunky_skudz 1–0\n- 🥈 blumzylol 1661 (+8 · +1 streak bonus)\n- bunky_skudz 1384 (−9)",
    "sent": true
+  },
+  {
+   "ts": 1795261216299,
+   "text": "✅ MMA result\n- blumzylol def. bunky_skudz 1–0\n- 🥈 blumzylol 1669 (+8 · 🔥2 win streak, +2 bonus)\n- bunky_skudz 1376 (−8)",
+   "sent": true
   }
  ],
- "next_fight_id": 143,
+ "next_fight_id": 144,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7307,7 +7323,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795261193810,
+  "last_run": 1795261256057,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
