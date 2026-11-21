@@ -315,11 +315,6 @@
   }
  },
  "seen": [
-  "145#459448001640317",
-  "145#459448002067456",
-  "145#459448010939779",
-  "146#459448011182543",
-  "146#459448011805687",
   "146#459448013111133",
   "146#459448024479385",
   "146#459448035287924",
@@ -3314,7 +3309,12 @@
   "176#459586557245474",
   "176#459586581716822",
   "176#459586673466355",
-  "176#459586674381761"
+  "176#459586674381761",
+  "176#459586674872312",
+  "176#459586675912748",
+  "176#459586677883909",
+  "176#459586679064577",
+  "176#459586679865009"
  ],
  "fights": [
   {
@@ -6006,6 +6006,22 @@
    "msg_uid": "176#459586416691807#0",
    "text": "GGs 0-1 mrwhoop mma",
    "status": "ok"
+  },
+  {
+   "id": 142,
+   "mode": "mma",
+   "winner": "8133734209062276856",
+   "loser": "1622088612165582170",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795260460484,
+   "msg_uid": "176#459586677883909",
+   "text": "i beat bunky 1-0 mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6278,16 +6294,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794830627704,
-   "text": "- TonganLion35, was that MMA or Stand & Bang?\n- TonganLion35 def. Hustler_money 3-2\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
-   "ts": 1794830677907,
-   "text": "✅ Stand & Bang result\n- TonganLion35 def. Hustler_money 3–2\n- TonganLion35 1572 (−41)\n- Hustler_money 1482 (+22)",
-   "sent": true
-  },
   {
    "ts": 1794831149898,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. TonganLion35 1–0\n- sweatytrixter 1581 (+29)\n- TonganLion35 1530 (−42)",
@@ -7277,9 +7283,19 @@
    "ts": 1795259446019,
    "text": "✅ MMA result\n- mrwhoopdatahh def. echo_goescrazy 1–0\n- 🥉 mrwhoopdatahh 1568 (+11 · 🔥2 win streak, +2 bonus)\n- echo_goescrazy 1284 (−6)",
    "sent": true
+  },
+  {
+   "ts": 1795260461903,
+   "text": "🎲 Random fight settings\n- Mode: MMA\n- Time: Real time\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Light Heavyweight",
+   "sent": true
+  },
+  {
+   "ts": 1795260461903,
+   "text": "✅ MMA result\n- blumzylol def. bunky_skudz 1–0\n- 🥈 blumzylol 1661 (+8 · +1 streak bonus)\n- bunky_skudz 1384 (−9)",
+   "sent": true
   }
  ],
- "next_fight_id": 142,
+ "next_fight_id": 143,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7291,7 +7307,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795260447909,
+  "last_run": 1795260512725,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
