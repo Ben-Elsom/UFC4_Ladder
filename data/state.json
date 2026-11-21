@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "145#459434143407264",
-  "145#459434154193548",
-  "145#459434157000155",
-  "145#459434161080077",
-  "145#459434221012197",
-  "145#459434222060522",
   "145#459434223476792",
   "145#459434254055261",
   "145#459434257261594",
@@ -3314,7 +3308,13 @@
   "175#459581710491890",
   "175#459581713581073",
   "175#459581722157680",
-  "175#459581745851997"
+  "175#459581745851997",
+  "175#459581746661136",
+  "175#459581751384162",
+  "176#459581752332365",
+  "176#459581753248121",
+  "176#459581754008373",
+  "176#459581754789750"
  ],
  "fights": [
   {
@@ -6059,11 +6059,6 @@
  ],
  "log": [
   {
-   "ts": 1794820761940,
-   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Women's Flyweight",
-   "sent": true
-  },
-  {
    "ts": 1794821501457,
    "text": "- BJkid2000, was that MMA or Stand & Bang?\n- BJkid2000 lost to dad_scopez 0-1\n- Not a result? Reply nvm",
    "sent": true
@@ -7057,6 +7052,11 @@
    "ts": 1795241191633,
    "text": "Type two different players, e.g. !record jono vs bjkid",
    "sent": true
+  },
+  {
+   "ts": 1795241220348,
+   "text": "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT\n- Example: \"vs bjkid 2-1 mma\"  (your score first)\n- Winners are responsible for posting their results if they want them on the leaderboard\n  - No green tick, no points\n- No fight that day? You lose 10 points at 12pm (never below 1200), so keep fighting to hold your spot\n- Win streak bonus: +1 extra for a win, +2 for your 2nd in a row, +3 for the 3rd, and so on\n- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you\n📖 How to use: https://ben-elsom.github.io/UFC4_Ladder/#help\n\n📋 COMMANDS\n- !board – top 10: MMA, S&B and combined\n- !board mma – just MMA\n- !board snb – just Stand & Bang\n- !board combined – average of both modes\n- !rank – your rank and record, plus combined\n- !rank bjkid – someone else's\n- !record bjkid – your record vs BJkid2000\n- !record jono vs bjkid – record between any two players\n- !recent – last 5 results\n- !fights – who's had the most fights\n- !pick – random mode, time, rounds, HUD and weight class\n- !pick mens – men's divisions only\n- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message BJkid2000\n\n❓ Problems or questions? Message BJkid2000\n📊 Full stats: https://ben-elsom.github.io/UFC4_Ladder/",
+   "sent": true
   }
  ],
  "next_fight_id": 132,
@@ -7071,7 +7071,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.0,
-  "last_run": 1795241191633,
+  "last_run": 1795241254465,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
