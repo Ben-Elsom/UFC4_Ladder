@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "145#459446430514590",
-  "145#459446490908699",
   "145#459446565520855",
   "145#459446943656934",
   "145#459447538100193",
@@ -3314,7 +3312,9 @@
   "176#459586211745912",
   "176#459586214600191",
   "176#459586324490103",
-  "176#459586326120638"
+  "176#459586326120638",
+  "176#459586416691807",
+  "176#459586417721603"
  ],
  "fights": [
   {
@@ -5990,6 +5990,22 @@
    "msg_uid": "176#459586324490103#0",
    "text": "Ggs 0-1 Mrwhoop mma",
    "status": "ok"
+  },
+  {
+   "id": 141,
+   "mode": "mma",
+   "winner": "7835799679513912497",
+   "loser": "2622241265805770209",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "2622241265805770209",
+   "ts": 1795259440202,
+   "msg_uid": "176#459586416691807#0",
+   "text": "GGs 0-1 mrwhoop mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6262,11 +6278,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794829696012,
-   "text": "✅ Stand & Bang result\n- Granite_chin23 def. sweatytrixter 1–0\n- Granite_chin23 1594 (+20)\n- sweatytrixter 1552 (−31)",
-   "sent": true
-  },
   {
    "ts": 1794830627704,
    "text": "- TonganLion35, was that MMA or Stand & Bang?\n- TonganLion35 def. Hustler_money 3-2\n- Not a result? Reply nvm",
@@ -7261,9 +7272,14 @@
    "ts": 1795259083179,
    "text": "✅ MMA result\n- mrwhoopdatahh def. echo_goescrazy 1–0\n- 🥉 mrwhoopdatahh 1557 (+10 · +1 streak bonus)\n- echo_goescrazy 1290 (−8)",
    "sent": true
+  },
+  {
+   "ts": 1795259446019,
+   "text": "✅ MMA result\n- mrwhoopdatahh def. echo_goescrazy 1–0\n- 🥉 mrwhoopdatahh 1568 (+11 · 🔥2 win streak, +2 bonus)\n- echo_goescrazy 1284 (−6)",
+   "sent": true
   }
  ],
- "next_fight_id": 141,
+ "next_fight_id": 142,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7275,7 +7291,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795259144853,
+  "last_run": 1795259446019,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
