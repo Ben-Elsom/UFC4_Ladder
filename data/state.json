@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "146#459448865800926",
   "146#459448894957721",
   "146#459448901103655",
   "146#459449349598048",
@@ -3314,7 +3313,8 @@
   "177#459587965422177",
   "177#459588049247723",
   "177#459588133536381",
-  "177#459588136122623"
+  "177#459588136122623",
+  "177#459588190339202"
  ],
  "fights": [
   {
@@ -6088,7 +6088,19 @@
    "status": "ok"
   }
  ],
- "pending": [],
+ "pending": [
+  {
+   "sender": "26499158721105144",
+   "uid": "177#459588190339202",
+   "ts": 1795266368512,
+   "text": "Yo yo its 1-1 RN",
+   "mine": 1,
+   "theirs": 1,
+   "mode": null,
+   "kind": "who",
+   "asked_at": 1795266368512
+  }
+ ],
  "review": [
   {
    "id": 1,
@@ -6358,11 +6370,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794832676309,
-   "text": "- blumzylol, who was that 1-1 against?\n- Not a result? Reply nvm",
-   "sent": true
-  },
   {
    "ts": 1794832707393,
    "text": "👍 No worries, ignored that one.",
@@ -7357,6 +7364,11 @@
    "ts": 1795265060903,
    "text": "✅ Stand & Bang result\n- grubby_flea257 def. Haka_ula 3–1 (4 fights added)\n- grubby_flea257 1311 (+19 · +1 streak bonus)\n- Haka_ula 1192 (−34)",
    "sent": true
+  },
+  {
+   "ts": 1795266372512,
+   "text": "- TonganLion35, who was that 1-1 against?\n- Not a result? Reply nvm",
+   "sent": true
   }
  ],
  "next_fight_id": 147,
@@ -7371,7 +7383,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795266219521,
+  "last_run": 1795266372512,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
