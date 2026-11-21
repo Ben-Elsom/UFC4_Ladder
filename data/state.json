@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "145#459446412501618",
   "145#459446420793508",
   "145#459446430514590",
   "145#459446490908699",
@@ -3314,7 +3313,8 @@
   "176#459583114465050",
   "176#459585970817121",
   "176#459586211745912",
-  "176#459586214600191"
+  "176#459586214600191",
+  "176#459586324490103"
  ],
  "fights": [
   {
@@ -5974,6 +5974,22 @@
    "msg_uid": "176#459586211745912#0",
    "text": "Ggs 1-0 mrwhoop mma",
    "status": "ok"
+  },
+  {
+   "id": 140,
+   "mode": "mma",
+   "winner": "7835799679513912497",
+   "loser": "2622241265805770209",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "2622241265805770209",
+   "ts": 1795259080039,
+   "msg_uid": "176#459586324490103#0",
+   "text": "Ggs 0-1 Mrwhoop mma",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6246,11 +6262,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794829181675,
-   "text": "✅ Stand & Bang result\n- dad_scopez def. mrwhoopdatahh 2–1\n- dad_scopez 1581 (+11)\n- mrwhoopdatahh 1526 (−23)",
-   "sent": true
-  },
   {
    "ts": 1794829696012,
    "text": "✅ Stand & Bang result\n- Granite_chin23 def. sweatytrixter 1–0\n- Granite_chin23 1594 (+20)\n- sweatytrixter 1552 (−31)",
@@ -7245,9 +7256,14 @@
    "ts": 1795258647574,
    "text": "✅ MMA result\n- echo_goescrazy def. mrwhoopdatahh 1–0\n- echo_goescrazy 1298 (+33 · +1 streak bonus)\n- 🥉 mrwhoopdatahh 1547 (−43)",
    "sent": true
+  },
+  {
+   "ts": 1795259083179,
+   "text": "✅ MMA result\n- mrwhoopdatahh def. echo_goescrazy 1–0\n- 🥉 mrwhoopdatahh 1557 (+10 · +1 streak bonus)\n- echo_goescrazy 1290 (−8)",
+   "sent": true
   }
  ],
- "next_fight_id": 140,
+ "next_fight_id": 141,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7259,7 +7275,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.8,
-  "last_run": 1795258709479,
+  "last_run": 1795259083179,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
