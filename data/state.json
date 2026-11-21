@@ -6998,7 +6998,7 @@
  "next_fight_id": 128,
  "next_review_id": 14,
  "meta": {
-  "status": "ok",
+  "status": "error",
   "dry_run": false,
   "group": "UFC 4: Elites",
   "started": 1794640102107,
@@ -7007,12 +7007,13 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.2,
-  "last_run": 1795229345759,
+  "last_run": 1795229759735,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
-  "last_error": 1795100683939,
+  "last_error": 1795229768110,
   "last_daily": 1795222800000,
-  "rules_from": 1795179718858
+  "rules_from": 1795179718858,
+  "error": "PSNAWPForbiddenError: <HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;gamingloungegroups&#45;np&#46;tree2&#46;playstation&#46;net&#47;api&#47;gamingLoungeGroups&#47;v1&#47;members&#47;me&#47;groups&#47;17c4b9185"
  }
 }
