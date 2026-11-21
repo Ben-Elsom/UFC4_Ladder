@@ -315,13 +315,6 @@
   }
  },
  "seen": [
-  "145#459434573022231",
-  "145#459434575976194",
-  "145#459434583207956",
-  "145#459434590114955",
-  "145#459434594106536",
-  "145#459434600832726",
-  "145#459434603486384",
   "145#459434605847010",
   "145#459434608572469",
   "145#459434614404201",
@@ -3314,7 +3307,14 @@
   "176#459582058219769",
   "176#459582068890688",
   "176#459582069846436",
-  "176#459582073230276"
+  "176#459582073230276",
+  "176#459582075076112",
+  "176#459582076460227",
+  "176#459582083676634",
+  "176#459582085777265",
+  "176#459582087568409",
+  "176#459582088702791",
+  "176#459582090445693"
  ],
  "fights": [
   {
@@ -5882,6 +5882,22 @@
    "msg_uid": "176#459582057408933#0",
    "text": "Vs haka 1-0 snb",
    "status": "ok"
+  },
+  {
+   "id": 136,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "7835799679513912497",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795242514361,
+   "msg_uid": "176#459582083676634",
+   "text": "i beat mrwhoop 1-0",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6154,16 +6170,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794825451807,
-   "text": "- dad_scopez, was that MMA or Stand & Bang?\n- dad_scopez def. sweatytrixter 2-0\n- Not a result? Reply nvm",
-   "sent": true
-  },
-  {
-   "ts": 1794825451807,
-   "text": "✅ Stand & Bang result\n- dad_scopez def. sweatytrixter 2–0\n- dad_scopez 1600 (+33)\n- sweatytrixter 1527 (−135) (4/5 fights)",
-   "sent": true
-  },
   {
    "ts": 1794826225352,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. dad_scopez 1–0\n- sweatytrixter 1584 (+57)\n- dad_scopez 1584 (−16)",
@@ -7153,9 +7159,19 @@
    "ts": 1795242454088,
    "text": "🔄 Stand & Bang result updated (was 1–0)\n- blumzylol and mrwhoopdatahh split 1–1\n- blumzylol 1541 (+1)\n- mrwhoopdatahh 1546 (−1)",
    "sent": true
+  },
+  {
+   "ts": 1795242516187,
+   "text": "- blumzylol, was that MMA or Stand & Bang?\n- blumzylol def. mrwhoopdatahh 1-0\n- Not a result? Reply nvm",
+   "sent": true
+  },
+  {
+   "ts": 1795242530787,
+   "text": "✅ Stand & Bang result\n- blumzylol def. mrwhoopdatahh 1–0\n- blumzylol 1564 (+23 · +1 streak bonus)\n- mrwhoopdatahh 1533 (−13)",
+   "sent": true
   }
  ],
- "next_fight_id": 136,
+ "next_fight_id": 137,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7167,7 +7183,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.0,
-  "last_run": 1795242476905,
+  "last_run": 1795242542248,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
