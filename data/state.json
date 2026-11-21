@@ -6088,19 +6088,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "26499158721105144",
-   "uid": "177#459588190339202",
-   "ts": 1795266368512,
-   "text": "Yo yo its 1-1 RN",
-   "mine": 1,
-   "theirs": 1,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1795266368512
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -6367,6 +6355,27 @@
     "asked_at": 1794903549023
    },
    "resolution": "dismissed on admin page"
+  },
+  {
+   "id": 14,
+   "kind": "unanswered",
+   "reason": "No opponent",
+   "text": "Yo yo its 1-1 RN",
+   "sender": "26499158721105144",
+   "ts": 1795266368512,
+   "fight_id": null,
+   "resolved": false,
+   "question": {
+    "sender": "26499158721105144",
+    "uid": "177#459588190339202",
+    "ts": 1795266368512,
+    "text": "Yo yo its 1-1 RN",
+    "mine": 1,
+    "theirs": 1,
+    "mode": null,
+    "kind": "who",
+    "asked_at": 1795266368512
+   }
   }
  ],
  "log": [
@@ -7372,7 +7381,7 @@
   }
  ],
  "next_fight_id": 147,
- "next_review_id": 14,
+ "next_review_id": 15,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -7383,7 +7392,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.7,
-  "last_run": 1795266520583,
+  "last_run": 1795266673191,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
