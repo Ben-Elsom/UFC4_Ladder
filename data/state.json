@@ -6104,30 +6104,7 @@
    "status": "ok"
   }
  ],
- "pending": [
-  {
-   "sender": "26499158721105144",
-   "uid": "177#459588615332033",
-   "ts": 1795268028640,
-   "text": "Ohh i mean 3-2",
-   "mine": 3,
-   "theirs": 2,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1795268028640
-  },
-  {
-   "sender": "6459805198974452339",
-   "uid": "177#459588616110641",
-   "ts": 1795268031682,
-   "text": "Bro it was 3-2",
-   "mine": 3,
-   "theirs": 2,
-   "mode": null,
-   "kind": "who",
-   "asked_at": 1795268031682
-  }
- ],
+ "pending": [],
  "review": [
   {
    "id": 1,
@@ -6414,6 +6391,48 @@
     "mode": null,
     "kind": "who",
     "asked_at": 1795266368512
+   }
+  },
+  {
+   "id": 15,
+   "kind": "unanswered",
+   "reason": "No opponent",
+   "text": "Ohh i mean 3-2",
+   "sender": "26499158721105144",
+   "ts": 1795268028640,
+   "fight_id": null,
+   "resolved": false,
+   "question": {
+    "sender": "26499158721105144",
+    "uid": "177#459588615332033",
+    "ts": 1795268028640,
+    "text": "Ohh i mean 3-2",
+    "mine": 3,
+    "theirs": 2,
+    "mode": null,
+    "kind": "who",
+    "asked_at": 1795268028640
+   }
+  },
+  {
+   "id": 16,
+   "kind": "unanswered",
+   "reason": "No opponent",
+   "text": "Bro it was 3-2",
+   "sender": "6459805198974452339",
+   "ts": 1795268031682,
+   "fight_id": null,
+   "resolved": false,
+   "question": {
+    "sender": "6459805198974452339",
+    "uid": "177#459588616110641",
+    "ts": 1795268031682,
+    "text": "Bro it was 3-2",
+    "mine": 3,
+    "theirs": 2,
+    "mode": null,
+    "kind": "who",
+    "asked_at": 1795268031682
    }
   }
  ],
@@ -7420,7 +7439,7 @@
   }
  ],
  "next_fight_id": 148,
- "next_review_id": 15,
+ "next_review_id": 17,
  "meta": {
   "status": "ok",
   "dry_run": false,
@@ -7431,7 +7450,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 52.7,
-  "last_run": 1795268284948,
+  "last_run": 1795268351943,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
