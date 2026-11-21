@@ -315,12 +315,6 @@
   }
  },
  "seen": [
-  "144#459433879433529",
-  "144#459433882441363",
-  "144#459433884881293",
-  "144#459433889198129",
-  "144#459433889464158",
-  "144#459433892465258",
   "144#459433901393731",
   "144#459433901801122",
   "144#459433902051807",
@@ -3314,7 +3308,13 @@
   "175#459578367738789",
   "175#459578378129477",
   "175#459578382619478",
-  "175#459578394896719"
+  "175#459578394896719",
+  "175#459578406328966",
+  "175#459578409589340",
+  "175#459578412770109",
+  "175#459578413539157",
+  "175#459578415483091",
+  "175#459578420265482"
  ],
  "fights": [
   {
@@ -5979,11 +5979,6 @@
  ],
  "log": [
   {
-   "ts": 1794818527842,
-   "text": "🔄 Stand & Bang result updated (was 1–0)\n- maoripunisher_ def. Hustler_money 2–1\n- maoripunisher_ 1607 (+7)\n- Hustler_money 1488 (−12) (3/5 fights)",
-   "sent": true
-  },
-  {
    "ts": 1794818825105,
    "text": "maoripunisher_ vs mrwhoopdatahh\n- MMA: 0-0\n- Stand & Bang: 0-0",
    "sent": true
@@ -6977,6 +6972,11 @@
    "ts": 1795222802875,
    "text": "🕛 DAILY UPDATE\n- Didn't fight since yesterday's 12pm? You lost 10 points\n  - Fight to keep your spot\n\nMMA\n- Biggest gains\n  - blumzylol +9\n- Biggest drops\n  - SlattSlatt92 −48\n\nSTAND & BANG\n- Biggest gains\n  - vanz_nz +9\n- Biggest drops\n  - blumzylol −14\n\nMOST FIGHTS TODAY\n- 1. blumzylol 4\n- 2. vanz_nz 3\n- 3. SlattSlatt92 1\n\n📊 https://ben-elsom.github.io/UFC4_Ladder/",
    "sent": true
+  },
+  {
+   "ts": 1795228179221,
+   "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 5\n- HUD: Hidden\n- Weight class: Men's Heavyweight",
+   "sent": true
   }
  ],
  "next_fight_id": 127,
@@ -6991,7 +6991,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.2,
-  "last_run": 1795228148432,
+  "last_run": 1795228210399,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
