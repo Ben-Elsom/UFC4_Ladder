@@ -315,7 +315,6 @@
   }
  },
  "seen": [
-  "145#459434552738869",
   "145#459434558149681",
   "145#459434561317164",
   "145#459434563359852",
@@ -3314,7 +3313,8 @@
   "176#459582021888569",
   "176#459582024616886",
   "176#459582029266131",
-  "176#459582031176030"
+  "176#459582031176030",
+  "176#459582057408933"
  ],
  "fights": [
   {
@@ -5850,6 +5850,22 @@
    "msg_uid": "176#459582021888569",
    "text": "i beat mrwhoop 1-0 snb",
    "status": "ok"
+  },
+  {
+   "id": 135,
+   "mode": "sb",
+   "winner": "5879038572944845531",
+   "loser": "4416763637802007853",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "5879038572944845531",
+   "ts": 1795242411753,
+   "msg_uid": "176#459582057408933#0",
+   "text": "Vs haka 1-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6122,11 +6138,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794822904551,
-   "text": "✅ Stand & Bang result\n- maoripunisher_ def. dad_scopez 2–1\n- maoripunisher_ 1601 (+22)\n- dad_scopez 1579 (−20)",
-   "sent": true
-  },
   {
    "ts": 1794824603471,
    "text": "✅ Stand & Bang result\n- maoripunisher_ def. dad_scopez 2–1\n- maoripunisher_ 1615 (+14)\n- dad_scopez 1567 (−12)",
@@ -7121,9 +7132,14 @@
    "ts": 1795242280375,
    "text": "✅ Stand & Bang result\n- blumzylol def. mrwhoopdatahh 1–0\n- 🥉 blumzylol 1565 (+25 · +1 streak bonus)\n- mrwhoopdatahh 1533 (−14)\n- 🥉 blumzylol moves up to #3 in Stand & Bang",
    "sent": true
+  },
+  {
+   "ts": 1795242411718,
+   "text": "✅ Stand & Bang result\n- BJkid2000 def. Haka_ula 1–0\n- BJkid2000 1565 (+14 · 🔥3 win streak, +3 bonus)\n- Haka_ula 1314 (−30) (3/5 fights)",
+   "sent": true
   }
  ],
- "next_fight_id": 135,
+ "next_fight_id": 136,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7135,7 +7151,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.0,
-  "last_run": 1795242325172,
+  "last_run": 1795242411718,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
