@@ -315,9 +315,6 @@
   }
  },
  "seen": [
-  "145#459443171062106",
-  "145#459444211309270",
-  "145#459446179051229",
   "145#459446180421110",
   "145#459446197226523",
   "145#459446302857868",
@@ -3314,7 +3311,10 @@
   "176#459582885881003",
   "176#459582887370181",
   "176#459582897337223",
-  "176#459582996752771"
+  "176#459582996752771",
+  "176#459583000562447",
+  "176#459583001954260",
+  "176#459583002038255"
  ],
  "fights": [
   {
@@ -5942,6 +5942,22 @@
     "8133734209062276856"
    ],
    "note": "added by admin: the 1-1 posted 17:20, a loss then a win"
+  },
+  {
+   "id": 138,
+   "mode": "sb",
+   "winner": "8133734209062276856",
+   "loser": "6459805198974452339",
+   "score": [
+    1,
+    0
+   ],
+   "method": null,
+   "reported_by": "8133734209062276856",
+   "ts": 1795246095947,
+   "msg_uid": "176#459583000562447",
+   "text": "i beat grubby 1-0 snb",
+   "status": "ok"
   }
  ],
  "pending": [],
@@ -6214,11 +6230,6 @@
   }
  ],
  "log": [
-  {
-   "ts": 1794827960476,
-   "text": "✅ Stand & Bang result\n- Granite_chin23 def. sweatytrixter 1–0\n- Granite_chin23 1597 (+21)\n- sweatytrixter 1546 (−36)",
-   "sent": true
-  },
   {
    "ts": 1794828812521,
    "text": "✅ Stand & Bang result\n- sweatytrixter def. Granite_chin23 1–0\n- sweatytrixter 1583 (+37)\n- Granite_chin23 1574 (−23)",
@@ -7213,9 +7224,14 @@
    "ts": 1795244912548,
    "text": "🏆 COMBINED (average of both)\n- 1. BJkid2000 1707\n- 2. blumzylol 1609\n- 3. mrwhoopdatahh 1563\n- 4. maoripunisher_ 1498\n- 5. Rat_on_Roidz 1495\n- 6. sweatytrixter 1489\n- 7. bunky_skudz 1403\n- 8. echo_goescrazy 1278\n- 9. grubby_flea257 1266\n\n📊 https://is.gd/ufc4ladder",
    "sent": true
+  },
+  {
+   "ts": 1795246098490,
+   "text": "✅ Stand & Bang result\n- blumzylol def. grubby_flea257 1–0\n- 🥉 blumzylol 1575 (+10 · 🔥2 win streak, +2 bonus)\n- grubby_flea257 1281 (−8)\n- 🥉 blumzylol moves up to #3 in Stand & Bang",
+   "sent": true
   }
  ],
- "next_fight_id": 138,
+ "next_fight_id": 139,
  "next_review_id": 14,
  "meta": {
   "status": "ok",
@@ -7227,7 +7243,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.0,
-  "last_run": 1795246084334,
+  "last_run": 1795246146245,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
