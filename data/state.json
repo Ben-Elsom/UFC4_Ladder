@@ -315,8 +315,6 @@
   }
  },
  "seen": [
-  "144#459433905855974",
-  "144#459433906696637",
   "144#459433909684928",
   "144#459433910586703",
   "144#459433913320622",
@@ -3314,7 +3312,9 @@
   "175#459578429223892",
   "175#459578432057363",
   "175#459578434771159",
-  "175#459578436418288"
+  "175#459578436418288",
+  "175#459578642107446",
+  "175#459578643069031"
  ],
  "fights": [
   {
@@ -5979,11 +5979,6 @@
  ],
  "log": [
   {
-   "ts": 1794818825105,
-   "text": "maoripunisher_ vs mrwhoopdatahh\n- MMA: 0-0\n- Stand & Bang: 0-0",
-   "sent": true
-  },
-  {
    "ts": 1794818961744,
    "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Accelerated\n- Rounds: 5\n- HUD: Shown\n- Weight class: Men's Middleweight",
    "sent": true
@@ -6977,6 +6972,11 @@
    "ts": 1795228179221,
    "text": "🎲 Random fight settings (Men's)\n- Mode: MMA\n- Time: Accelerated\n- Rounds: 5\n- HUD: Hidden\n- Weight class: Men's Heavyweight",
    "sent": true
+  },
+  {
+   "ts": 1795229074574,
+   "text": "🎲 Random fight settings\n- Mode: Stand & Bang\n- Time: Real time\n- Rounds: 3\n- HUD: Hidden\n- Weight class: Men's Middleweight",
+   "sent": true
   }
  ],
  "next_fight_id": 127,
@@ -6991,7 +6991,7 @@
   "login_since": 1794640102107,
   "login_warned": false,
   "login_days_left": 53.2,
-  "last_run": 1795228277621,
+  "last_run": 1795229074574,
   "admin_psn": "BJkid2000",
   "intro_sent": 1794643674287,
   "wiped": 1794646936079,
