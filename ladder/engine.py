@@ -15,13 +15,15 @@ from zoneinfo import ZoneInfo
 
 from . import glicko
 from .names import norm, resolve as _fuzzy_resolve
-from .parser import SELF, VsLine, detect_mode, has_score, parse, parse_bare, parse_vs_lines
+from .parser import SELF, VsLine, detect_mode, has_score, parse, parse_bare, parse_tally, parse_vs_lines
 
 MODES = {"mma": "MMA", "sb": "Stand & Bang"}
 PROVISIONAL_FIGHTS = 5     # fights before you appear on the board
+HELP_GENERAL = {"general", "rules", "posting", "results", "basics"}
+HELP_COMMANDS = {"commands", "command", "cmds", "cmd"}
 COMBINED_WORDS = {"combined", "combo", "both", "all", "avg", "average", "overall"}
 DUPLICATE_MINUTES = 10     # both players reporting the same result within this window = one result
-SET_UPDATE_MINUTES = 60    # 1-1 then 2-1 within this long of the last post = the same set, updated
+SET_UPDATE_MINUTES = 60    # results this close together are one sitting (for the other player confirming the total)
 QUESTION_EXPIRES_MINUTES = 5   # a bot question not answered in this long goes to Needs review
 MIN = 60 * 1000
 H = 60 * MIN
@@ -133,12 +135,13 @@ def new_state() -> dict[str, Any]:
 
 class Ladder:
     def __init__(self, state: dict[str, Any], admin_name: str = "the admin", site_url: str = "",
-                 nicknames: dict[str, str] | None = None):
+                 nicknames: dict[str, str] | None = None, help_url: str = ""):
         self.s = state
         # Admin-set defaults, e.g. {"maori": "maoripunisher_"}: that word always means that player.
         self.nicknames = {norm(k): v.lower() for k, v in (nicknames or {}).items()}
         self.admin = admin_name
         self.site = site_url
+        self.help_url = help_url or (f"{site_url.rstrip('/')}/#help" if site_url else "")
         self._seen = set(state["seen"])
 
     # ------------------------------------------------------------ players
@@ -210,7 +213,20 @@ class Ladder:
         # New rules (drop only for non-fighters with a floor, streak bonus, average start) apply only from the
         # moment they were announced (meta.rules_from). Nothing before that is recalculated.
         rules_from = self.s.get("meta", {}).get("rules_from")
+        splits_from = self.s.get("meta", {}).get("splits_from")
         started = [False]
+
+        def game_order(f: dict) -> list[str] | None:
+            """Who won each game, in order, when that's known. A split from meta.splits_from on: the poster
+            lost first and won last (winners post), e.g. 1-1 = a loss then a win for the poster."""
+            if f.get("games"):
+                return f["games"]
+            gw, gl = f.get("score") or (1, 0)
+            if gw == gl and splits_from and f["ts"] >= splits_from:
+                me = f["reported_by"] if f["reported_by"] in (f["winner"], f["loser"]) else f["winner"]
+                opp = f["loser"] if me == f["winner"] else f["winner"]
+                return [opp] * gw + [me] * gw
+            return None
 
         def ranked() -> list[str]:
             return sorted((a for a, x in stats.items() if x["fights"] >= PROVISIONAL_FIGHTS), key=lambda a: -stats[a]["rating"])
@@ -272,11 +288,22 @@ class Ladder:
             # Streaks count games. The game order inside a set isn't known, so a set where you dropped a game
             # restarts your streak: 1 if you won the set (you won the last game), 0 otherwise.
             # Bonus: each win adds your streak length, +1 for a 1-win streak, +2 for 2 in a row, and so on (no cap).
-            bonus = 0
+            bonus = l_bonus = 0
+            order = game_order(f) if started[0] else None
             if not started[0]:      # before the bonus: streaks counted sets, and a split left them alone
                 if gw != gl:
                     w["streak"] = w["streak"] + 1 if w["streak"] > 0 else 1
                     l["streak"] = l["streak"] - 1 if l["streak"] < 0 else -1
+            elif order:
+                # The games' order is known (posted game by game, or a split from meta.splits_from on),
+                # so play them through one at a time: each win extends that player's streak and earns its bonus.
+                got = {f["winner"]: 0, f["loser"]: 0}
+                for g in order:
+                    x, y = (w, l) if g == f["winner"] else (l, w)
+                    run = max(x["streak"], 0) + 1
+                    x["streak"], got[g] = run, got[g] + run
+                    y["streak"] = min(y["streak"], 0) - 1
+                bonus, l_bonus = got[f["winner"]], got[f["loser"]]
             elif gw == gl:
                 w["streak"] = l["streak"] = 0
             elif gl == 0:
@@ -287,8 +314,10 @@ class Ladder:
             else:
                 w["streak"], l["streak"], bonus = 1, 0, 1
             w["rating"] += bonus
+            l["rating"] += l_bonus
             changes[f["id"]] = {"winner": (before[0], w["rating"]), "loser": (before[1], l["rating"]),
-                                "bonus": bonus, "streak": w["streak"]}
+                                "bonus": bonus, "streak": w["streak"],
+                                "loser_bonus": l_bonus, "loser_streak": l["streak"]}
             w["fights"] += gw + gl
             l["fights"] += gw + gl
             w["wins"] += gw; w["losses"] += gl
@@ -342,6 +371,9 @@ class Ladder:
         if not has_score(body):
             return []
 
+        tally = parse_tally(body)
+        if tally:
+            return self._vs_batch(msg, body, [tally])
         vs = parse_vs_lines(body)
         if vs:
             return self._vs_batch(msg, body, vs)
@@ -365,30 +397,25 @@ class Ladder:
             status, ids = self._resolve_opp(b.name, exclude={sender}, prefer=self._recent_opponents(sender))
             if status != "none":
                 return self._vs_batch(msg, body, [VsLine(name=b.name, mine=b.mine, theirs=b.theirs, mode=b.mode, text=b.text)])
-        # No name: is it the set they posted earlier, carrying on? (1-1 earlier, now 2-1)
-        f = self._latest_set_of(sender, msg["ts"], b.mode)
-        if f:
-            opp = f["loser"] if f["winner"] == sender else f["winner"]
-            mine = self._games(f, sender)
-            theirs = self._games(f, opp)
-            if b.mine >= mine and b.theirs >= theirs and b.mine + b.theirs > mine + theirs:
+        # No name, but the other player posted tonight's results: is this them confirming the total?
+        for f in reversed(self.s["fights"]):
+            if f["status"] == "void" or sender not in (f["winner"], f["loser"]) or (b.mode and f["mode"] != b.mode):
+                continue
+            if msg["ts"] - f["ts"] <= SET_UPDATE_MINUTES * MIN and f["reported_by"] != sender:
+                opp = f["loser"] if f["winner"] == sender else f["winner"]
+                won = b.mine >= b.theirs
                 d = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body, "mode": f["mode"], "method": None,
-                     "winner": sender if b.mine >= b.theirs else opp, "loser": opp if b.mine >= b.theirs else sender,
+                     "winner": sender if won else opp, "loser": opp if won else sender,
                      "score": (max(b.mine, b.theirs), min(b.mine, b.theirs))}
-                return self._finalise(d)
+                confirmed = self._against_session(d)
+                if confirmed:
+                    return confirmed
+            break
+        # Otherwise ask. A score never updates an earlier result; only !dispute takes one off.
         q = {"sender": sender, "uid": msg["uid"], "ts": msg["ts"], "text": body,
              "mine": b.mine, "theirs": b.theirs, "mode": b.mode}
         self._set_pending(q, "who")
         return [f"- {self.name(sender)}, who was that {b.mine}-{b.theirs} against?\n{NVM_LINE}"]
-
-    def _latest_set_of(self, acct: str, now: int, mode: str | None) -> dict | None:
-        for f in reversed(self.s["fights"]):
-            if f["status"] == "void" or acct not in (f["winner"], f["loser"]):
-                continue
-            if mode and f["mode"] != mode:
-                continue
-            return f if now - f.get("updated_ts", f["ts"]) <= SET_UPDATE_MINUTES * MIN else None
-        return None
 
     def _fill_names(self, d: dict, w_text: str, l_text: str, strong: bool) -> list[str]:
         sender = d["sender"]
@@ -526,6 +553,7 @@ class Ladder:
                 "opp": ids[0] if status == "ok" else None, "options": ids if status == "ask" else None,
                 "unknown": status == "none",
                 "name_text": ln.name,
+                "games_mine": ln.games,
             })
         if not drafts:
             return notes
@@ -564,6 +592,8 @@ class Ladder:
         out = []
         for d in q["drafts"]:
             d["winner"], d["loser"] = (d["sender"], d["opp"]) if d["won"] else (d["opp"], d["sender"])
+            if d.get("games_mine"):
+                d["games"] = [d["sender"] if g else d["opp"] for g in d["games_mine"]]
             out += self._finalise(d)
         return ["\n\n".join(out)] if out else []
 
@@ -632,37 +662,6 @@ class Ladder:
         gw, gl = f.get("score") or (1, 0)
         return gw if f["winner"] == acct else gl
 
-    def _continues(self, d: dict) -> dict | None:
-        """Is this the same set carrying on? e.g. 1-1 posted, then 2-1 after the decider.
-
-        Only the latest result between the two, in the same mode, posted (or last updated)
-        within SET_UPDATE_MINUTES, where neither player's tally went down and at least one went up.
-        """
-        pair = {d["winner"], d["loser"]}
-        dw, dl = d["score"] or (1, 0)
-        new = {d["winner"]: dw, d["loser"]: dl}
-        for f in reversed(self.s["fights"]):
-            if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
-                continue
-            if d["ts"] - f.get("updated_ts", f["ts"]) > SET_UPDATE_MINUTES * MIN:
-                return None
-            old = {a: self._games(f, a) for a in pair}
-            if all(new[a] >= old[a] for a in pair) and sum(new.values()) > sum(old.values()):
-                return f
-            return None
-        return None
-
-    def _update_set(self, f: dict, d: dict) -> list[str]:
-        old = f.get("score") or [1, 0]
-        was = f"{old[0]}–{old[1]}"
-        f.setdefault("updates", []).append({"ts": d["ts"], "by": d["sender"], "text": d["text"],
-                                            "was": {"winner": f["winner"], "loser": f["loser"], "score": f.get("score")}})
-        f["winner"], f["loser"] = d["winner"], d["loser"]
-        f["score"] = list(d["score"]) if d["score"] else None
-        f["updated_ts"] = d["ts"]
-        self._resolve_unreadable(d)
-        return [self._confirm(f, f"🔄 {MODES[f['mode']]} result updated (was {was})")]
-
     def _session(self, d: dict) -> list[dict]:
         """This pair's results in this mode from the same sitting: newest first, each within
         SET_UPDATE_MINUTES of the next one (and the newest within it of this post)."""
@@ -677,13 +676,12 @@ class Ladder:
         return out
 
     def _against_session(self, d: dict) -> list[str] | None:
-        """A post that's the score for the whole sitting, not one more game.
-
-        Applies when the other player posts, or when there's already more than one result
-        tonight: e.g. you post 0-1 then 1-0, and they post 1-1 -> already got it, nothing added.
-        A bigger total adds only the missing games. Anything else falls through to the usual checks."""
+        """The other player confirming tonight's total: e.g. you post 0-1 then 1-0, and they post 1-1
+        -> already got it, nothing added. Only when none of tonight's results are theirs: a score you post
+        is always new games (1-0 then 2-0 = 3-0), and only !dispute changes a result.
+        Anything else falls through to the usual checks."""
         session = self._session(d)
-        if not session or (len(session) == 1 and session[0]["reported_by"] == d["sender"]):
+        if not session or any(f["reported_by"] == d["sender"] for f in session):
             return None
         a, b = d["winner"], d["loser"]
         have = {a: sum(self._games(f, a) for f in session), b: sum(self._games(f, b) for f in session)}
@@ -700,23 +698,12 @@ class Ladder:
             if len(session) == 1:
                 return [f"👍 Already got that one\n- {self._describe(latest)}\n- Thanks for confirming"]
             return [f"👍 Already got that\n- {overall} ({MODES[d['mode']]})\n- Thanks for confirming"]
-        if not (all(new[x] >= have[x] for x in (a, b)) and sum(new.values()) > sum(have.values())):
-            return None
-        if len(session) == 1:
-            return self._update_set(session[0], d)
-        extra = {x: new[x] - have[x] for x in (a, b)}
-        w, l = (a, b) if extra[a] >= extra[b] else (b, a)
-        add = dict(d, winner=w, loser=l, score=(extra[w], extra[l]))
-        now = f"{self.name(me)} {new[me]}–{new[opp]} {self.name(opp)} overall"
-        return self._record(add, f"✅ {MODES[d['mode']]} result added ({now})")
+        return None
 
     def _finalise(self, d: dict) -> list[str]:
         whole = self._against_session(d)
         if whole is not None:
             return whole
-        carried_on = self._continues(d)
-        if carried_on:
-            return self._update_set(carried_on, d)
         pair = {d["winner"], d["loser"]}
         for f in reversed(self.s["fights"]):
             if f["status"] == "void" or f["mode"] != d["mode"] or {f["winner"], f["loser"]} != pair:
@@ -754,11 +741,13 @@ class Ladder:
             "score": list(d["score"]) if d["score"] else None, "method": d["method"],
             "reported_by": d["sender"], "ts": d["ts"], "msg_uid": d["uid"], "text": d["text"], "status": "ok",
         }
+        if d.get("games"):
+            fight["games"] = list(d["games"])
         self.s["fights"].append(fight)
         self._resolve_unreadable(d)
-        return [self._confirm(fight, head or f"✅ {MODES[mode]} result")]
+        return [self._confirm(fight, head or f"✅ {MODES[mode]} result", added=True)]
 
-    def _confirm(self, fight: dict, head: str) -> str:
+    def _confirm(self, fight: dict, head: str, added: bool = False) -> str:
         after = self.replay(fight["mode"])
         before = self.replay(fight["mode"], cutoff=fight["ts"] - 1)["stats"]
         ch = after["changes"][fight["id"]]
@@ -770,9 +759,10 @@ class Ladder:
             x = after["stats"][acct]
             medal = MEDALS.get(x["rank"], "")
             extra = ""
-            if won and ch.get("bonus"):
-                extra = (f" · 🔥{ch['streak']} win streak, +{ch['bonus']} bonus" if ch["streak"] >= 2
-                         else f" · +{ch['bonus']} streak bonus")
+            bonus, streak = (ch.get("bonus"), ch.get("streak", 0)) if won else (ch.get("loser_bonus"), ch.get("loser_streak", 0))
+            if bonus:
+                extra = (f" · 🔥{streak} win streak, +{bonus} bonus" if streak >= 2
+                         else f" · +{bonus} streak bonus")
             tag = f" ({x['fights']}/{PROVISIONAL_FIGHTS} fights)" if x["provisional"] else ""
             was = before.get(acct, {}).get("rank")
             if medal and (was is None or was > x["rank"]):
@@ -780,9 +770,17 @@ class Ladder:
                             else f"- {medal} {self.name(acct)} moves up to #{x['rank']} in {mode}")
             return f"{medal + ' ' if medal else ''}{self.name(acct)} {round(pair[1])} ({'+' if delta >= 0 else '−'}{abs(delta)}{extra}){tag}"
 
-        lines = [head, f"- {self._describe(fight)}",
+        lines = [head, f"- {self._describe(fight)}{self._games_note(fight) if added else ''}",
                  f"- {fmt(fight['winner'], ch['winner'], True)}", f"- {fmt(fight['loser'], ch['loser'], False)}"]
+        if fight.get("games") and len(fight["games"]) > 1:
+            lines.insert(2, f"{SUB}In order: " + ", ".join(self.name(g) for g in fight["games"]))
         return "\n".join(lines + news)
+
+    @staticmethod
+    def _games_note(f: dict) -> str:
+        """Spell out how many fights a result adds, e.g. ' (2 fights added)'. Every score posted is new fights."""
+        n = sum(f.get("score") or (1, 0))
+        return f" ({n} fights added)" if n > 1 else ""
 
     def _describe(self, f: dict) -> str:
         sc = f.get("score")
@@ -925,37 +923,44 @@ class Ladder:
         mode, rest = self._mode_arg(args)
         site = f"\n\n📊 Full stats: {self.site}" if self.site else ""
         if cmd in ("help", "commands", "how"):
-            lines = [
-                "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT",
-                '- Example: "vs bjkid 2-1 mma"  (your score first)',
-                "- Winners are responsible for posting their results if they want them on the leaderboard",
-                f"{SUB}No green tick, no points",
-                f"- No fight that day? You lose {DECAY_POINTS} points at 12pm (never below {DECAY_FLOOR}), so keep fighting to hold your spot",
-                "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
-            ]
-            if self.s.get("meta", {}).get("rules_from"):
-                lines.insert(5, "- Win streak bonus: +1 extra for a win, +2 for your 2nd in a row, +3 for the 3rd, and so on")
-            if self.site:
-                lines.append(f"📖 How to use: {self.site.rstrip('/')}/#help")
-            lines += [
-                "",
-                "📋 COMMANDS",
-                "- !board – top 10: MMA, S&B and combined",
-                "- !board mma – just MMA",
-                "- !board snb – just Stand & Bang",
-                "- !board combined – average of both modes",
-                "- !rank – your rank and record, plus combined",
-                "- !rank bjkid – someone else's",
-                "- !record bjkid – your record vs BJkid2000",
-                "- !record jono vs bjkid – record between any two players",
-                "- !recent – last 5 results",
-                "- !fights – who's had the most fights",
-                "- !pick – random mode, time, rounds, HUD and weight class",
-                "- !pick mens – men's divisions only",
-                f"- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message {self.admin}",
-                "",
-                f"❓ Problems or questions? Message {self.admin}",
-            ]
+            # !help = everything; !help general / !help commands = just that part
+            words = set(parts[1:])
+            want_general = not (words & HELP_COMMANDS) and cmd != "commands"
+            want_commands = not (words & HELP_GENERAL)
+            lines: list[str] = []
+            if want_general:
+                lines += [
+                    "POST YOUR RESULTS TO THE GROUP CHAT AFTER YOUR FIGHT",
+                    '- Example: "vs bjkid 2-1 mma"  (your score first)',
+                    "- Winners are responsible for posting their results if they want them on the leaderboard",
+                    f"{SUB}No green tick, no points",
+                    f"- No fight that day? You lose {DECAY_POINTS} points at 12pm (never below {DECAY_FLOOR}), so keep fighting to hold your spot",
+                    "- Talking about a score, not posting one? Put a / in front, e.g. I'll /3-0 you",
+                ]
+                if self.s.get("meta", {}).get("rules_from"):
+                    lines.insert(5, "- Win streak bonus: +1 extra for a win, +2 for your 2nd in a row, +3 for the 3rd, and so on")
+                if self.help_url:
+                    lines.append(f"📖 How to use: {self.help_url}")
+            if want_commands:
+                lines += ([""] if lines else []) + [
+                    "📋 COMMANDS",
+                    "- !board – top 10: MMA, S&B and combined",
+                    "- !board mma – just MMA",
+                    "- !board snb – just Stand & Bang",
+                    "- !board combined – average of both modes",
+                    "- !rank – your rank and record, plus combined",
+                    "- !rank mma / snb / combined – just one",
+                    "- !rank bjkid – someone else's",
+                    "- !record bjkid – your record vs BJkid2000",
+                    "- !record jono vs bjkid – record between any two players",
+                    "- !recent – last 5 results",
+                    "- !fights – who's had the most fights",
+                    "- !pick – random mode, time, rounds, HUD and weight class",
+                    "- !pick mens – men's divisions only",
+                    f"- !dispute – removes your most recent result (the whole set), then post it again. Older ones: message {self.admin}",
+                    "- !help general / !help commands – just one part of this",
+                ]
+            lines += ["", f"❓ Problems or questions? Message {self.admin}"]
             if self.site:
                 lines.append(f"📊 Full stats: {self.site}")
             return ["\n".join(lines)]

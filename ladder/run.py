@@ -98,7 +98,7 @@ def run(chat, state: dict, cfg: dict, now: int, npsso: str = "") -> dict:
     dry = cfg.get("dry_run", True)
     meta["dry_run"] = dry
     meta["admin_psn"] = cfg.get("admin_psn", "")
-    ladder = Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames"))
+    ladder = Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames"), help_url=cfg.get("help_url", ""))
 
     def say(text: str) -> None:
         entry = {"ts": now, "text": text, "sent": False}
@@ -208,7 +208,7 @@ def main() -> int:
         traceback.print_exc()
         code = 1 if args.fake else 0  # errors show on the website instead of failing the run (no GitHub emails)
     save_state(state_path, state)
-    build_site(Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames")).snapshot(now),
+    build_site(Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin", site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames"), help_url=cfg.get("help_url", "")).snapshot(now),
                Path(args.site))
     return code
 

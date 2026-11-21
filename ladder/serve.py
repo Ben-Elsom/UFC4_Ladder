@@ -67,7 +67,7 @@ def main() -> None:
     def make_ladder(st: dict) -> Ladder:
         c = load_config()
         return Ladder(st, admin_name=c.get("admin_name") or c.get("admin_psn") or "the admin",
-                      site_url=c.get("site_url", ""), nicknames=c.get("nicknames"))
+                      site_url=c.get("site_url", ""), nicknames=c.get("nicknames"), help_url=c.get("help_url", ""))
 
     admin_web.start(shared, cfg.get("site_url", ""), log=log, make_ladder=make_ladder)
     mtime = STATE.stat().st_mtime if STATE.exists() else 0
@@ -117,7 +117,7 @@ def main() -> None:
                 pending_push = pending_push or changed
                 if now_s - last_push >= PUSH_MIN_GAP or now_s - last_push > HEARTBEAT_PUSH:
                     build_site(Ladder(state, admin_name=cfg.get("admin_name") or cfg.get("admin_psn") or "the admin",
-                                      site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames")).snapshot(int(now_s * 1000)), SITE)
+                                      site_url=cfg.get("site_url", ""), nicknames=cfg.get("nicknames"), help_url=cfg.get("help_url", "")).snapshot(int(now_s * 1000)), SITE)
                     do_publish = True
                     last_push, pending_push = now_s, False
         if do_publish:

@@ -75,7 +75,7 @@ def say(lad, who, body, t):
 
 def test_result_logged_and_rated(lad):
     out = say(lad, "a1", "beat sam 2-1 mma", T0)
-    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1\n- JonoTheGoat ")
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1 (3 fights added)\n- JonoTheGoat ")
     f = lad.s["fights"][0]
     assert (f["winner"], f["loser"], f["score"], f["mode"]) == ("a1", "a2", [2, 1], "mma")
     st = lad.replay("mma", now=T0)["stats"]
@@ -200,26 +200,103 @@ def test_other_player_posting_the_session_score_is_not_counted_again(lad):
     out = say(lad, "a2", "1-1", T0 + 9 * 60_000)                 # Sam: "it's 1-1"
     assert out[0].startswith("👍 Already got that\n- Sam_K 1–1 JonoTheGoat overall (Stand & Bang)")
     assert _games(lad) == (1, 1) and len(lad.s["fights"]) == 2
-    out = say(lad, "a2", "vs jono 1-2 snb", T0 + 20 * 60_000)    # later: "jono 2-1 now"
-    assert out[0].startswith("✅ Stand & Bang result added (Sam_K 1–2 JonoTheGoat overall)\n- JonoTheGoat def. Sam_K 1–0")
-    assert _games(lad) == (2, 1)
+    out = say(lad, "a2", "vs jono 1-2 snb", T0 + 20 * 60_000)    # a bigger total is new games, not an update
+    assert out[0].startswith("✅ Stand & Bang result\n- JonoTheGoat def. Sam_K 2–1 (3 fights added)")
+    assert _games(lad) == (3, 2)
 
 
-def test_running_total_after_single_games_adds_only_the_missing_ones(lad):
+def test_a_posted_score_is_always_new_games(lad):
     say(lad, "a1", "beat sam 1-0 mma", T0)
-    say(lad, "a1", "beat sam 1-0 mma", T0 + 10 * 60_000)         # per-game posting still counts
-    assert _games(lad) == (2, 0)
-    say(lad, "a1", "beat sam 3-0 mma", T0 + 20 * 60_000)         # then a running total
-    assert _games(lad) == (3, 0)
-    assert "Already got that" in say(lad, "a1", "beat sam 3-0 mma", T0 + 21 * 60_000)[0]
-    assert _games(lad) == (3, 0)
+    out = say(lad, "a1", "beat sam 2-0 mma", T0 + 60_000)        # not an update: two more fights
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–0 (2 fights added)")
+    assert _games(lad) == (3, 0) and len(lad.s["fights"]) == 2
+    say(lad, "a1", "beat sam 3-0 mma", T0 + 2 * 60_000)
+    assert _games(lad) == (6, 0)
 
 
-def test_tally_update_and_other_player_confirm_still_work(lad):
+def test_other_player_confirming_the_total_still_works(lad):
     say(lad, "a1", "beat sam 1-0 mma", T0)
-    assert "updated (was 1–0)" in say(lad, "a1", "beat sam 2-0 mma", T0 + 60_000)[0]
-    assert "Already got that one" in say(lad, "a2", "lost to jono 0-2 mma", T0 + 30 * 60_000)[0]
-    assert _games(lad) == (2, 0) and len(lad.s["fights"]) == 1
+    say(lad, "a1", "beat sam 1-0 mma", T0 + 10 * 60_000)
+    assert "Already got that" in say(lad, "a2", "lost to jono 0-2 mma", T0 + 30 * 60_000)[0]
+    assert _games(lad) == (2, 0) and len(lad.s["fights"]) == 2
+
+
+def test_blumzy_split_after_two_wins_is_two_more_games(lad):
+    """21 Nov: two 1-0s, then '1-1' turned the second win into a split. It's two more games."""
+    say(lad, "a1", "i beat sam 1-0 snb", T0)
+    say(lad, "a1", "i beat sam 1-0 snb", T0 + 6 * 60_000)
+    out = say(lad, "a1", "i beat sam 1-1 snb", T0 + 37 * 60_000)
+    assert out[0].startswith("✅ Stand & Bang result\n- JonoTheGoat and Sam_K split 1–1 (2 fights added)")
+    assert [f["score"] for f in lad.s["fights"]] == [[1, 0], [1, 0], [1, 1]]
+    # chat about it, with a score in it, but no name: asks who, changes nothing
+    out = say(lad, "a1", "Its correct now, when i said 1-1 it thought i meant my previous win", T0 + 40 * 60_000)
+    assert "who was that 1-1 against" in out[0]
+    assert [f["score"] for f in lad.s["fights"]] == [[1, 0], [1, 0], [1, 1]]
+
+
+def test_split_streak_poster_loses_first_then_wins(lad):
+    lad.s["meta"]["rules_from"] = T0 - 1
+    lad.s["meta"]["splits_from"] = T0 - 1
+    say(lad, "a1", "beat sam 1-0 snb", T0)                        # Jono: W1 (+1)
+    out = say(lad, "a1", "vs sam 1-1 snb", T0 + 60_000)           # Sam won first, then Jono
+    ch = lad.replay("sb")["changes"][lad.s["fights"][-1]["id"]]
+    st = lad.replay("sb")["stats"]
+    assert st["a1"]["streak"] == 1 and st["a2"]["streak"] == -1
+    jono_bonus = ch["bonus"] if lad.s["fights"][-1]["winner"] == "a1" else ch["loser_bonus"]
+    sam_bonus = ch["loser_bonus"] if lad.s["fights"][-1]["winner"] == "a1" else ch["bonus"]
+    assert (jono_bonus, sam_bonus) == (1, 1)
+    assert "+1 streak bonus" in out[0]
+    say(lad, "a2", "vs jono 2-2 snb", T0 + H)                    # Sam posts: Jono 2 then Sam 2
+    st = lad.replay("sb")["stats"]
+    assert st["a2"]["streak"] == 2 and st["a1"]["streak"] == -2
+
+
+def test_split_before_switch_on_keeps_the_old_rule(lad):
+    lad.s["meta"]["rules_from"] = T0 - 1
+    lad.s["meta"]["splits_from"] = T0 + H
+    say(lad, "a1", "beat sam 1-0 snb", T0)
+    say(lad, "a1", "vs sam 1-1 snb", T0 + 60_000)
+    st = lad.replay("sb")["stats"]
+    assert st["a1"]["streak"] == 0 and st["a2"]["streak"] == 0
+
+
+def test_game_by_game_tally_keeps_the_order(lad):
+    lad.s["meta"]["rules_from"] = T0 - 1
+    out = say(lad, "a1", "Vs sam mma\n1-0\n1-1\n2-1", T0)
+    f = lad.s["fights"][-1]
+    assert (f["winner"], f["loser"], f["score"], f["games"]) == ("a1", "a2", [2, 1], ["a1", "a2", "a1"])
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1 (3 fights added)\n  - In order: JonoTheGoat, Sam_K, JonoTheGoat")
+    st = lad.replay("mma")["stats"]
+    assert st["a1"]["streak"] == 1 and st["a2"]["streak"] == -1
+    say(lad, "a1", "vs sam 1-0 mma\n2-0\n3-0", T0 + H)            # 3 straight: +1 +2 +3 after the 1 streak
+    ch = lad.replay("mma")["changes"][lad.s["fights"][-1]["id"]]
+    assert ch["bonus"] == 2 + 3 + 4 and lad.replay("mma")["stats"]["a1"]["streak"] == 4
+    assert len(lad.s["fights"]) == 2
+    # not a tally: jumps, or two different people
+    assert len(say(lad, "a1", "vs sam 1-0 mma\nvs maori 1-1 mma", T0 + 2 * H)) >= 1
+    assert all(not f.get("games") for f in lad.s["fights"][2:])
+
+
+def test_help_sections(lad):
+    full = say(lad, "a1", "!help", T0)[0]
+    gen = say(lad, "a1", "!help general", T0)[0]
+    cmds = say(lad, "a1", "!help commands", T0)[0]
+    assert "POST YOUR RESULTS" in full and "📋 COMMANDS" in full
+    assert "POST YOUR RESULTS" in gen and "📋 COMMANDS" not in gen
+    assert "📋 COMMANDS" in cmds and "POST YOUR RESULTS" not in cmds and "!rank mma / snb / combined" in cmds
+    assert say(lad, "a1", "!commands", T0)[0] == cmds
+
+
+def test_rank_one_mode(lad):
+    say(lad, "a1", "beat sam 2-1 mma", T0)
+    say(lad, "a1", "beat sam 2-1 snb", T0 + H)
+    mma = say(lad, "a1", "!rank mma", T0 + 2 * H)[0]
+    assert "- MMA:" in mma and "Stand & Bang" not in mma and "Combined" not in mma
+    snb = say(lad, "a1", "!rank snb", T0 + 2 * H)[0]
+    assert "- Stand & Bang:" in snb and "- MMA" not in snb
+    comb = say(lad, "a1", "!rank combined", T0 + 2 * H)[0]
+    assert "- Combined" in comb and "- MMA" not in comb
+    assert "- MMA:" in say(lad, "a1", "!rank sam mma", T0 + 2 * H)[0]
 
 
 def test_forward_slash_means_not_a_result(lad):
@@ -491,22 +568,11 @@ def test_long_replies_are_split_under_the_limit():
     assert split_message("short") == ["short"]
 
 
-def test_set_posted_mid_way_then_finished_is_one_result(lad):
+def test_set_posted_mid_way_then_finished_adds_games(lad):
     say(lad, "a1", "vs sam 1-1 mma", T0)
-    out = say(lad, "a1", "beat sam 2-1 mma", T0 + 25 * 60_000)        # the decider
-    assert out[0].startswith("🔄 MMA result updated (was 1–1)\n- JonoTheGoat def. Sam_K 2–1")
-    assert len(lad.s["fights"]) == 1
-    st = lad.replay("mma")["stats"]
-    assert (st["a1"]["wins"], st["a1"]["losses"]) == (2, 1)
-
-
-def test_other_player_can_finish_the_set(lad):
-    say(lad, "a1", "beat sam 1-0 mma", T0)                            # 1-0 after game one
-    out = say(lad, "a2", "lost to jono 2-0", T0 + 20 * 60_000)        # no mode: asks, then updates
-    assert "MMA or Stand & Bang" in out[0]
-    out = say(lad, "a2", "mma", T0 + 21 * 60_000)
-    assert "updated (was 1–0)" in out[0] and len(lad.s["fights"]) == 1
-    assert lad.s["fights"][0]["score"] == [2, 0]
+    out = say(lad, "a1", "beat sam 2-1 mma", T0 + 25 * 60_000)        # new games, not an update
+    assert out[0].startswith("✅ MMA result\n- JonoTheGoat def. Sam_K 2–1")
+    assert len(lad.s["fights"]) == 2
 
 
 def test_finished_set_then_new_set_is_separate(lad):
@@ -528,15 +594,15 @@ def test_no_score_means_no_result(lad):
     assert lad.s["fights"] == [] and lad.s["pending"] == [] and lad.s["review"] == []
 
 
-def test_bare_score_asks_who_then_later_score_updates_the_set(lad):
+def test_bare_score_asks_who(lad):
     out = say(lad, "a2", "1 -1", T0)                                   # sweatytrixter's mid-set post
     assert out[0].startswith("- Sam_K, who was that 1-1 against?")
     out = say(lad, "a2", "reaper", T0 + 60_000)
     assert "MMA or Stand & Bang" in out[0]
     out = say(lad, "a2", "snb", T0 + 90_000)
     assert "split 1–1" in out[0]
-    out = say(lad, "a2", "Safe as bruv 2-1 ", T0 + 20 * 60_000)       # the decider, no name
-    assert out[0].startswith("🔄 Stand & Bang result updated (was 1–1)\n- Sam_K def. xX_Reaper_Xx 2–1")
+    out = say(lad, "a2", "Safe as bruv 2-1 ", T0 + 20 * 60_000)       # no name: asks again, never updates
+    assert "who was that 2-1 against" in out[0]
     assert len(lad.s["fights"]) == 1
 
 

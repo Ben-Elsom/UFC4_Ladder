@@ -194,6 +194,44 @@ class VsLine:
     theirs: int
     mode: str | None
     text: str
+    games: list[bool] | None = None   # game by game, True = the poster won it (from a running tally)
+
+
+def parse_tally(text: str) -> VsLine | None:
+    """A set posted game by game, so the order is known:
+        vs bjkid mma
+        1-0
+        1-1
+        2-1
+    = the poster won game 1, bjkid game 2, the poster game 3. Poster's score first. Each score must add
+    exactly one game to the last, starting from 1-0 or 0-1, and the opponent must be named."""
+    raw = text.strip()
+    if not raw or raw.startswith("!") or raw.endswith("?"):
+        return None
+    t = raw.lower().replace("’", "'")
+    if HYPOTHETICAL.search(t) or len(parse_vs_lines(raw)) > 1:
+        return None
+    t = ROUND_RE.sub(" ", t)
+    scores = [(int(m.group(1)), int(m.group(2))) for m in SCORE_RE.finditer(t)]
+    if len(scores) < 2:
+        return None
+    games, prev = [], (0, 0)
+    for a, b in scores:
+        step = (a - prev[0], b - prev[1])
+        if step not in ((1, 0), (0, 1)):
+            return None
+        games.append(step == (1, 0))
+        prev = (a, b)
+    mode = detect_mode(t)
+    rest = SCORE_RE.sub(" ", t)
+    for _, pat in MODE_PATTERNS + METHOD_PATTERNS:
+        rest = re.sub(pat, " ", rest)
+    toks = [tok.strip("'.-") for tok in re.findall(r"[a-z0-9_'.\-]+", rest)]
+    name = [tok for tok in toks if tok and not tok.isdigit() and tok not in FILLER and tok not in SELF_WORDS
+            and tok not in WIN_VERBS and tok not in WON_VERBS and tok not in LOSS_VERBS]
+    if not name or len(name) > 3:
+        return None
+    return VsLine(name=" ".join(name), mine=prev[0], theirs=prev[1], mode=mode, text=raw, games=games)
 
 
 def parse_vs_lines(text: str) -> list[VsLine]:
